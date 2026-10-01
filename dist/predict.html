@@ -1073,12 +1073,15 @@ function clearAllFormFields() {
 // ================================================================
 //  SCAN OVERLAY & ANIMATION
 // ================================================================
+//  SCAN OVERLAY & CLINICAL DIAGNOSTIC PACING
+// ================================================================
 const SCAN_STEPS = [
-  "Reading patient demographics & enzyme biomarkers",
-  "Checking missing values against Median Imputer",
-  "StandardScaler normalizing input vector",
-  "XGBoost gradient boosting evaluating decision trees",
-  "Calculating 5-stage softprob distribution"
+  { text: "Acquiring 12 serum biomarker inputs & patient demographics", duration: 550 },
+  { text: "Checking missing values against Median Reference Imputer", duration: 520 },
+  { text: "StandardScaler z-score normalization across reference cohort", duration: 560 },
+  { text: "Evaluating 1,500 XGBoost decision tree paths & gradient margins", duration: 800 },
+  { text: "Analyzing De Ritis ratio (AST/ALT) & synthetic enzyme kinetics", duration: 600 },
+  { text: "Synthesizing 5-stage softprob distribution & staging confidence", duration: 540 }
 ];
 
 function runScanAnimation() {
@@ -1092,16 +1095,16 @@ function runScanAnimation() {
     list.innerHTML = SCAN_STEPS.map((s, i) => `
       <div class="scan-step" id="step_${i}">
         <div class="scan-step-marker">✓</div>
-        <span>${s}</span>
+        <span>${s.text}</span>
       </div>
     `).join('');
 
     overlay.classList.add('active');
     fill.style.width = '0%';
     pct.textContent  = '0%';
+    sub.textContent  = 'Initiating clinical diagnostic sequence…';
 
     let i = 0;
-    const delay = 220;
 
     function tick() {
       if (i < SCAN_STEPS.length) {
@@ -1112,23 +1115,31 @@ function runScanAnimation() {
         const cur = document.getElementById('step_' + i);
         if (cur) cur.classList.add('active');
 
-        const progress = Math.round(((i + 1) / SCAN_STEPS.length) * 100);
+        const stepObj = SCAN_STEPS[i];
+        const progress = Math.round(((i + 1) / (SCAN_STEPS.length + 0.2)) * 100);
         fill.style.width = progress + '%';
         pct.textContent  = progress + '%';
-        sub.textContent  = SCAN_STEPS[i] + '…';
+        sub.textContent  = stepObj.text + '…';
+
         i++;
-        setTimeout(tick, delay);
+        setTimeout(tick, stepObj.duration);
       } else {
+        const lastStep = document.getElementById('step_' + (SCAN_STEPS.length - 1));
+        if (lastStep) { lastStep.classList.remove('active'); lastStep.classList.add('done'); }
+
         fill.style.width = '100%';
         pct.textContent  = '100%';
-        sub.textContent  = 'Classification complete';
+        sub.textContent  = '✓ Diagnostic synthesis complete · Ready';
+
         setTimeout(() => {
           overlay.classList.remove('active');
           resolve();
-        }, 320);
+        }, 550);
       }
     }
-    tick();
+
+    // Brief initial intake moment before starting steps
+    setTimeout(tick, 200);
   });
 }
 
@@ -1280,36 +1291,50 @@ document.getElementById('predictForm').addEventListener('submit', async function
   e.preventDefault();
   const fd = new FormData(this);
   const payload = Object.fromEntries(fd.entries());
+  const submitBtn = document.getElementById('submitBtn');
+  const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
 
-  await runScanAnimation();
-
-  let data;
-  if (typeof HCVEngine !== 'undefined') {
-    // 100% Client-side ML diagnostic inference (Zero latency, Netlify compatible)
-    data = HCVEngine.predict(payload);
-  } else {
-    try {
-      const response = await fetch("/api/predict", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      data = await response.json();
-      if (!response.ok) {
-        alert(data.error || 'Prediction failed.');
-        return;
-      }
-    } catch (err) {
-      alert('Prediction network error: ' + err.message);
-      return;
-    }
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" style="width:0.95rem; height:0.95rem; vertical-align:-0.15em;"></span>Executing Diagnostic Inference…';
   }
 
   try {
-    sessionStorage.setItem('last_hcv_result', JSON.stringify(data));
-  } catch (err) {}
+    await runScanAnimation();
 
-  renderResult(data);
+    let data;
+    if (typeof HCVEngine !== 'undefined') {
+      // 100% Client-side ML diagnostic inference (Netlify compatible)
+      data = HCVEngine.predict(payload);
+    } else {
+      try {
+        const response = await fetch("/api/predict", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        data = await response.json();
+        if (!response.ok) {
+          alert(data.error || 'Prediction failed.');
+          return;
+        }
+      } catch (err) {
+        alert('Prediction network error: ' + err.message);
+        return;
+      }
+    }
+
+    try {
+      sessionStorage.setItem('last_hcv_result', JSON.stringify(data));
+    } catch (err) {}
+
+    renderResult(data);
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnHtml;
+    }
+  }
 });
 
 // Initialize on page load
