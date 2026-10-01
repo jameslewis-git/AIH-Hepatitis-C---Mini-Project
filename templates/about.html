@@ -43,14 +43,14 @@
     <div class="card-header-label">Architecture</div>
     <h2 style="font-size:1.4rem; margin-bottom:1rem;">Model Architecture</h2>
     <p>
-      The pipeline trains both <strong style="color:var(--amber)">Random Forest</strong> and
-      <strong style="color:var(--amber)">XGBoost</strong> classifiers on the UCI HCV dataset.
+      The pipeline trains both <strong style="color:var(--red)">Random Forest</strong> and
+      <strong style="color:var(--red)">XGBoost</strong> classifiers on the UCI HCV dataset.
       The model achieving the highest <strong style="color:var(--text-primary)">macro-F1 score</strong>
       is automatically selected and serialized to disk — ensuring the best performer is always
       deployed without manual intervention.
     </p>
     <p style="margin-top:0.75rem; margin-bottom:0;">
-      The full bundle saved to <code style="background:var(--bg-raised); padding:0.15rem 0.4rem; border-radius:5px; font-family:var(--font-mono); font-size:0.85rem; color:var(--amber);">model/hcv_model.pkl</code>
+      The full bundle saved to <code style="background:var(--bg-raised); padding:0.15rem 0.4rem; border-radius:5px; font-family:var(--font-mono); font-size:0.85rem; color:var(--red);">model/hcv_model.pkl</code>
       includes the fitted imputer, scaler, trained classifier, feature names, and class labels —
       enabling fully reproducible inference.
     </p>
@@ -95,7 +95,7 @@
     <div style="display:flex; flex-wrap:wrap;">
       {% for feat in features %}
         <div class="feature-pill">
-          <span style="color:var(--amber); font-size:0.65rem;">◆</span>
+          <span style="color:var(--red); font-size:0.65rem;">◆</span>
           {{ feat }}
         </div>
       {% endfor %}
@@ -143,7 +143,7 @@
         <div style="margin-bottom:1rem;">
           <div style="font-size:0.72rem; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.5rem;">Source</div>
           <div style="color:var(--text-secondary);">UCI Machine Learning Repository — Hepatitis C Virus for Egyptian patients</div>
-          <div style="font-family:var(--font-mono); font-size:0.82rem; color:var(--amber); margin-top:0.3rem;">hcvdat0.csv</div>
+          <div style="font-family:var(--font-mono); font-size:0.82rem; color:var(--red); margin-top:0.3rem;">hcvdat0.csv</div>
         </div>
       </div>
       <div class="col-md-6">

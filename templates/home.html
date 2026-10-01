@@ -87,7 +87,7 @@
         <h2 style="font-size:1.5rem; margin-bottom:1rem;">Hepatitis C Kills Silently</h2>
         <p style="margin-bottom:0.85rem;">
           <strong style="color:var(--text-primary);">Hepatitis C virus (HCV)</strong> infects the liver and progresses
-          silently over decades. An estimated <strong style="color:var(--amber);">58 million</strong> people worldwide
+          silently over decades. An estimated <strong style="color:var(--red);">58 million</strong> people worldwide
           are living with chronic HCV infection (WHO, 2023), and most don't know it.
         </p>
         <p style="margin-bottom:0.85rem;">
@@ -96,7 +96,7 @@
           procedure with risk of bleeding and complications.
         </p>
         <p style="margin-bottom:0; font-size:0.85rem; font-family:var(--font-mono); color:var(--text-muted);">
-          → This project proposes a <strong style="color:var(--amber);">non-invasive ML alternative</strong> using
+          → This project proposes a <strong style="color:var(--red);">non-invasive ML alternative</strong> using
           routine blood panel values collected during standard checkups.
         </p>
       </div>
@@ -129,7 +129,7 @@
 
     <div class="row g-3">
       <div class="col-md-6 col-lg" style="min-width:180px;">
-        <div style="border:1px solid rgba(16,185,129,0.2); border-left:3px solid var(--healthy); border-radius:10px; padding:1rem; background:rgba(16,185,129,0.04); height:100%;">
+        <div style="border:1px solid #a7f3d0; border-left:3px solid var(--healthy); border-radius:10px; padding:1rem; background:rgba(16,185,129,0.04); height:100%;">
           <div style="font-weight:700; color:var(--healthy); margin-bottom:0.35rem; font-size:0.85rem;">🟢 Blood Donor</div>
           <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
             All liver markers within normal ranges. No HCV activity detected. Patient is a safe blood donor.
@@ -137,7 +137,7 @@
         </div>
       </div>
       <div class="col-md-6 col-lg" style="min-width:180px;">
-        <div style="border:1px solid rgba(245,158,11,0.2); border-left:3px solid var(--suspect); border-radius:10px; padding:1rem; background:rgba(245,158,11,0.04); height:100%;">
+        <div style="border:1px solid #fde68a; border-left:3px solid var(--suspect); border-radius:10px; padding:1rem; background:rgba(245,158,11,0.04); height:100%;">
           <div style="font-weight:700; color:var(--suspect); margin-bottom:0.35rem; font-size:0.85rem;">🟡 Suspect Donor</div>
           <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
             Borderline elevations in enzymes (ALT, GGT). Not confirmable as donor. Monitoring required.
@@ -189,18 +189,18 @@
             <tr><th>Marker</th><th>Full Name</th><th>Clinical Significance</th></tr>
           </thead>
           <tbody>
-            <tr><td style="color:var(--amber); font-family:var(--font-mono);">Age</td><td style="color:var(--text-secondary);">Patient Age</td><td style="color:var(--text-muted); font-size:0.8rem;">Older → higher risk</td></tr>
-            <tr><td style="color:var(--amber); font-family:var(--font-mono);">Sex</td><td style="color:var(--text-secondary);">Biological Sex</td><td style="color:var(--text-muted); font-size:0.8rem;">Sex-related enzyme variation</td></tr>
-            <tr><td style="color:var(--amber); font-family:var(--font-mono);">ALB</td><td style="color:var(--text-secondary);">Albumin (g/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↓ signals liver damage</td></tr>
-            <tr><td style="color:var(--amber); font-family:var(--font-mono);">ALP</td><td style="color:var(--text-secondary);">Alkaline Phosphatase</td><td style="color:var(--text-muted); font-size:0.8rem;">↑ in biliary disease</td></tr>
-            <tr><td style="color:var(--amber); font-family:var(--font-mono);">ALT</td><td style="color:var(--text-secondary);">Alanine Aminotransferase</td><td style="color:var(--text-muted); font-size:0.8rem;">Key hepatitis marker</td></tr>
-            <tr><td style="color:var(--amber); font-family:var(--font-mono);">AST</td><td style="color:var(--text-secondary);">Aspartate Aminotransferase</td><td style="color:var(--text-muted); font-size:0.8rem;">↑ in cell damage</td></tr>
-            <tr><td style="color:var(--amber); font-family:var(--font-mono);">BIL</td><td style="color:var(--text-secondary);">Bilirubin (µmol/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↑ = poor bile excretion</td></tr>
-            <tr><td style="color:var(--amber); font-family:var(--font-mono);">CHE</td><td style="color:var(--text-secondary);">Cholinesterase (kU/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↓ = reduced liver synthesis</td></tr>
-            <tr><td style="color:var(--amber); font-family:var(--font-mono);">CHOL</td><td style="color:var(--text-secondary);">Cholesterol (mmol/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↓ in late cirrhosis</td></tr>
-            <tr><td style="color:var(--amber); font-family:var(--font-mono);">CREA</td><td style="color:var(--text-secondary);">Creatinine (µmol/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">Kidney co-function</td></tr>
-            <tr><td style="color:var(--amber); font-family:var(--font-mono);">GGT</td><td style="color:var(--text-secondary);">Gamma-GT (U/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↑ with alcohol/liver damage</td></tr>
-            <tr><td style="color:var(--amber); font-family:var(--font-mono);">PROT</td><td style="color:var(--text-secondary);">Total Protein (g/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↓ in liver failure</td></tr>
+            <tr><td style="color:var(--red); font-family:var(--font-mono);">Age</td><td style="color:var(--text-secondary);">Patient Age</td><td style="color:var(--text-muted); font-size:0.8rem;">Older → higher risk</td></tr>
+            <tr><td style="color:var(--red); font-family:var(--font-mono);">Sex</td><td style="color:var(--text-secondary);">Biological Sex</td><td style="color:var(--text-muted); font-size:0.8rem;">Sex-related enzyme variation</td></tr>
+            <tr><td style="color:var(--red); font-family:var(--font-mono);">ALB</td><td style="color:var(--text-secondary);">Albumin (g/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↓ signals liver damage</td></tr>
+            <tr><td style="color:var(--red); font-family:var(--font-mono);">ALP</td><td style="color:var(--text-secondary);">Alkaline Phosphatase</td><td style="color:var(--text-muted); font-size:0.8rem;">↑ in biliary disease</td></tr>
+            <tr><td style="color:var(--red); font-family:var(--font-mono);">ALT</td><td style="color:var(--text-secondary);">Alanine Aminotransferase</td><td style="color:var(--text-muted); font-size:0.8rem;">Key hepatitis marker</td></tr>
+            <tr><td style="color:var(--red); font-family:var(--font-mono);">AST</td><td style="color:var(--text-secondary);">Aspartate Aminotransferase</td><td style="color:var(--text-muted); font-size:0.8rem;">↑ in cell damage</td></tr>
+            <tr><td style="color:var(--red); font-family:var(--font-mono);">BIL</td><td style="color:var(--text-secondary);">Bilirubin (µmol/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↑ = poor bile excretion</td></tr>
+            <tr><td style="color:var(--red); font-family:var(--font-mono);">CHE</td><td style="color:var(--text-secondary);">Cholinesterase (kU/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↓ = reduced liver synthesis</td></tr>
+            <tr><td style="color:var(--red); font-family:var(--font-mono);">CHOL</td><td style="color:var(--text-secondary);">Cholesterol (mmol/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↓ in late cirrhosis</td></tr>
+            <tr><td style="color:var(--red); font-family:var(--font-mono);">CREA</td><td style="color:var(--text-secondary);">Creatinine (µmol/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">Kidney co-function</td></tr>
+            <tr><td style="color:var(--red); font-family:var(--font-mono);">GGT</td><td style="color:var(--text-secondary);">Gamma-GT (U/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↑ with alcohol/liver damage</td></tr>
+            <tr><td style="color:var(--red); font-family:var(--font-mono);">PROT</td><td style="color:var(--text-secondary);">Total Protein (g/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↓ in liver failure</td></tr>
           </tbody>
         </table>
       </div>
@@ -210,7 +210,7 @@
              alt="Doctor reviewing liver function panel on tablet"
              style="width:100%; border-radius:14px; object-fit:cover; height:420px;">
         <div style="margin-top:1rem; padding:1rem 1.25rem; background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.12); border-radius:10px;">
-          <div style="font-size:0.78rem; font-family:var(--font-mono); color:var(--amber); font-weight:600; margin-bottom:0.35rem;">WHY THIS MATTERS</div>
+          <div style="font-size:0.78rem; font-family:var(--font-mono); color:var(--red); font-weight:600; margin-bottom:0.35rem;">WHY THIS MATTERS</div>
           <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
             A liver biopsy costs $1,500–$5,000 and carries real medical risk. These same
             12 markers cost &lt;$50 and are already collected during routine checkups — meaning
@@ -237,7 +237,7 @@
 
         <!-- XGBoost explanation -->
         <div style="margin-bottom:1.25rem;">
-          <div style="font-weight:700; color:var(--amber); font-size:0.9rem; margin-bottom:0.4rem;">1. XGBoost (Extreme Gradient Boosting)</div>
+          <div style="font-weight:700; color:var(--red); font-size:0.9rem; margin-bottom:0.4rem;">1. XGBoost (Extreme Gradient Boosting)</div>
           <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
             XGBoost builds an <strong style="color:var(--text-primary)">ensemble of decision trees</strong> sequentially.
             Each tree corrects errors from the previous one, minimizing a loss function using gradient descent.
@@ -246,7 +246,7 @@
         </div>
 
         <div style="margin-bottom:1.25rem;">
-          <div style="font-weight:700; color:var(--amber); font-size:0.9rem; margin-bottom:0.4rem;">2. Training vs Random Forest</div>
+          <div style="font-weight:700; color:var(--red); font-size:0.9rem; margin-bottom:0.4rem;">2. Training vs Random Forest</div>
           <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
             Both <strong style="color:var(--text-primary)">Random Forest</strong> and <strong style="color:var(--text-primary)">XGBoost</strong>
             are trained on the same dataset. The one with higher <strong style="color:var(--text-primary)">macro-F1 score</strong>
@@ -255,7 +255,7 @@
         </div>
 
         <div style="margin-bottom:1.25rem;">
-          <div style="font-weight:700; color:var(--amber); font-size:0.9rem; margin-bottom:0.4rem;">3. Macro-F1 as the Evaluation Metric</div>
+          <div style="font-weight:700; color:var(--red); font-size:0.9rem; margin-bottom:0.4rem;">3. Macro-F1 as the Evaluation Metric</div>
           <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
             Regular accuracy fails with imbalanced classes (e.g., few Cirrhosis vs many Blood Donors).
             <strong style="color:var(--text-primary)">Macro-F1</strong> averages precision & recall equally across all 5 classes,
@@ -264,9 +264,9 @@
         </div>
 
         <div style="margin-bottom:0;">
-          <div style="font-weight:700; color:var(--amber); font-size:0.9rem; margin-bottom:0.4rem;">4. Output: Probability Distribution</div>
+          <div style="font-weight:700; color:var(--red); font-size:0.9rem; margin-bottom:0.4rem;">4. Output: Probability Distribution</div>
           <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
-            Instead of a single label, the model uses <code style="background:var(--bg-raised); padding:0.1rem 0.35rem; border-radius:4px; color:var(--amber); font-size:0.82rem;">predict_proba()</code>
+            Instead of a single label, the model uses <code style="background:var(--bg-raised); padding:0.1rem 0.35rem; border-radius:4px; color:var(--red); font-size:0.82rem;">predict_proba()</code>
             to return a <strong style="color:var(--text-primary)">confidence score for each stage</strong>,
             giving clinicians actionable probabilistic insight rather than a binary decision.
           </div>
@@ -287,7 +287,7 @@
       <!-- Step 1 -->
       <div class="col-md-6 col-lg">
         <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:14px; padding:1.25rem; height:100%; position:relative;">
-          <div style="width:28px; height:28px; background:linear-gradient(135deg, var(--crimson), var(--blood)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 4px 12px rgba(220,38,38,0.3);">01</div>
+          <div style="width:28px; height:28px; background:var(--red); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 2px 8px rgba(220,38,38,0.2);">01</div>
           <div style="font-size:1.25rem; margin-bottom:0.5rem;">🗄️</div>
           <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.4rem; font-size:0.9rem;">UCI Dataset</div>
           <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
@@ -305,7 +305,7 @@
       <!-- Step 2 -->
       <div class="col-md-6 col-lg">
         <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:14px; padding:1.25rem; height:100%;">
-          <div style="width:28px; height:28px; background:linear-gradient(135deg, var(--crimson), var(--blood)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 4px 12px rgba(220,38,38,0.3);">02</div>
+          <div style="width:28px; height:28px; background:var(--red); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 2px 8px rgba(220,38,38,0.2);">02</div>
           <div style="font-size:1.25rem; margin-bottom:0.5rem;">🧹</div>
           <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.4rem; font-size:0.9rem;">Preprocessing</div>
           <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
@@ -322,10 +322,10 @@
 
       <!-- Step 3 -->
       <div class="col-md-6 col-lg">
-        <div style="background:var(--bg-raised); border:1px solid rgba(245,158,11,0.2); border-radius:14px; padding:1.25rem; height:100%;">
-          <div style="width:28px; height:28px; background:linear-gradient(135deg, var(--crimson), var(--blood)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 4px 12px rgba(220,38,38,0.3);">03</div>
+        <div style="background:var(--bg-raised); border:1px solid #fde68a; border-radius:14px; padding:1.25rem; height:100%;">
+          <div style="width:28px; height:28px; background:var(--red); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 2px 8px rgba(220,38,38,0.2);">03</div>
           <div style="font-size:1.25rem; margin-bottom:0.5rem;">🤖</div>
-          <div style="font-weight:700; color:var(--amber); margin-bottom:0.4rem; font-size:0.9rem;">XGBoost Train</div>
+          <div style="font-weight:700; color:var(--red); margin-bottom:0.4rem; font-size:0.9rem;">XGBoost Train</div>
           <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
             Gradient boosting<br>
             Best macro-F1 selected<br>
@@ -341,7 +341,7 @@
       <!-- Step 4 -->
       <div class="col-md-6 col-lg">
         <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:14px; padding:1.25rem; height:100%;">
-          <div style="width:28px; height:28px; background:linear-gradient(135deg, var(--crimson), var(--blood)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 4px 12px rgba(220,38,38,0.3);">04</div>
+          <div style="width:28px; height:28px; background:var(--red); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 2px 8px rgba(220,38,38,0.2);">04</div>
           <div style="font-size:1.25rem; margin-bottom:0.5rem;">💾</div>
           <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.4rem; font-size:0.9rem;">Model Bundle</div>
           <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
@@ -358,8 +358,8 @@
 
       <!-- Step 5 -->
       <div class="col-md-6 col-lg">
-        <div style="background:var(--bg-raised); border:1px solid rgba(16,185,129,0.2); border-radius:14px; padding:1.25rem; height:100%;">
-          <div style="width:28px; height:28px; background:linear-gradient(135deg, var(--crimson), var(--blood)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 4px 12px rgba(220,38,38,0.3);">05</div>
+        <div style="background:var(--bg-raised); border:1px solid #a7f3d0; border-radius:14px; padding:1.25rem; height:100%;">
+          <div style="width:28px; height:28px; background:var(--red); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 2px 8px rgba(220,38,38,0.2);">05</div>
           <div style="font-size:1.25rem; margin-bottom:0.5rem;">🌐</div>
           <div style="font-weight:700; color:var(--healthy); margin-bottom:0.4rem; font-size:0.9rem;">Flask API</div>
           <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
@@ -373,8 +373,8 @@
     </div>
 
     <!-- Data flow note -->
-    <div style="margin-top:1.5rem; padding:1rem 1.25rem; background:rgba(245,158,11,0.05); border:1px solid rgba(245,158,11,0.1); border-radius:10px; font-size:0.82rem; font-family:var(--font-mono); color:var(--text-muted);">
-      <span style="color:var(--amber); font-weight:600;">INFERENCE FLOW:</span>
+    <div style="margin-top:1.5rem; padding:1rem 1.25rem; background:var(--bg-subtle); border:1px solid var(--border); border-radius:10px; font-size:0.82rem; font-family:var(--font-mono); color:var(--text-secondary);">
+      <span style="color:var(--red); font-weight:600;">INFERENCE FLOW:</span>
       User Input → Pandas DataFrame → Imputer.transform() → Scaler.transform() → XGBoost.predict_proba() → JSON Response
     </div>
   </div>
@@ -454,7 +454,7 @@
   <div class="alert-caution fade-up" style="margin-bottom:1.5rem;">
     <div style="font-size:1.1rem;">⚠️</div>
     <div>
-      <strong style="color:var(--amber);">Academic Demonstration Only</strong><br>
+      <strong style="color:var(--red);">Academic Demonstration Only</strong><br>
       This tool is not a certified medical device. Results are for educational and research purposes
       only and must never be used for clinical diagnosis or patient management.
     </div>
