@@ -1681,7 +1681,7 @@ main {
 .footer-dot { color: var(--border-mid); margin: 0 0.4rem; }
 
 /* ================================================================
-   WORKFLOW MODES (Solution 3 & Solution 4)
+   WORKFLOW MODES
    ================================================================ */
 .workflow-switcher {
   display: flex;
@@ -1737,7 +1737,7 @@ main {
 }
 
 /* ================================================================
-   PATIENT CASE PERSONAS (Solution 3)
+   PATIENT CASE PERSONAS
    ================================================================ */
 .case-selector-grid {
   display: grid;
@@ -1830,7 +1830,7 @@ main {
 }
 
 /* ================================================================
-   AI LAB REPORT SCANNER (Solution 4 - Gemini Vision OCR)
+   AI LAB REPORT SCANNER (Gemini Vision OCR)
    ================================================================ */
 .scanner-dropzone {
   border: 2px dashed var(--border-mid);
@@ -1894,7 +1894,7 @@ main {
 }
 
 /* ================================================================
-   AI SYMPTOM & RISK SCREENER (Solution 4 - Zero Lab Data)
+   AI SYMPTOM & RISK SCREENER (Zero Lab Data)
    ================================================================ */
 .screener-card {
   background: var(--bg-white);

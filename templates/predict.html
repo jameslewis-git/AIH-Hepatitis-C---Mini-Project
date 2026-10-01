@@ -23,13 +23,13 @@
   <!-- Workflow Mode Switcher -->
   <div class="workflow-switcher fade-up" style="animation-delay:0.05s;">
     <button type="button" class="workflow-btn active" id="tabBtnScenarios" onclick="switchWorkflow('scenarios')">
-      <span>🧑‍⚕️</span> Clinical Patient Cases (Solution 3)
+      <span>🧑‍⚕️</span> Clinical Patient Cases
     </button>
     <button type="button" class="workflow-btn" id="tabBtnScanner" onclick="switchWorkflow('scanner')">
-      <span>📸</span> AI Lab Report Scanner (Solution 4)
+      <span>📸</span> AI Lab Report Scanner
     </button>
     <button type="button" class="workflow-btn" id="tabBtnScreener" onclick="switchWorkflow('screener')">
-      <span>🩺</span> AI Symptom &amp; Risk Screener
+      <span>🩺</span> Symptom &amp; Risk Screener
     </button>
     <button type="button" class="workflow-btn-api" onclick="toggleApiKeyModal()">
       <span>🔑</span> <span id="apiKeyStatusText">{% if has_gemini_key %}Gemini Active (.env) ✓{% else %}Gemini API Key{% endif %}</span>
@@ -56,7 +56,7 @@
   </div>
 
   <!-- ============================================================
-       TAB 1: CLINICAL PATIENT CASES (SOLUTION 3)
+       TAB 1: CLINICAL PATIENT CASES
        ============================================================ -->
   <div id="tabPanelScenarios" class="fade-up" style="animation-delay:0.08s;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
@@ -138,7 +138,7 @@
   </div>
 
   <!-- ============================================================
-       TAB 2: AI LAB REPORT SCANNER (SOLUTION 4 - GEMINI VISION)
+       TAB 2: AI LAB REPORT SCANNER (GEMINI VISION)
        ============================================================ -->
   <div id="tabPanelScanner" class="fade-up" style="display:none;">
     <div class="screener-card">
@@ -192,7 +192,7 @@
   </div>
 
   <!-- ============================================================
-       TAB 3: AI SYMPTOM & RISK SCREENER (SOLUTION 4 - ZERO LAB DATA)
+       TAB 3: AI SYMPTOM & RISK SCREENER (ZERO LAB DATA)
        ============================================================ -->
   <div id="tabPanelScreener" class="fade-up" style="display:none;">
     <div class="screener-card">
@@ -506,7 +506,7 @@
 {% block scripts %}
 <script>
 // ================================================================
-//  PATIENT CASE PERSONAS DATA (SOLUTION 3)
+//  PATIENT CASE PERSONAS DATA
 // ================================================================
 const PATIENT_CASES = {
   healthy: {
@@ -641,7 +641,7 @@ function saveApiKey() {
 }
 
 // ================================================================
-//  AI LAB REPORT SCANNER (SOLUTION 4)
+//  AI LAB REPORT SCANNER
 // ================================================================
 async function scanSampleReport(sampleId) {
   try {
@@ -725,7 +725,7 @@ dropzone.addEventListener('drop', (e) => {
 });
 
 // ================================================================
-//  AI SYMPTOM & RISK SCREENER (SOLUTION 4)
+//  AI SYMPTOM & RISK SCREENER
 // ================================================================
 let currentEstimatedPanel = null;
 
