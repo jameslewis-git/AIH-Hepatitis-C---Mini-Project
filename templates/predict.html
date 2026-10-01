@@ -32,7 +32,7 @@
       <span>🩺</span> AI Symptom &amp; Risk Screener
     </button>
     <button type="button" class="workflow-btn-api" onclick="toggleApiKeyModal()">
-      <span>🔑</span> <span id="apiKeyStatusText">Gemini API Key</span>
+      <span>🔑</span> <span id="apiKeyStatusText">{% if has_gemini_key %}Gemini Active (.env) ✓{% else %}Gemini API Key{% endif %}</span>
     </button>
   </div>
 

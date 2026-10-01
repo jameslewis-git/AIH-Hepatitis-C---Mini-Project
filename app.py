@@ -138,8 +138,9 @@ def predict_view():
     if bundle is None:
         return render_template("predict.html", error="Model not found. Run train_model.py first.", form=request.form)
 
+    has_key = bool(os.environ.get("GEMINI_API_KEY"))
     if request.method == "GET":
-        return render_template("predict.html", form={})
+        return render_template("predict.html", form={}, has_gemini_key=has_key)
 
     age_val = parse_float_or_nan(request.form.get("age"))
     sex_str = request.form.get("sex", "Male")
