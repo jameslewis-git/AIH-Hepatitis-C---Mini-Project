@@ -1,7 +1,7 @@
 # Hepatitis C Detection and Staging using Machine Learning
 
 <p align="center">
-  <img src="static/img/app_logo.jpg" alt="Hepatitis C Detection and Staging Logo" width="120" style="border-radius:18px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+  <img src="static/img/app_logo.png" alt="Hepatitis C Detection and Staging Logo" width="135">
   <br>
   <strong>AI for Healthcare: Mini Project</strong>
 </p>
