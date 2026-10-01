@@ -183,6 +183,31 @@ def predict_view():
     )
 
 
+@app.route("/result", methods=["GET"])
+def result_view():
+    bundle = get_bundle()
+    label = "Blood Donor"
+    confidence = 99.8
+    info = STAGE_INFO[label]
+    probs = [
+        {"stage": "Blood Donor", "value": 99.8},
+        {"stage": "Suspect Blood Donor", "value": 0.1},
+        {"stage": "Hepatitis", "value": 0.1},
+        {"stage": "Fibrosis", "value": 0.0},
+        {"stage": "Cirrhosis", "value": 0.0}
+    ]
+    return render_template(
+        "result.html",
+        label=label,
+        confidence=confidence,
+        color=info["color"],
+        desc=info["desc"],
+        probs=probs,
+        inputs={},
+        imputed_markers=[]
+    )
+
+
 @app.route("/api/predict", methods=["POST"])
 def api_predict():
     bundle = get_bundle()

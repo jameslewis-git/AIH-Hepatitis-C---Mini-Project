@@ -1,0 +1,1451 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Hepatitis C Detection and Staging using Machine Learning: AI-powered diagnostic platform trained on routine blood panel values.">
+  <title>About the Model · Hepatitis C Detection & Staging</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="/static/img/app_logo.jpg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script>
+    // Immediate theme initializer: defaults to light (white) mode
+    (function () {
+      var saved = localStorage.getItem('hcv_theme');
+      var theme = (saved === 'dark') ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- Page Preloader -->
+  <div id="pagePreloader">
+    <div class="preloader-dna">
+      <div class="preloader-dna-inner"></div>
+    </div>
+    <div class="preloader-text">Initializing Diagnostic Engine</div>
+    <div class="preloader-bar">
+      <div class="preloader-bar-fill"></div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="app-navbar">
+    <div style="max-width:1200px; margin:0 auto; padding:0 1.5rem; display:flex; align-items:center; justify-content:space-between;">
+
+      <a class="navbar-brand" href="/" style="text-decoration:none;">
+        <img src="/static/img/app_logo.jpg" alt="Hepatitis C Detection and Staging Logo" class="brand-logo-img">
+        <div>
+          <div class="brand-name">Hepatitis C Detection &amp; Staging</div>
+          <div class="brand-sub">Machine Learning Platform</div>
+        </div>
+      </a>
+
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <a href="/" class="nav-link ">Home</a>
+        <a href="/predict" class="nav-link ">Predict</a>
+        <a href="/about" class="nav-link active-link">About</a>
+        <div class="nav-status">
+          <div class="nav-status-dot"></div>
+          <span>MODEL LIVE</span>
+        </div>
+
+        <!-- Dark / Light Mode Toggle Button -->
+        <button id="themeToggleBtn" class="theme-toggle-btn" type="button" aria-label="Toggle dark/light theme" title="Toggle theme">
+          <span id="themeIconSun" class="theme-toggle-icon" style="display:none;" title="Switch to Light mode">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+          <span id="themeIconMoon" class="theme-toggle-icon" style="display:inline-flex;" title="Switch to Dark mode">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+        </button>
+      </div>
+
+    </div>
+  </nav>
+
+  <main>
+    
+<div style="max-width:1150px; margin:0 auto; padding:0 1.5rem 3rem;">
+
+  <!-- ============================================================
+       PRESENTATION HERO HEADER with Real Clinical AI Imagery
+       ============================================================ -->
+  <div class="about-hero-card fade-up">
+    <div class="about-hero-body">
+      <div class="card-header-label" style="display:inline-flex; margin-bottom:0.6rem;">
+        🤖 Machine Learning Architecture &amp; Clinical System
+      </div>
+      <h1 class="about-hero-title">HCV Staging &amp; Predictive Intelligence</h1>
+      <p class="about-hero-desc">
+        Comprehensive technical documentation, algorithm benchmarking, feature attribution analysis, and presentation defense insights for the Hepatitis C AI Clinical Decision Support System.
+      </p>
+      <div class="predict-hero-tags">
+        <span class="predict-tag">✓ Algorithm: <strong>XGBoost</strong></span>
+        <span class="predict-tag">✓ Test Accuracy: <strong>94.31%</strong></span>
+        <span class="predict-tag">✓ Dataset: <strong>615 Patients</strong></span>
+        <span class="predict-tag">✓ Input Features: <strong>12 Lab Biomarkers</strong></span>
+      </div>
+    </div>
+    <div class="about-hero-visual">
+      <img src="/static/img/ml_ai.jpg" alt="Machine Learning Clinical AI Diagnostics" class="about-hero-img">
+      <div class="predict-hero-badge">
+        <span class="pulse-dot"></span> Gradient Boosted Diagnostic Engine
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Navigation for Presentations -->
+  <div class="about-quicknav fade-up" style="animation-delay:0.04s;">
+    <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-muted); font-weight:700; padding:0 0.4rem; text-transform:uppercase;">
+      Jump To:
+    </span>
+    <a href="#clinical-problem" class="quicknav-link">🎯 Clinical Motivation</a>
+    <a href="#model-benchmarking" class="quicknav-link">🤖 Model Benchmarking</a>
+    <a href="#feature-importances" class="quicknav-link">📊 Feature Importance</a>
+    <a href="#dataset-profile" class="quicknav-link">📁 Dataset &amp; Imbalance</a>
+    <a href="#preprocessing-pipeline" class="quicknav-link">🔬 ML Pipeline</a>
+    <a href="#disease-stages" class="quicknav-link">🫀 Pathology Stages</a>
+    <a href="#presentation-defense" class="quicknav-link">🎓 Viva Defense Q&amp;A</a>
+    <a href="#tech-stack" class="quicknav-link">💻 Tech Stack</a>
+  </div>
+
+  <!-- ============================================================
+       SECTION 1: CLINICAL PROBLEM & MOTIVATION
+       ============================================================ -->
+  <div id="clinical-problem" class="content-card fade-up" style="margin-bottom:2rem; animation-delay:0.08s;">
+    <div class="card-header-label">🎯 Clinical Problem &amp; Project Motivation</div>
+    <div class="clinical-split-card" style="margin-top:0.75rem;">
+      <div class="clinical-split-content">
+        <h2 style="font-size:1.35rem; margin-bottom:0.75rem; color:var(--text-primary);">
+          Why Machine Learning for Hepatitis C Staging?
+        </h2>
+        <p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.65; margin-bottom:1rem;">
+          Hepatitis C Virus (HCV) affects over <strong>58 million people globally</strong>. It is commonly dubbed the "silent killer" because infected patients remain asymptomatic for decades while active viral replication slowly destroys functional liver parenchyma.
+        </p>
+
+        <div style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem; margin-bottom:1rem;">
+          <strong style="color:var(--text-primary); font-size:0.86rem; display:block; margin-bottom:0.4rem;">
+            ⚠️ The Diagnostic Dilemma:
+          </strong>
+          <ul style="font-size:0.83rem; color:var(--text-secondary); margin-bottom:0; padding-left:1.25rem; line-height:1.6;">
+            <li><strong>Needle Liver Biopsy</strong>: Invasive, painful, carries bleeding and puncture risks (1 in 500), and costs $1,200–$2,500.</li>
+            <li><strong>Transient Elastography (FibroScan)</strong>: Non-invasive but requires specialized $50,000+ hardware unavailable in primary care or rural facilities.</li>
+          </ul>
+        </div>
+
+        <div style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25); border-radius:12px; padding:1rem 1.25rem;">
+          <strong style="color:var(--healthy); font-size:0.86rem; display:block; margin-bottom:0.4rem;">
+            💡 The Machine Learning Diagnostic Solution:
+          </strong>
+          <p style="font-size:0.83rem; color:var(--text-secondary); line-height:1.55; margin-bottom:0;">
+            Standard <strong>Liver Function Tests (LFT)</strong> cost only $15–$30 and are available in any diagnostic pathology lab. By utilizing advanced machine learning on 12 routinely collected biochemical markers, this clinical model stages hepatic progression with <strong>94.31% accuracy</strong> non-invasively.
+          </p>
+        </div>
+      </div>
+
+      <div class="clinical-split-visual">
+        <img src="/static/img/doctor_results.jpg" alt="Clinician Reviewing Diagnostic Lab Results" class="clinical-split-img">
+        <div class="clinical-split-caption">
+          <span>🩺</span> Non-Invasive Decision Support for Hepatologists
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 2: MODEL ARCHITECTURE & BENCHMARKING
+       ============================================================ -->
+  <div id="model-benchmarking" class="content-card fade-up" style="margin-bottom:2rem; animation-delay:0.1s;">
+    <div class="card-header-label">🤖 Architecture &amp; Evaluation</div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+      <div>
+        <h2 style="font-size:1.35rem; margin-bottom:0.35rem; color:var(--text-primary);">
+          Algorithm Selection &amp; Benchmarking
+        </h2>
+        <div style="font-size:0.85rem; color:var(--text-secondary);">
+          Evaluation on 20% stratified hold-out test set comparing competitive machine learning algorithms.
+        </div>
+      </div>
+      <div style="display:inline-flex; align-items:center; gap:0.5rem; background:rgba(220,38,38,0.08); border:1px solid var(--red-border); padding:0.4rem 0.9rem; border-radius:8px; font-family:var(--font-mono); font-size:0.78rem; font-weight:700; color:var(--red);">
+        <span>🏆</span> Deployed Model: XGBoost
+      </div>
+    </div>
+
+    <!-- Benchmarking Table -->
+    <div class="benchmark-table-wrapper">
+      <table class="benchmark-table">
+        <thead>
+          <tr>
+            <th>Model Algorithm</th>
+            <th>Test Accuracy</th>
+            <th>Macro F1-Score</th>
+            <th>Type</th>
+            <th>Latency (CPU)</th>
+            <th>Evaluation Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight-row">
+            <td>
+              <strong style="color:var(--red);">★ XGBoost Classifier (Deployed)</strong>
+            </td>
+            <td><span class="hero-pill" style="color:var(--healthy); font-weight:700;">94.31%</span></td>
+            <td><strong>0.7420</strong></td>
+            <td>Gradient Tree Boosting</td>
+            <td>&lt; 12 ms</td>
+            <td><span style="color:var(--healthy); font-weight:600;">✓ Optimal generalization on minority classes</span></td>
+          </tr>
+          <tr>
+            <td><strong>Random Forest Classifier</strong></td>
+            <td>91.87%</td>
+            <td>0.6912</td>
+            <td>Bagging Ensemble</td>
+            <td>&lt; 18 ms</td>
+            <td>Robust baseline; slightly lower recall on Fibrosis</td>
+          </tr>
+          <tr>
+            <td>Decision Tree (CART)</td>
+            <td>83.74%</td>
+            <td>0.5240</td>
+            <td>Single Tree</td>
+            <td>&lt; 4 ms</td>
+            <td>Prone to high variance and overfitting outlier enzymes</td>
+          </tr>
+          <tr>
+            <td>Multinomial Logistic Regression</td>
+            <td>86.99%</td>
+            <td>0.4418</td>
+            <td>Linear / Softmax</td>
+            <td>&lt; 3 ms</td>
+            <td>Fails on non-linear biomarker interactions (AST/ALT ratio)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row g-3" style="margin-top:1rem;">
+      <div class="col-md-6">
+        <div style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:12px; padding:1.25rem; height:100%;">
+          <strong style="color:var(--text-primary); font-size:0.88rem; display:block; margin-bottom:0.5rem;">
+            ⚙️ Trained Hyperparameters (XGBoost)
+          </strong>
+          <div style="font-size:0.8rem; font-family:var(--font-mono); color:var(--text-secondary); line-height:1.7;">
+            <div>• <code style="color:var(--red);">n_estimators</code>: 300 sequential boosting stages</div>
+            <div>• <code style="color:var(--red);">max_depth</code>: 5 (controlled to prevent memorizing small classes)</div>
+            <div>• <code style="color:var(--red);">learning_rate (eta)</code>: 0.05 shrinkage parameter</div>
+            <div>• <code style="color:var(--red);">objective</code>: multi:softprob (5-class softmax distribution)</div>
+            <div>• <code style="color:var(--red);">eval_metric</code>: mlogloss (multiclass log loss)</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:12px; padding:1.25rem; height:100%;">
+          <strong style="color:var(--text-primary); font-size:0.88rem; display:block; margin-bottom:0.5rem;">
+            🎯 Why Macro-F1 was the Selection Criterion
+          </strong>
+          <p style="font-size:0.82rem; color:var(--text-secondary); line-height:1.55; margin-bottom:0;">
+            A naive model that predicts "Healthy Blood Donor" on every sample achieves <strong>86.7% raw accuracy</strong> while having zero diagnostic utility for hepatitis or cirrhosis! To ensure patient safety, our training pipeline chooses the model with the highest <strong>Macro-F1 score</strong>, which computes unweighted average F1 across all 5 classes equally.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 3: FEATURE IMPORTANCE RANKING
+       ============================================================ -->
+  <div id="feature-importances" class="content-card fade-up" style="margin-bottom:2rem; animation-delay:0.12s;">
+    <div class="card-header-label">📊 Biomarker Attribution &amp; Interpretability</div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:1.25rem;">
+      <div>
+        <h2 style="font-size:1.35rem; margin-bottom:0.35rem; color:var(--text-primary);">
+          What the Model Learned: Feature Importance
+        </h2>
+        <div style="font-size:0.85rem; color:var(--text-secondary);">
+          Calculated via normalized split gain across all 300 boosting trees in the production ensemble.
+        </div>
+      </div>
+      <span class="hero-pill" style="color:var(--red); font-weight:700;">
+        Top 2 Markers (AST + CHE) Account for > 41% of Decisions
+      </span>
+    </div>
+
+    <!-- Feature items list -->
+    <div style="margin-bottom:1.5rem;">
+      
+      <div class="importance-item">
+        <div class="importance-header">
+          <div>
+            <strong style="font-size:0.9rem; color:var(--text-primary);">AST</strong>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.5rem;">: Aspartate Aminotransferase · Hepatocellular necrosis &amp; De Ritis index</span>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:var(--red); font-size:0.85rem;">
+            21.87%
+          </div>
+        </div>
+        <div class="importance-track">
+          <div class="importance-fill" style="width:21.87%;"></div>
+        </div>
+      </div>
+      
+      <div class="importance-item">
+        <div class="importance-header">
+          <div>
+            <strong style="font-size:0.9rem; color:var(--text-primary);">CHE</strong>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.5rem;">: Cholinesterase · Exclusive liver synthetic enzyme; plummets in cirrhosis</span>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:var(--red); font-size:0.85rem;">
+            19.34%
+          </div>
+        </div>
+        <div class="importance-track">
+          <div class="importance-fill" style="width:19.34%;"></div>
+        </div>
+      </div>
+      
+      <div class="importance-item">
+        <div class="importance-header">
+          <div>
+            <strong style="font-size:0.9rem; color:var(--text-primary);">ALB</strong>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.5rem;">: Albumin · Major serum protein; declining levels indicate decompensation</span>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:var(--red); font-size:0.85rem;">
+            9.99%
+          </div>
+        </div>
+        <div class="importance-track">
+          <div class="importance-fill" style="width:9.99%;"></div>
+        </div>
+      </div>
+      
+      <div class="importance-item">
+        <div class="importance-header">
+          <div>
+            <strong style="font-size:0.9rem; color:var(--text-primary);">Age</strong>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.5rem;">: Patient Age · Cumulative indicator of chronic fibrosis progression</span>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:var(--red); font-size:0.85rem;">
+            7.98%
+          </div>
+        </div>
+        <div class="importance-track">
+          <div class="importance-fill" style="width:7.98%;"></div>
+        </div>
+      </div>
+      
+      <div class="importance-item">
+        <div class="importance-header">
+          <div>
+            <strong style="font-size:0.9rem; color:var(--text-primary);">ALT</strong>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.5rem;">: Alanine Aminotransferase · Liver-specific cytoplasmic injury marker</span>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:var(--red); font-size:0.85rem;">
+            7.77%
+          </div>
+        </div>
+        <div class="importance-track">
+          <div class="importance-fill" style="width:7.77%;"></div>
+        </div>
+      </div>
+      
+      <div class="importance-item">
+        <div class="importance-header">
+          <div>
+            <strong style="font-size:0.9rem; color:var(--text-primary);">ALP</strong>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.5rem;">: Alkaline Phosphatase · Canalicular enzyme; marks cholestatic biliary injury</span>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:var(--red); font-size:0.85rem;">
+            7.23%
+          </div>
+        </div>
+        <div class="importance-track">
+          <div class="importance-fill" style="width:7.23%;"></div>
+        </div>
+      </div>
+      
+      <div class="importance-item">
+        <div class="importance-header">
+          <div>
+            <strong style="font-size:0.9rem; color:var(--text-primary);">CREA</strong>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.5rem;">: Creatinine · Renal filtration; flags hepatorenal syndrome in end-stage</span>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:var(--red); font-size:0.85rem;">
+            7.06%
+          </div>
+        </div>
+        <div class="importance-track">
+          <div class="importance-fill" style="width:7.06%;"></div>
+        </div>
+      </div>
+      
+      <div class="importance-item">
+        <div class="importance-header">
+          <div>
+            <strong style="font-size:0.9rem; color:var(--text-primary);">PROT</strong>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.5rem;">: Total Protein · Overall circulating serum immunoglobulins and albumin</span>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:var(--red); font-size:0.85rem;">
+            4.59%
+          </div>
+        </div>
+        <div class="importance-track">
+          <div class="importance-fill" style="width:4.59%;"></div>
+        </div>
+      </div>
+      
+      <div class="importance-item">
+        <div class="importance-header">
+          <div>
+            <strong style="font-size:0.9rem; color:var(--text-primary);">GGT</strong>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.5rem;">: Gamma-Glutamyl Transferase · Sensitive microsomal biliary enzyme</span>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:var(--red); font-size:0.85rem;">
+            4.55%
+          </div>
+        </div>
+        <div class="importance-track">
+          <div class="importance-fill" style="width:4.55%;"></div>
+        </div>
+      </div>
+      
+      <div class="importance-item">
+        <div class="importance-header">
+          <div>
+            <strong style="font-size:0.9rem; color:var(--text-primary);">BIL</strong>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.5rem;">: Total Bilirubin · Heme breakdown byproduct; clearance failure causes jaundice</span>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:var(--red); font-size:0.85rem;">
+            4.33%
+          </div>
+        </div>
+        <div class="importance-track">
+          <div class="importance-fill" style="width:4.33%;"></div>
+        </div>
+      </div>
+      
+      <div class="importance-item">
+        <div class="importance-header">
+          <div>
+            <strong style="font-size:0.9rem; color:var(--text-primary);">CHOL</strong>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.5rem;">: Total Cholesterol · Hepatic lipid synthesis and biliary excretion balance</span>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:var(--red); font-size:0.85rem;">
+            3.59%
+          </div>
+        </div>
+        <div class="importance-track">
+          <div class="importance-fill" style="width:3.59%;"></div>
+        </div>
+      </div>
+      
+      <div class="importance-item">
+        <div class="importance-header">
+          <div>
+            <strong style="font-size:0.9rem; color:var(--text-primary);">Sex</strong>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.5rem;">: Biological Sex · Baseline demographic stratification factor</span>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:var(--red); font-size:0.85rem;">
+            1.71%
+          </div>
+        </div>
+        <div class="importance-track">
+          <div class="importance-fill" style="width:1.71%;"></div>
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- Clinical Biochemical Highlight -->
+    <div style="background:var(--bg-subtle); border:1px solid var(--border); border-left:4px solid var(--red); border-radius:12px; padding:1.25rem;">
+      <div style="font-size:0.86rem; font-weight:700; color:var(--text-primary); margin-bottom:0.35rem;">
+        🩺 Clinical Insight: The De Ritis Ratio (AST / ALT Inversion)
+      </div>
+      <p style="font-size:0.82rem; color:var(--text-secondary); line-height:1.6; margin-bottom:0;">
+        In early or acute hepatitis, <strong>ALT &gt; AST</strong> because ALT is exclusively cytoplasmic. However, as hepatitis progresses to <strong>Fibrosis</strong> and <strong>Cirrhosis</strong>, deep mitochondrial lysis and impaired sinusoidal clearance cause <strong>AST to exceed ALT</strong> (De Ritis Ratio &gt; 1.0). The model automatically discovered this landmark clinical principle, making <strong>AST (21.9%)</strong> and synthetic enzyme <strong>CHE (19.3%)</strong> its two most decisive attributes!
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 4: COMPREHENSIVE DATASET PROFILING & CLINICAL EDA
+       ============================================================ -->
+  <div id="dataset-profile" class="content-card fade-up" style="margin-bottom:2rem; animation-delay:0.14s;">
+    <div class="card-header-label">📁 Dataset In-Depth &amp; Exploratory Data Analysis (EDA)</div>
+
+    <!-- Header & Clinical Split Card -->
+    <div class="clinical-split-card" style="margin-top:0.75rem; margin-bottom:1.5rem;">
+      <div class="clinical-split-content">
+        <h2 style="font-size:1.35rem; margin-bottom:0.5rem; color:var(--text-primary);">
+          UCI Machine Learning Hepatitis C Cohort
+        </h2>
+        <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1rem;">
+          The benchmark dataset was collected and validated by <strong>Ralf Lichtinghagen, Frank Klawonn, and Gabriele Hoffmann</strong> at the Department of Clinical Chemistry, Hannover Medical School, Germany, and published via the <strong>UCI Machine Learning Repository</strong>.
+        </p>
+
+        <!-- Spectrum Bar -->
+        <div style="font-size:0.74rem; font-family:var(--font-mono); color:var(--text-muted); font-weight:600; text-transform:uppercase; margin-bottom:0.4rem;">
+          Cohort Progression Spectrum (615 Records):
+        </div>
+        <div style="display:flex; height:12px; border-radius:6px; overflow:hidden; gap:2px; margin-bottom:1rem;">
+          <div style="flex:533; background:var(--healthy);" title="Blood Donor: 533 (86.7%)"></div>
+          <div style="flex:7; background:var(--suspect);" title="Suspect Donor: 7 (1.1%)"></div>
+          <div style="flex:24; background:var(--hepatitis);" title="Hepatitis: 24 (3.9%)"></div>
+          <div style="flex:21; background:var(--fibrosis);" title="Fibrosis: 21 (3.4%)"></div>
+          <div style="flex:30; background:var(--cirrhosis);" title="Cirrhosis: 30 (4.9%)"></div>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.25rem;">
+          
+          <div class="feature-pill" style="display:inline-flex; align-items:center; gap:0.4rem;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#10b981;"></span>
+            <strong>0 = Blood Donor</strong>: 533 pts (86.7%)
+          </div>
+          
+          <div class="feature-pill" style="display:inline-flex; align-items:center; gap:0.4rem;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#dc2626;"></span>
+            <strong>3 = Cirrhosis</strong>: 30 pts (4.9%)
+          </div>
+          
+          <div class="feature-pill" style="display:inline-flex; align-items:center; gap:0.4rem;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#f97316;"></span>
+            <strong>1 = Hepatitis</strong>: 24 pts (3.9%)
+          </div>
+          
+          <div class="feature-pill" style="display:inline-flex; align-items:center; gap:0.4rem;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#e11d48;"></span>
+            <strong>2 = Fibrosis</strong>: 21 pts (3.4%)
+          </div>
+          
+          <div class="feature-pill" style="display:inline-flex; align-items:center; gap:0.4rem;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#f59e0b;"></span>
+            <strong>0s = Suspect Donor</strong>: 7 pts (1.1%)
+          </div>
+          
+        </div>
+
+        <div style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem;">
+          <strong style="color:var(--text-primary); font-size:0.84rem; display:block; margin-bottom:0.35rem;">
+            🛡️ Imbalance Mitigation Protocol (86.7% vs 1.1%):
+          </strong>
+          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.55;">
+            <div>• <strong>Stratified Split</strong>: 80/20 train/test partition locks identical class distributions in validation folds.</div>
+            <div>• <strong>Balanced Loss Weights</strong>: Model gradient steps are penalized inversely proportional to class frequency.</div>
+            <div>• <strong>Macro-F1 Target</strong>: Selection optimizes unweighted average F1 across all 5 classes equally.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="clinical-split-visual">
+        <img src="/static/img/lab_blood.jpg" alt="Blood Sample Tubes in Phlebotomy Laboratory" class="clinical-split-img">
+        <div class="clinical-split-caption">
+          <span>🔬</span> 615 Laboratory Phlebotomy Samples
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Demographics & Quality Metric Cards -->
+    <div class="demographics-card-grid">
+      <div class="demographic-stat-card">
+        <div class="demographic-icon">👥</div>
+        <div>
+          <div class="demographic-val">615</div>
+          <div class="demographic-sub">Total Patient Cases (Hannover Cohort)</div>
+        </div>
+      </div>
+
+      <div class="demographic-stat-card">
+        <div class="demographic-icon">⚖️</div>
+        <div>
+          <div class="demographic-val">377 / 238</div>
+          <div class="demographic-sub">Sex Split (61.3% M · 38.7% F)</div>
+        </div>
+      </div>
+
+      <div class="demographic-stat-card">
+        <div class="demographic-icon">🎂</div>
+        <div>
+          <div class="demographic-val">47.41 <span style="font-size:0.85rem; font-weight:500;">yrs</span></div>
+          <div class="demographic-sub">Mean Age (Range: 19–77 yrs · σ=10.06)</div>
+        </div>
+      </div>
+
+      <div class="demographic-stat-card">
+        <div class="demographic-icon">🧪</div>
+        <div>
+          <div class="demographic-val">31 <span style="font-size:0.85rem; font-weight:500;">/ 7,380</span></div>
+          <div class="demographic-sub">Missing Cells (0.42% Gaps Imputed)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-Section A: Stage-Wise Exploratory Data Analysis (EDA) Matrix -->
+    <div style="margin-top:1.75rem; margin-bottom:1.75rem;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
+        <div>
+          <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:0.2rem;">
+            📊 Stage-Wise Biomarker Evolution Matrix (Cohort Means)
+          </h3>
+          <div style="font-size:0.82rem; color:var(--text-secondary);">
+            Observed clinical trajectory across stages showing the exact biochemical progression in the dataset.
+          </div>
+        </div>
+        <span class="hero-pill" style="color:var(--healthy); font-weight:700;">
+          Statistical Proof of Clinical Pathophysiology
+        </span>
+      </div>
+
+      <div class="benchmark-table-wrapper">
+        <table class="benchmark-table">
+          <thead>
+            <tr>
+              <th>Disease Stage Category</th>
+              <th>Cohort N</th>
+              <th>Mean Age</th>
+              <th>ALT (U/L)</th>
+              <th>AST (U/L)</th>
+              <th>BIL (µmol/L)</th>
+              <th>ALB (g/L)</th>
+              <th>CHE (kU/L)</th>
+              <th>GGT (U/L)</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td>
+                <span class="eda-stage-badge" style="border-left:3px solid #10b981;">
+                  <span style="width:8px; height:8px; border-radius:50%; background:#10b981;"></span>
+                  <strong>0 = Blood Donor</strong>
+                </span>
+              </td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">533</span></td>
+              <td><span style="font-family:var(--font-mono);">47.1 yrs</span></td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--text-primary);">
+                  26.6
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--text-primary);">
+                  26.6
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--text-primary);">
+                  8.5
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:600; color:var(--healthy);">
+                  42.2
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--healthy);">
+                  8.4
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:600; color:var(--text-primary);">
+                  29.0
+                </span>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>
+                <span class="eda-stage-badge" style="border-left:3px solid #f59e0b;">
+                  <span style="width:8px; height:8px; border-radius:50%; background:#f59e0b;"></span>
+                  <strong>0s = Suspect Donor</strong>
+                </span>
+              </td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">7</span></td>
+              <td><span style="font-family:var(--font-mono);">57.6 yrs</span></td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--red);">
+                  102.1
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--red);">
+                  71.0
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--text-primary);">
+                  4.7
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:600; color:var(--cirrhosis);">
+                  24.4
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--healthy);">
+                  7.5
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:600; color:var(--red);">
+                  151.5
+                </span>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>
+                <span class="eda-stage-badge" style="border-left:3px solid #f97316;">
+                  <span style="width:8px; height:8px; border-radius:50%; background:#f97316;"></span>
+                  <strong>1 = Hepatitis</strong>
+                </span>
+              </td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">24</span></td>
+              <td><span style="font-family:var(--font-mono);">38.7 yrs</span></td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--text-primary);">
+                  26.9
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--red);">
+                  75.7
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--text-primary);">
+                  15.6
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:600; color:var(--healthy);">
+                  43.8
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--healthy);">
+                  9.3
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:600; color:var(--red);">
+                  92.6
+                </span>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>
+                <span class="eda-stage-badge" style="border-left:3px solid #e11d48;">
+                  <span style="width:8px; height:8px; border-radius:50%; background:#e11d48;"></span>
+                  <strong>2 = Fibrosis</strong>
+                </span>
+              </td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">21</span></td>
+              <td><span style="font-family:var(--font-mono);">52.3 yrs</span></td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--red);">
+                  59.6
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--red);">
+                  81.2
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--text-primary);">
+                  13.4
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:600; color:var(--healthy);">
+                  41.8
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--healthy);">
+                  8.3
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:600; color:var(--red);">
+                  79.6
+                </span>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>
+                <span class="eda-stage-badge" style="border-left:3px solid #dc2626;">
+                  <span style="width:8px; height:8px; border-radius:50%; background:#dc2626;"></span>
+                  <strong>3 = Cirrhosis</strong>
+                </span>
+              </td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">30</span></td>
+              <td><span style="font-family:var(--font-mono);">53.5 yrs</span></td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--text-primary);">
+                  23.0
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--red);">
+                  107.5
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--cirrhosis);">
+                  59.1
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:600; color:var(--cirrhosis);">
+                  32.5
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:var(--cirrhosis);">
+                  3.8
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:600; color:var(--red);">
+                  129.4
+                </span>
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+
+      <div style="font-size:0.78rem; font-family:var(--font-mono); color:var(--text-muted); margin-top:0.5rem;">
+        * Noticeable Trends: AST increases 4-fold from 26.6 to 107.5 U/L in Cirrhosis. Bilirubin surges 7-fold (8.5 to 59.1 µmol/L). Cholinesterase (CHE) collapses by &gt;54% (8.4 to 3.8 kU/L) confirming parenchymal synthesis failure.
+      </div>
+    </div>
+
+    <!-- Sub-Section B: Missing Value Audit Table -->
+    <div style="margin-top:1.75rem; margin-bottom:1.75rem;">
+      <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:0.2rem;">
+        🔍 Missing Value Audit &amp; Imputation Quality Control
+      </h3>
+      <p style="font-size:0.83rem; color:var(--text-secondary); line-height:1.55; margin-bottom:0.75rem;">
+        Real clinical datasets naturally contain missing tests due to selective physician ordering. 5 of the 12 features exhibited missing records, handled with non-parametric median imputation:
+      </p>
+
+      <div class="benchmark-table-wrapper">
+        <table class="benchmark-table">
+          <thead>
+            <tr>
+              <th>Biomarker Name</th>
+              <th>Missing Count</th>
+              <th>Missing %</th>
+              <th>Normal Reference</th>
+              <th>Fitted Imputation Value (Median)</th>
+              <th>Clinical Handling Rationale</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td><strong>ALP (Alkaline Phosphatase)</strong></td>
+              <td><span style="font-family:var(--font-mono); color:var(--red); font-weight:700;">18 pts</span></td>
+              <td><span style="font-family:var(--font-mono);">2.93%</span></td>
+              <td><span style="font-size:0.8rem; color:var(--text-muted);">40–129 U/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:700; color:var(--healthy);">66.2 U/L</span></td>
+              <td style="font-size:0.8rem;">Non-parametric median preserves class distribution without row deletion.</td>
+            </tr>
+            
+            <tr>
+              <td><strong>CHOL (Total Cholesterol)</strong></td>
+              <td><span style="font-family:var(--font-mono); color:var(--red); font-weight:700;">10 pts</span></td>
+              <td><span style="font-family:var(--font-mono);">1.63%</span></td>
+              <td><span style="font-size:0.8rem; color:var(--text-muted);">3.0–5.2 mmol/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:700; color:var(--healthy);">5.3 mmol/L</span></td>
+              <td style="font-size:0.8rem;">Non-parametric median preserves class distribution without row deletion.</td>
+            </tr>
+            
+            <tr>
+              <td><strong>ALB (Albumin)</strong></td>
+              <td><span style="font-family:var(--font-mono); color:var(--red); font-weight:700;">1 pts</span></td>
+              <td><span style="font-family:var(--font-mono);">0.16%</span></td>
+              <td><span style="font-size:0.8rem; color:var(--text-muted);">35–50 g/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:700; color:var(--healthy);">41.95 g/L</span></td>
+              <td style="font-size:0.8rem;">Non-parametric median preserves class distribution without row deletion.</td>
+            </tr>
+            
+            <tr>
+              <td><strong>ALT (Alanine Aminotransferase)</strong></td>
+              <td><span style="font-family:var(--font-mono); color:var(--red); font-weight:700;">1 pts</span></td>
+              <td><span style="font-family:var(--font-mono);">0.16%</span></td>
+              <td><span style="font-size:0.8rem; color:var(--text-muted);">7–56 U/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:700; color:var(--healthy);">23.0 U/L</span></td>
+              <td style="font-size:0.8rem;">Non-parametric median preserves class distribution without row deletion.</td>
+            </tr>
+            
+            <tr>
+              <td><strong>PROT (Total Protein)</strong></td>
+              <td><span style="font-family:var(--font-mono); color:var(--red); font-weight:700;">1 pts</span></td>
+              <td><span style="font-family:var(--font-mono);">0.16%</span></td>
+              <td><span style="font-size:0.8rem; color:var(--text-muted);">64–83 g/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:700; color:var(--healthy);">72.2 g/L</span></td>
+              <td style="font-size:0.8rem;">Non-parametric median preserves class distribution without row deletion.</td>
+            </tr>
+            
+            <tr style="background:var(--bg-subtle);">
+              <td><strong>Other 7 Biomarkers (Age, Sex, AST, BIL, CHE, CREA, GGT)</strong></td>
+              <td><span style="font-family:var(--font-mono); color:var(--healthy); font-weight:700;">0 missing</span></td>
+              <td><span style="font-family:var(--font-mono); color:var(--healthy);">0.00%</span></td>
+              <td>N/A</td>
+              <td><span style="color:var(--healthy); font-weight:600;">✓ 100% Complete</span></td>
+              <td style="font-size:0.8rem;">Fully documented across all 615 patient records.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sub-Section C: Full 12-Biomarker Clinical Reference Dictionary -->
+    <div style="margin-top:1.75rem;">
+      <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:0.2rem;">
+        📖 Complete 12-Feature Clinical Biomarker Dictionary
+      </h3>
+      <p style="font-size:0.83rem; color:var(--text-secondary); line-height:1.55; margin-bottom:0.75rem;">
+        Standard reference units, observed cohort distribution, and clinical diagnostic roles in hepatic evaluation:
+      </p>
+
+      <div class="benchmark-table-wrapper">
+        <table class="benchmark-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Clinical Biomarker Name</th>
+              <th>Unit</th>
+              <th>Cohort Range</th>
+              <th>Cohort Mean (Median)</th>
+              <th>Clinical Normal Range</th>
+              <th>Diagnostic Role in Staging</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td><span class="dictionary-code">AST</span></td>
+              <td><strong>Aspartate Aminotransferase</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">U/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">10.6 – 324.0</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">34.79 (25.9)</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">10 – 40 U/L</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">Mitochondrial &amp; cytoplasmic enzyme; spikes in necrosis and cirrhosis.</td>
+            </tr>
+            
+            <tr>
+              <td><span class="dictionary-code">CHE</span></td>
+              <td><strong>Cholinesterase</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">kU/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">1.42 – 16.41</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">8.2 (8.26)</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">5.3 – 12.9 kU/L</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">Exclusive liver synthetic enzyme; severely suppressed in advanced cirrhosis.</td>
+            </tr>
+            
+            <tr>
+              <td><span class="dictionary-code">ALB</span></td>
+              <td><strong>Albumin</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">g/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">14.9 – 82.2</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">41.62 (41.95)</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">35 – 50 g/L</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">Primary oncotic protein; declines in liver decompensation and ascites.</td>
+            </tr>
+            
+            <tr>
+              <td><span class="dictionary-code">Age</span></td>
+              <td><strong>Patient Age</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">years</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">19 – 77</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">47.41 (47.0)</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">18 – 90</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">Duration of chronic infection; strongly correlates with cumulative fibrosis.</td>
+            </tr>
+            
+            <tr>
+              <td><span class="dictionary-code">ALT</span></td>
+              <td><strong>Alanine Aminotransferase</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">U/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">0.9 – 325.3</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">28.45 (23.0)</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">7 – 56 U/L</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">Liver-specific enzyme released into bloodstream during acute inflammation.</td>
+            </tr>
+            
+            <tr>
+              <td><span class="dictionary-code">ALP</span></td>
+              <td><strong>Alkaline Phosphatase</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">U/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">11.3 – 416.6</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">68.28 (66.2)</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">40 – 129 U/L</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">Biliary canalicular enzyme; flags cholestasis and biliary obstruction.</td>
+            </tr>
+            
+            <tr>
+              <td><span class="dictionary-code">CREA</span></td>
+              <td><strong>Creatinine</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">µmol/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">8.0 – 1079.1</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">81.29 (77.0)</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">60 – 110 µmol/L</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">Renal filtration marker; indicates hepatorenal syndrome in end-stage.</td>
+            </tr>
+            
+            <tr>
+              <td><span class="dictionary-code">PROT</span></td>
+              <td><strong>Total Protein</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">g/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">44.8 – 90.0</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">72.04 (72.2)</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">64 – 83 g/L</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">Serum protein sum; reflects protein synthesis and immunoglobulins.</td>
+            </tr>
+            
+            <tr>
+              <td><span class="dictionary-code">GGT</span></td>
+              <td><strong>Gamma-Glutamyl Transferase</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">U/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">4.5 – 650.9</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">39.53 (23.3)</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">8 – 61 U/L</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">Biliary epithelial enzyme; highly sensitive to toxic and viral damage.</td>
+            </tr>
+            
+            <tr>
+              <td><span class="dictionary-code">BIL</span></td>
+              <td><strong>Total Bilirubin</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">µmol/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">0.8 – 254.0</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">11.4 (7.3)</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">3 – 21 µmol/L</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">Heme breakdown pigment; accumulation causes jaundice and icterus.</td>
+            </tr>
+            
+            <tr>
+              <td><span class="dictionary-code">CHOL</span></td>
+              <td><strong>Total Cholesterol</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">mmol/L</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">1.43 – 9.67</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">5.37 (5.3)</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">3.0 – 5.2 mmol/L</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">Lipid synthesized by hepatocytes; drops during advanced parenchymal loss.</td>
+            </tr>
+            
+            <tr>
+              <td><span class="dictionary-code">Sex</span></td>
+              <td><strong>Biological Sex</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">binary</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">Male / Female</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">61.3% M (Male (1))</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">M: 61.3%, F: 38.7%</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">Demographic baseline covariate; encoded as Male=1, Female=0.</td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================
+       SECTION 5: END-TO-END PIPELINE & MULTIMODAL VISION
+       ============================================================ -->
+  <div id="preprocessing-pipeline" class="content-card fade-up" style="margin-bottom:2rem; animation-delay:0.16s;">
+    <div class="card-header-label">🔬 End-to-End Pipeline</div>
+    <h2 style="font-size:1.35rem; margin-bottom:0.75rem; color:var(--text-primary);">
+      Production Inference &amp; Preprocessing Architecture
+    </h2>
+    <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1.5rem;">
+      The application bundles data ingestion, multimodal OCR document extraction, zero-data symptom screening, and deterministic machine learning inference into a unified pipeline.
+    </p>
+
+    <!-- 5 Pipeline Steps -->
+    <div class="row g-3">
+      <div class="col-md">
+        <div class="pipeline-step" style="height:100%;">
+          <div class="pipeline-step-num">01</div>
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">📸</div>
+          <div style="font-weight:700; color:var(--text-primary); font-size:0.88rem; margin-bottom:0.35rem;">Multimodal Intake</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.45;">
+            Manual entry, Gemini 1.5 Flash Vision OCR parsing of photo reports, or zero-data symptom screening.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="pipeline-step" style="height:100%;">
+          <div class="pipeline-step-num">02</div>
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">🧹</div>
+          <div style="font-weight:700; color:var(--text-primary); font-size:0.88rem; margin-bottom:0.35rem;">Imputation</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.45;">
+            Median imputer fitted strictly on training fold. Incomplete lab panels are safely imputed without data leakage.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="pipeline-step" style="height:100%;">
+          <div class="pipeline-step-num">03</div>
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">🏷️</div>
+          <div style="font-weight:700; color:var(--text-primary); font-size:0.88rem; margin-bottom:0.35rem;">Encoding</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.45;">
+            Binary sex encoding (Male=1, Female=0) and ordinal stage mapping for multi-class indexing.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="pipeline-step" style="height:100%;">
+          <div class="pipeline-step-num">04</div>
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">📐</div>
+          <div style="font-weight:700; color:var(--text-primary); font-size:0.88rem; margin-bottom:0.35rem;">StandardScaler</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.45;">
+            Z-score feature normalization across all 12 biomarkers to align feature magnitude and distributions.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="pipeline-step" style="height:100%;">
+          <div class="pipeline-step-num">05</div>
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">⚡</div>
+          <div style="font-weight:700; color:var(--text-primary); font-size:0.88rem; margin-bottom:0.35rem;">XGBoost Staging</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.45;">
+            Softmax output vector generating predicted stage, calibrated confidence score, and full distribution.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 6: DISEASE PATHOLOGY & STAGING GUIDE
+       ============================================================ -->
+  <div id="disease-stages" class="content-card fade-up" style="margin-bottom:2rem; animation-delay:0.18s;">
+    <div class="card-header-label">🫀 Clinical Pathology Reference</div>
+    <h2 style="font-size:1.35rem; margin-bottom:0.75rem; color:var(--text-primary);">
+      5 Hepatic Stages Classified by the System
+    </h2>
+    <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1.5rem;">
+      Understanding the histopathological evolution from acute viral infection through collagen remodeling to decompensated cirrhosis.
+    </p>
+
+    <!-- Real Pathology Anatomy Photography -->
+    <div style="position:relative; border-radius:14px; overflow:hidden; border:1px solid var(--border); margin-bottom:1.5rem; box-shadow:var(--shadow-sm);">
+      <img src="/static/img/liver_stages.jpg" alt="Human Liver Disease Progression Stages" style="width:100%; height:260px; object-fit:cover; display:block;">
+      <div style="position:absolute; bottom:10px; left:10px; right:10px; background:rgba(15,23,42,0.85); backdrop-filter:blur(8px); color:#fff; font-size:0.75rem; font-family:var(--font-mono); font-weight:600; padding:0.4rem 0.85rem; border-radius:8px; display:flex; align-items:center; gap:0.5rem;">
+        <span>🫀</span> Histopathological Spectrum: Healthy Parenchyma → Inflammatory Hepatitis → Fibrosis → Cirrhosis
+      </div>
+    </div>
+
+    <!-- Stage details cards -->
+    <div class="row g-3">
+      
+      <div class="col-md-6 col-lg" style="min-width:200px;">
+        <div style="background:var(--bg-subtle); border:1px solid var(--border); border-left:4px solid #10b981; border-radius:12px; padding:1.15rem; height:100%;">
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.35rem; display:flex; align-items:center; gap:0.5rem; font-size:0.88rem;">
+            <span style="width:10px; height:10px; background:#10b981; border-radius:50%; display:inline-block; flex-shrink:0;"></span>
+            Blood Donor
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.5;">No indication of liver disease. Lab values are within a healthy donor range.</div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 col-lg" style="min-width:200px;">
+        <div style="background:var(--bg-subtle); border:1px solid var(--border); border-left:4px solid #f59e0b; border-radius:12px; padding:1.15rem; height:100%;">
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.35rem; display:flex; align-items:center; gap:0.5rem; font-size:0.88rem;">
+            <span style="width:10px; height:10px; background:#f59e0b; border-radius:50%; display:inline-block; flex-shrink:0;"></span>
+            Suspect Blood Donor
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.5;">Borderline values. Not a confirmed donor profile: further clinical monitoring recommended.</div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 col-lg" style="min-width:200px;">
+        <div style="background:var(--bg-subtle); border:1px solid var(--border); border-left:4px solid #f97316; border-radius:12px; padding:1.15rem; height:100%;">
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.35rem; display:flex; align-items:center; gap:0.5rem; font-size:0.88rem;">
+            <span style="width:10px; height:10px; background:#f97316; border-radius:50%; display:inline-block; flex-shrink:0;"></span>
+            Hepatitis
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.5;">Pattern consistent with active Hepatitis C infection. Clinical follow-up advised.</div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 col-lg" style="min-width:200px;">
+        <div style="background:var(--bg-subtle); border:1px solid var(--border); border-left:4px solid #ef4444; border-radius:12px; padding:1.15rem; height:100%;">
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.35rem; display:flex; align-items:center; gap:0.5rem; font-size:0.88rem;">
+            <span style="width:10px; height:10px; background:#ef4444; border-radius:50%; display:inline-block; flex-shrink:0;"></span>
+            Fibrosis
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.5;">Signs of liver fibrosis (scar tissue) consistent with progressive damage.</div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 col-lg" style="min-width:200px;">
+        <div style="background:var(--bg-subtle); border:1px solid var(--border); border-left:4px solid #9f1239; border-radius:12px; padding:1.15rem; height:100%;">
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.35rem; display:flex; align-items:center; gap:0.5rem; font-size:0.88rem;">
+            <span style="width:10px; height:10px; background:#9f1239; border-radius:50%; display:inline-block; flex-shrink:0;"></span>
+            Cirrhosis
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.5;">Advanced liver scarring. Urgent specialist hepatology consultation strongly recommended.</div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 7: 🎓 PRESENTATION & VIVA DEFENSE CHEATSHEET
+       ============================================================ -->
+  <div id="presentation-defense" class="content-card fade-up" style="margin-bottom:2rem; animation-delay:0.2s;">
+    <div class="card-header-label">🎓 Mini-Project Presentation &amp; Viva Defense</div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:1.25rem;">
+      <div>
+        <h2 style="font-size:1.35rem; margin-bottom:0.35rem; color:var(--text-primary);">
+          Frequently Asked Viva Evaluation Questions
+        </h2>
+        <div style="font-size:0.85rem; color:var(--text-secondary);">
+          Key questions professors and project reviewers commonly ask, with authoritative machine learning defenses.
+        </div>
+      </div>
+      <span class="hero-pill" style="color:var(--healthy); font-weight:700;">
+        ✓ Presentation Defense Ready
+      </span>
+    </div>
+
+    <div class="viva-grid">
+      <!-- Q1 -->
+      <div class="viva-card">
+        <div class="viva-q">
+          <span>Q1.</span> Why use XGBoost/Random Forest instead of a Deep Neural Network?
+        </div>
+        <div class="viva-a">
+          <strong>Defense:</strong> The dataset has 615 tabular rows. Deep Neural Networks require tens of thousands of samples to learn representations and suffer severely from overfitting on small clinical tables. Gradient Boosted Trees consistently outperform deep learning on tabular data while offering native feature importance rankings.
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="viva-card">
+        <div class="viva-q">
+          <span>Q2.</span> How did you ensure there is no Data Leakage in missing value imputation?
+        </div>
+        <div class="viva-a">
+          <strong>Defense:</strong> We strictly performed <code>imputer.fit(X_train)</code> on the training fold only, and subsequently transformed <code>X_test</code> and live inputs using those fixed median values. Computing medians across the entire dataset before splitting would cause test-set distribution leakage.
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="viva-card">
+        <div class="viva-q">
+          <span>Q3.</span> Why is AST more important than ALT in your feature ranking?
+        </div>
+        <div class="viva-a">
+          <strong>Defense:</strong> While ALT is liver-specific for acute hepatitis, AST exists in both mitochondria and cytoplasm. When disease advances from hepatitis to fibrosis and cirrhosis, mitochondrial disruption causes AST to outpace ALT (Inverted De Ritis Ratio: AST/ALT &gt; 1.0). The model successfully learned this biological hallmark.
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="viva-card">
+        <div class="viva-q">
+          <span>Q4.</span> How did you handle the extreme 86.7% class imbalance?
+        </div>
+        <div class="viva-a">
+          <strong>Defense:</strong> We used <strong>Stratified Splitting</strong> (guaranteeing exact class ratios in test sets), <strong>Balanced Class Weighting</strong> (penalizing minority class errors inversely proportional to frequencies), and <strong>Macro-F1 selection</strong> to prevent the model from defaulting to the 86.7% majority.
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="viva-card">
+        <div class="viva-q">
+          <span>Q5.</span> What if a patient arrives with only 3 or 4 blood markers?
+        </div>
+        <div class="viva-a">
+          <strong>Defense:</strong> The production API seamlessly imputes unprovided markers using the training median baseline. The system explicitly discloses which markers were estimated vs measured in the UI flags, ensuring clinical transparency without crashing.
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="viva-card">
+        <div class="viva-q">
+          <span>Q6.</span> What is the role of the Vision OCR and Symptom Screener?
+        </div>
+        <div class="viva-a">
+          <strong>Defense:</strong> They bridge the gap between AI and clinical workflow: <strong>Gemini 1.5 Flash Vision OCR</strong> allows digitizing physical lab printouts directly without typing, while the <strong>Symptom Screener</strong> enables preliminary risk stratification when lab tests are unavailable.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 8: TECHNICAL STACK ARCHITECTURE
+       ============================================================ -->
+  <div id="tech-stack" class="content-card fade-up" style="margin-bottom:2.5rem; animation-delay:0.22s;">
+    <div class="card-header-label">💻 Technology Stack &amp; Tools</div>
+    <h2 style="font-size:1.35rem; margin-bottom:1rem; color:var(--text-primary);">
+      End-to-End System Infrastructure
+    </h2>
+
+    <div class="tech-pill-grid">
+      <div class="tech-pill-card">
+        <div class="tech-pill-icon">🐍</div>
+        <div>
+          <div class="tech-pill-name">Python 3.11</div>
+          <div class="tech-pill-sub">Core Programming Runtime</div>
+        </div>
+      </div>
+
+      <div class="tech-pill-card">
+        <div class="tech-pill-icon">⚡</div>
+        <div>
+          <div class="tech-pill-name">XGBoost &amp; scikit-learn</div>
+          <div class="tech-pill-sub">Ensemble Tree Staging Engine</div>
+        </div>
+      </div>
+
+      <div class="tech-pill-card">
+        <div class="tech-pill-icon">👁️</div>
+        <div>
+          <div class="tech-pill-name">Google Gemini 1.5 Flash</div>
+          <div class="tech-pill-sub">Multimodal Lab Report OCR</div>
+        </div>
+      </div>
+
+      <div class="tech-pill-card">
+        <div class="tech-pill-icon">🌶️</div>
+        <div>
+          <div class="tech-pill-name">Flask REST API</div>
+          <div class="tech-pill-sub">Web Server &amp; Endpoint Routing</div>
+        </div>
+      </div>
+
+      <div class="tech-pill-card">
+        <div class="tech-pill-icon">🎨</div>
+        <div>
+          <div class="tech-pill-name">Vanilla CSS3</div>
+          <div class="tech-pill-sub">Custom Glassmorphism &amp; Dark Mode</div>
+        </div>
+      </div>
+
+      <div class="tech-pill-card">
+        <div class="tech-pill-icon">📦</div>
+        <div>
+          <div class="tech-pill-name">Joblib &amp; NumPy</div>
+          <div class="tech-pill-sub">Model Serialization &amp; Vectorization</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Presentation Call to Action -->
+  <div class="fade-up" style="text-align:center; margin-bottom:2rem; animation-delay:0.24s;">
+    <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
+      <a href="/predict" class="btn-primary" style="font-size:0.95rem; padding:0.85rem 2.25rem;">
+        🧬 Launch Prediction Engine
+      </a>
+      <a href="/" class="btn-ghost" style="font-size:0.95rem; padding:0.85rem 1.75rem;">
+        🏠 Back to Home
+      </a>
+    </div>
+  </div>
+
+</div>
+
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-text">
+      <img src="/static/img/app_logo.jpg" alt="Logo" style="width:18px; height:18px; border-radius:4px; vertical-align:middle; margin-right:0.35rem; display:inline-block;">
+      Hepatitis C Detection and Staging using Machine Learning <span class="footer-dot">·</span> AI for Healthcare Mini Project
+      <span class="footer-dot">·</span> Academic use only (not a certified medical device)
+      <span class="footer-dot">·</span> UCI HCV Dataset
+    </div>
+  </footer>
+
+  <script>
+    // Theme toggle handling
+    (function () {
+      function syncIcons(theme) {
+        var sun = document.getElementById('themeIconSun');
+        var moon = document.getElementById('themeIconMoon');
+        if (!sun || !moon) return;
+        if (theme === 'dark') {
+          sun.style.display = 'inline-flex';
+          moon.style.display = 'none';
+        } else {
+          sun.style.display = 'none';
+          moon.style.display = 'inline-flex';
+        }
+      }
+
+      function initTheme() {
+        var current = document.documentElement.getAttribute('data-theme') || 'light';
+        syncIcons(current);
+
+        var btn = document.getElementById('themeToggleBtn');
+        if (btn) {
+          btn.addEventListener('click', function () {
+            var active = document.documentElement.getAttribute('data-theme') || 'light';
+            var next = (active === 'dark') ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('hcv_theme', next);
+            syncIcons(next);
+          });
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTheme);
+      } else {
+        initTheme();
+      }
+    })();
+
+    // Page preloader
+    window.addEventListener('load', function () {
+      const preloader = document.getElementById('pagePreloader');
+      if (!preloader) return;
+      setTimeout(function () {
+        preloader.classList.add('fade-out');
+        setTimeout(function () { preloader.classList.add('hidden'); }, 500);
+      }, 1400);
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+</body>
+</html>

@@ -1,0 +1,5 @@
+# Netlify Redirects & Clean URLs
+/predict   /predict.html   200
+/about     /about.html     200
+/result    /result.html    200
+/*         /index.html     200

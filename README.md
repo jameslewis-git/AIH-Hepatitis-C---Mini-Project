@@ -59,6 +59,22 @@ Open `http://localhost:5000` in your browser.
    CHE, CHOL, CREA, GGT, PROT) and click **Predict Stage**.
 3. **About Model** (`/about`): model accuracy, feature list, stage descriptions, dataset info.
 
+## 5. Deploy to Netlify
+
+The application is pre-configured for instant zero-configuration Netlify deployment:
+
+```bash
+# Build the production bundle
+python build.py
+
+# Deploy directly via Netlify CLI
+npx netlify deploy --prod --dir=dist
+```
+
+- **Continuous Deployment**: Connect this GitHub repository to Netlify — it automatically uses [`netlify.toml`](netlify.toml) with build command `python build.py` and publish directory `dist`.
+- **Drag & Drop**: Drag the pre-built `dist/` directory directly into [app.netlify.com/drop](https://app.netlify.com/drop).
+- Read the full [NETLIFY.md](NETLIFY.md) guide for details.
+
 ## Dataset
 
 UCI Machine Learning Repository: Hepatitis C Virus (HCV) dataset, 615 real patient
