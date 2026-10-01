@@ -238,22 +238,24 @@
   </div>
 
   <!-- ============================================================
-       SECTION 4: DATASET PROFILING & CLASS IMBALANCE
+       SECTION 4: COMPREHENSIVE DATASET PROFILING & CLINICAL EDA
        ============================================================ -->
   <div id="dataset-profile" class="content-card fade-up" style="margin-bottom:2rem; animation-delay:0.14s;">
-    <div class="card-header-label">📁 Dataset Composition &amp; Handling Imbalance</div>
-    <div class="clinical-split-card" style="margin-top:0.75rem;">
+    <div class="card-header-label">📁 Dataset In-Depth &amp; Exploratory Data Analysis (EDA)</div>
+
+    <!-- Header & Clinical Split Card -->
+    <div class="clinical-split-card" style="margin-top:0.75rem; margin-bottom:1.5rem;">
       <div class="clinical-split-content">
         <h2 style="font-size:1.35rem; margin-bottom:0.5rem; color:var(--text-primary);">
-          UCI Machine Learning HCV Cohort
+          UCI Machine Learning Hepatitis C Cohort
         </h2>
-        <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1.25rem;">
-          Dataset compiled by Lichtinghagen et al., comprising <strong>615 patient records</strong> with 12 laboratory test measurements and demographic factors.
+        <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1rem;">
+          The benchmark dataset was collected and validated by <strong>Ralf Lichtinghagen, Frank Klawonn, and Gabriele Hoffmann</strong> at the Department of Clinical Chemistry, Hannover Medical School, Germany, and published via the <strong>UCI Machine Learning Repository</strong>.
         </p>
 
-        <!-- Segmented Spectrum Bar -->
+        <!-- Spectrum Bar -->
         <div style="font-size:0.74rem; font-family:var(--font-mono); color:var(--text-muted); font-weight:600; text-transform:uppercase; margin-bottom:0.4rem;">
-          Patient Distribution Across 5 Stages:
+          Cohort Progression Spectrum (615 Records):
         </div>
         <div style="display:flex; height:12px; border-radius:6px; overflow:hidden; gap:2px; margin-bottom:1rem;">
           <div style="flex:533; background:var(--healthy);" title="Blood Donor: 533 (86.7%)"></div>
@@ -274,12 +276,12 @@
 
         <div style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem;">
           <strong style="color:var(--text-primary); font-size:0.84rem; display:block; margin-bottom:0.35rem;">
-            🛡️ How We Solved the 86.7% vs 1.1% Class Imbalance:
+            🛡️ Imbalance Mitigation Protocol (86.7% vs 1.1%):
           </strong>
           <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.55;">
-            <div><strong>1. Stratified Partitioning</strong>: 80/20 train/test split maintains identical class ratios in test folds.</div>
-            <div><strong>2. Balanced Class Weighting</strong>: Gradient steps penalize misclassification of rare cases (Fibrosis/Cirrhosis) exponentially higher.</div>
-            <div><strong>3. Macro-F1 Benchmark</strong>: Final serialized model was chosen solely on unweighted class-level F1.</div>
+            <div>• <strong>Stratified Split</strong>: 80/20 train/test partition locks identical class distributions in validation folds.</div>
+            <div>• <strong>Balanced Loss Weights</strong>: Model gradient steps are penalized inversely proportional to class frequency.</div>
+            <div>• <strong>Macro-F1 Target</strong>: Selection optimizes unweighted average F1 across all 5 classes equally.</div>
           </div>
         </div>
       </div>
@@ -291,6 +293,209 @@
         </div>
       </div>
     </div>
+
+    <!-- 4 Demographics & Quality Metric Cards -->
+    <div class="demographics-card-grid">
+      <div class="demographic-stat-card">
+        <div class="demographic-icon">👥</div>
+        <div>
+          <div class="demographic-val">{{ demographics.total_records }}</div>
+          <div class="demographic-sub">Total Patient Cases (Hannover Cohort)</div>
+        </div>
+      </div>
+
+      <div class="demographic-stat-card">
+        <div class="demographic-icon">⚖️</div>
+        <div>
+          <div class="demographic-val">{{ demographics.males }} / {{ demographics.females }}</div>
+          <div class="demographic-sub">Sex Split ({{ demographics.males_pct }}% M · {{ demographics.females_pct }}% F)</div>
+        </div>
+      </div>
+
+      <div class="demographic-stat-card">
+        <div class="demographic-icon">🎂</div>
+        <div>
+          <div class="demographic-val">{{ demographics.age_mean }} <span style="font-size:0.85rem; font-weight:500;">yrs</span></div>
+          <div class="demographic-sub">Mean Age (Range: {{ demographics.age_min }}–{{ demographics.age_max }} yrs · σ={{ demographics.age_std }})</div>
+        </div>
+      </div>
+
+      <div class="demographic-stat-card">
+        <div class="demographic-icon">🧪</div>
+        <div>
+          <div class="demographic-val">31 <span style="font-size:0.85rem; font-weight:500;">/ 7,380</span></div>
+          <div class="demographic-sub">Missing Cells (0.42% Gaps Imputed)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-Section A: Stage-Wise Exploratory Data Analysis (EDA) Matrix -->
+    <div style="margin-top:1.75rem; margin-bottom:1.75rem;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
+        <div>
+          <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:0.2rem;">
+            📊 Stage-Wise Biomarker Evolution Matrix (Cohort Means)
+          </h3>
+          <div style="font-size:0.82rem; color:var(--text-secondary);">
+            Observed clinical trajectory across stages showing the exact biochemical progression in the dataset.
+          </div>
+        </div>
+        <span class="hero-pill" style="color:var(--healthy); font-weight:700;">
+          Statistical Proof of Clinical Pathophysiology
+        </span>
+      </div>
+
+      <div class="benchmark-table-wrapper">
+        <table class="benchmark-table">
+          <thead>
+            <tr>
+              <th>Disease Stage Category</th>
+              <th>Cohort N</th>
+              <th>Mean Age</th>
+              <th>ALT (U/L)</th>
+              <th>AST (U/L)</th>
+              <th>BIL (µmol/L)</th>
+              <th>ALB (g/L)</th>
+              <th>CHE (kU/L)</th>
+              <th>GGT (U/L)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in eda_matrix %}
+            <tr>
+              <td>
+                <span class="eda-stage-badge" style="border-left:3px solid {{ row.color }};">
+                  <span style="width:8px; height:8px; border-radius:50%; background:{{ row.color }};"></span>
+                  <strong>{{ row.stage }}</strong>
+                </span>
+              </td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">{{ row.count }}</span></td>
+              <td><span style="font-family:var(--font-mono);">{{ row.age }} yrs</span></td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:{% if row.alt > 50 %}var(--red){% else %}var(--text-primary){% endif %};">
+                  {{ row.alt }}
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:{% if row.ast > 50 %}var(--red){% else %}var(--text-primary){% endif %};">
+                  {{ row.ast }}
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:{% if row.bil > 20 %}var(--cirrhosis){% else %}var(--text-primary){% endif %};">
+                  {{ row.bil }}
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:600; color:{% if row.alb < 35 %}var(--cirrhosis){% else %}var(--healthy){% endif %};">
+                  {{ row.alb }}
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:700; color:{% if row.che < 5 %}var(--cirrhosis){% else %}var(--healthy){% endif %};">
+                  {{ row.che }}
+                </span>
+              </td>
+              <td>
+                <span style="font-family:var(--font-mono); font-weight:600; color:{% if row.ggt > 60 %}var(--red){% else %}var(--text-primary){% endif %};">
+                  {{ row.ggt }}
+                </span>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div style="font-size:0.78rem; font-family:var(--font-mono); color:var(--text-muted); margin-top:0.5rem;">
+        * Noticeable Trends: AST increases 4-fold from 26.6 to 107.5 U/L in Cirrhosis. Bilirubin surges 7-fold (8.5 to 59.1 µmol/L). Cholinesterase (CHE) collapses by &gt;54% (8.4 to 3.8 kU/L) confirming parenchymal synthesis failure.
+      </div>
+    </div>
+
+    <!-- Sub-Section B: Missing Value Audit Table -->
+    <div style="margin-top:1.75rem; margin-bottom:1.75rem;">
+      <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:0.2rem;">
+        🔍 Missing Value Audit &amp; Imputation Quality Control
+      </h3>
+      <p style="font-size:0.83rem; color:var(--text-secondary); line-height:1.55; margin-bottom:0.75rem;">
+        Real clinical datasets naturally contain missing tests due to selective physician ordering. 5 of the 12 features exhibited missing records, handled with non-parametric median imputation:
+      </p>
+
+      <div class="benchmark-table-wrapper">
+        <table class="benchmark-table">
+          <thead>
+            <tr>
+              <th>Biomarker Name</th>
+              <th>Missing Count</th>
+              <th>Missing %</th>
+              <th>Normal Reference</th>
+              <th>Fitted Imputation Value (Median)</th>
+              <th>Clinical Handling Rationale</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for m in missing_audit %}
+            <tr>
+              <td><strong>{{ m.feature }}</strong></td>
+              <td><span style="font-family:var(--font-mono); color:var(--red); font-weight:700;">{{ m.missing }} pts</span></td>
+              <td><span style="font-family:var(--font-mono);">{{ m.pct }}%</span></td>
+              <td><span style="font-size:0.8rem; color:var(--text-muted);">{{ m.normal }}</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:700; color:var(--healthy);">{{ m.median }} {{ m.unit }}</span></td>
+              <td style="font-size:0.8rem;">Non-parametric median preserves class distribution without row deletion.</td>
+            </tr>
+            {% endfor %}
+            <tr style="background:var(--bg-subtle);">
+              <td><strong>Other 7 Biomarkers (Age, Sex, AST, BIL, CHE, CREA, GGT)</strong></td>
+              <td><span style="font-family:var(--font-mono); color:var(--healthy); font-weight:700;">0 missing</span></td>
+              <td><span style="font-family:var(--font-mono); color:var(--healthy);">0.00%</span></td>
+              <td>—</td>
+              <td><span style="color:var(--healthy); font-weight:600;">✓ 100% Complete</span></td>
+              <td style="font-size:0.8rem;">Fully documented across all 615 patient records.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sub-Section C: Full 12-Biomarker Clinical Reference Dictionary -->
+    <div style="margin-top:1.75rem;">
+      <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:0.2rem;">
+        📖 Complete 12-Feature Clinical Biomarker Dictionary
+      </h3>
+      <p style="font-size:0.83rem; color:var(--text-secondary); line-height:1.55; margin-bottom:0.75rem;">
+        Standard reference units, observed cohort distribution, and clinical diagnostic roles in hepatic evaluation:
+      </p>
+
+      <div class="benchmark-table-wrapper">
+        <table class="benchmark-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Clinical Biomarker Name</th>
+              <th>Unit</th>
+              <th>Cohort Range</th>
+              <th>Cohort Mean (Median)</th>
+              <th>Clinical Normal Range</th>
+              <th>Diagnostic Role in Staging</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for b in biomarker_dictionary %}
+            <tr>
+              <td><span class="dictionary-code">{{ b.code }}</span></td>
+              <td><strong>{{ b.name }}</strong></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.8rem;">{{ b.unit }}</span></td>
+              <td><span style="font-family:var(--font-mono); font-size:0.78rem;">{{ b.range }}</span></td>
+              <td><span style="font-family:var(--font-mono); font-weight:600;">{{ b.mean }} ({{ b.median }})</span></td>
+              <td><span style="font-size:0.78rem; color:var(--healthy); font-weight:600;">{{ b.normal }}</span></td>
+              <td style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary);">{{ b.role }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
   <!-- ============================================================

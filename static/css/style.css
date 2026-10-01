@@ -2481,6 +2481,66 @@ main {
   color: var(--text-muted);
 }
 
+/* Demographics Stat Cards */
+.demographics-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+.demographic-stat-card {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.15rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  transition: transform 0.2s ease;
+}
+.demographic-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-mid);
+}
+.demographic-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+.demographic-val {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  line-height: 1.1;
+}
+.demographic-sub {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+/* Stage Matrix Table & Badges */
+.eda-stage-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+}
+
+/* Dictionary Table */
+.dictionary-code {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--red);
+  font-size: 0.86rem;
+}
+
 /* ================================================================
    RESPONSIVE
    ================================================================ */

@@ -499,6 +499,50 @@ def about():
         {"label": "0s = Suspect Donor", "count": 7, "pct": 1.1, "color": "#f59e0b", "type": "Enzymatic Deferral"}
     ]
 
+    eda_matrix = [
+        {"stage": "0 = Blood Donor", "color": "#10b981", "count": 533, "age": 47.1, "alt": 26.6, "ast": 26.6, "bil": 8.5, "alb": 42.2, "che": 8.4, "ggt": 29.0},
+        {"stage": "0s = Suspect Donor", "color": "#f59e0b", "count": 7, "age": 57.6, "alt": 102.1, "ast": 71.0, "bil": 4.7, "alb": 24.4, "che": 7.5, "ggt": 151.5},
+        {"stage": "1 = Hepatitis", "color": "#f97316", "count": 24, "age": 38.7, "alt": 26.9, "ast": 75.7, "bil": 15.6, "alb": 43.8, "che": 9.3, "ggt": 92.6},
+        {"stage": "2 = Fibrosis", "color": "#e11d48", "count": 21, "age": 52.3, "alt": 59.6, "ast": 81.2, "bil": 13.4, "alb": 41.8, "che": 8.3, "ggt": 79.6},
+        {"stage": "3 = Cirrhosis", "color": "#dc2626", "count": 30, "age": 53.5, "alt": 23.0, "ast": 107.5, "bil": 59.1, "alb": 32.5, "che": 3.8, "ggt": 129.4}
+    ]
+
+    missing_audit = [
+        {"feature": "ALP (Alkaline Phosphatase)", "missing": 18, "pct": 2.93, "median": 66.2, "unit": "U/L", "normal": "40–129 U/L"},
+        {"feature": "CHOL (Total Cholesterol)", "missing": 10, "pct": 1.63, "median": 5.30, "unit": "mmol/L", "normal": "3.0–5.2 mmol/L"},
+        {"feature": "ALB (Albumin)", "missing": 1, "pct": 0.16, "median": 41.95, "unit": "g/L", "normal": "35–50 g/L"},
+        {"feature": "ALT (Alanine Aminotransferase)", "missing": 1, "pct": 0.16, "median": 23.0, "unit": "U/L", "normal": "7–56 U/L"},
+        {"feature": "PROT (Total Protein)", "missing": 1, "pct": 0.16, "median": 72.2, "unit": "g/L", "normal": "64–83 g/L"},
+    ]
+
+    demographics = {
+        "total_records": 615,
+        "males": 377,
+        "males_pct": 61.3,
+        "females": 238,
+        "females_pct": 38.7,
+        "age_mean": 47.41,
+        "age_median": 47.0,
+        "age_min": 19,
+        "age_max": 77,
+        "age_std": 10.06,
+    }
+
+    biomarker_dictionary = [
+        {"code": "AST", "name": "Aspartate Aminotransferase", "unit": "U/L", "mean": 34.79, "median": 25.9, "range": "10.6 – 324.0", "normal": "10 – 40 U/L", "role": "Mitochondrial & cytoplasmic enzyme; spikes in necrosis and cirrhosis."},
+        {"code": "CHE", "name": "Cholinesterase", "unit": "kU/L", "mean": 8.20, "median": 8.26, "range": "1.42 – 16.41", "normal": "5.3 – 12.9 kU/L", "role": "Exclusive liver synthetic enzyme; severely suppressed in advanced cirrhosis."},
+        {"code": "ALB", "name": "Albumin", "unit": "g/L", "mean": 41.62, "median": 41.95, "range": "14.9 – 82.2", "normal": "35 – 50 g/L", "role": "Primary oncotic protein; declines in liver decompensation and ascites."},
+        {"code": "Age", "name": "Patient Age", "unit": "years", "mean": 47.41, "median": 47.0, "range": "19 – 77", "normal": "18 – 90", "role": "Duration of chronic infection; strongly correlates with cumulative fibrosis."},
+        {"code": "ALT", "name": "Alanine Aminotransferase", "unit": "U/L", "mean": 28.45, "median": 23.0, "range": "0.9 – 325.3", "normal": "7 – 56 U/L", "role": "Liver-specific enzyme released into bloodstream during acute inflammation."},
+        {"code": "ALP", "name": "Alkaline Phosphatase", "unit": "U/L", "mean": 68.28, "median": 66.2, "range": "11.3 – 416.6", "normal": "40 – 129 U/L", "role": "Biliary canalicular enzyme; flags cholestasis and biliary obstruction."},
+        {"code": "CREA", "name": "Creatinine", "unit": "µmol/L", "mean": 81.29, "median": 77.0, "range": "8.0 – 1079.1", "normal": "60 – 110 µmol/L", "role": "Renal filtration marker; indicates hepatorenal syndrome in end-stage."},
+        {"code": "PROT", "name": "Total Protein", "unit": "g/L", "mean": 72.04, "median": 72.2, "range": "44.8 – 90.0", "normal": "64 – 83 g/L", "role": "Serum protein sum; reflects protein synthesis and immunoglobulins."},
+        {"code": "GGT", "name": "Gamma-Glutamyl Transferase", "unit": "U/L", "mean": 39.53, "median": 23.3, "range": "4.5 – 650.9", "normal": "8 – 61 U/L", "role": "Biliary epithelial enzyme; highly sensitive to toxic and viral damage."},
+        {"code": "BIL", "name": "Total Bilirubin", "unit": "µmol/L", "mean": 11.40, "median": 7.3, "range": "0.8 – 254.0", "normal": "3 – 21 µmol/L", "role": "Heme breakdown pigment; accumulation causes jaundice and icterus."},
+        {"code": "CHOL", "name": "Total Cholesterol", "unit": "mmol/L", "mean": 5.37, "median": 5.30, "range": "1.43 – 9.67", "normal": "3.0 – 5.2 mmol/L", "role": "Lipid synthesized by hepatocytes; drops during advanced parenchymal loss."},
+        {"code": "Sex", "name": "Biological Sex", "unit": "binary", "mean": "61.3% M", "median": "Male (1)", "range": "Male / Female", "normal": "M: 61.3%, F: 38.7%", "role": "Demographic baseline covariate; encoded as Male=1, Female=0."}
+    ]
+
     return render_template(
         "about.html",
         model_name=bundle["model_name"] if bundle else "XGBoost",
@@ -507,6 +551,10 @@ def about():
         stages=stages,
         feature_importances=feature_importances,
         dataset_distribution=dataset_distribution,
+        eda_matrix=eda_matrix,
+        missing_audit=missing_audit,
+        demographics=demographics,
+        biomarker_dictionary=biomarker_dictionary,
     )
 
 
