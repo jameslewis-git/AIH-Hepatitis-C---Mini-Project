@@ -1,107 +1,170 @@
 {% extends "base.html" %}
-{% block title %}About the Model — Hepatitis C Detection{% endblock %}
+{% block title %}About the Model — HCV Sentinel{% endblock %}
 {% block content %}
-<div class="container">
-  <div class="text-center mb-4">
-    <h1 class="fw-bold" style="color: #fff;">Model Information</h1>
-    <p style="color: rgba(255,255,255,0.9);">Technical details and dataset information</p>
+<div style="max-width:1100px; margin:0 auto; padding:0 1.5rem;">
+
+  <div class="fade-up" style="margin-bottom:2rem;">
+    <div class="card-header-label" style="display:inline-flex; margin-bottom:0.6rem;">⚙️ Model Details</div>
+    <div style="font-size:2rem; font-weight:700; letter-spacing:-0.02em; color:var(--text-primary);">
+      About the AI Model
+    </div>
+    <div style="color:var(--text-secondary); margin-top:0.3rem;">
+      Technical architecture, dataset composition, and preprocessing pipeline
+    </div>
   </div>
 
-  <div class="row g-4 mb-5">
-    <div class="col-md-4">
+  <!-- STAT CARDS -->
+  <div class="row g-3 mb-4 stagger">
+    <div class="col-6 col-md-4">
       <div class="stat-card text-center">
-        <div class="stat-value">{{ model_name }}</div>
+        <div class="stat-icon">🤖</div>
+        <div class="stat-value stat-value-accent" style="font-size:1.4rem;">{{ model_name }}</div>
         <div class="stat-label">Algorithm</div>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-6 col-md-4">
       <div class="stat-card text-center">
-        <div class="stat-value">{{ accuracy }}</div>
+        <div class="stat-icon">🎯</div>
+        <div class="stat-value stat-value-accent">{{ accuracy }}</div>
         <div class="stat-label">Test Accuracy</div>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-6 col-md-4">
       <div class="stat-card text-center">
-        <div class="stat-value">{{ features|length }}</div>
+        <div class="stat-icon">🔬</div>
+        <div class="stat-value stat-value-accent">{{ features|length }}</div>
         <div class="stat-label">Input Features</div>
       </div>
     </div>
   </div>
 
-  <div class="content-card">
-    <h3 class="fw-bold mb-4">Model Architecture</h3>
-    <p>The prediction system uses an ensemble approach, training both <strong>Random Forest</strong> and <strong>XGBoost</strong> classifiers on the UCI HCV dataset. The model with the highest macro-F1 score is automatically selected for deployment.</p>
+  <!-- MODEL ARCHITECTURE -->
+  <div class="content-card fade-up" style="animation-delay:0.1s;">
+    <div class="card-header-label">Architecture</div>
+    <h2 style="font-size:1.4rem; margin-bottom:1rem;">Model Architecture</h2>
+    <p>
+      The pipeline trains both <strong style="color:var(--amber)">Random Forest</strong> and
+      <strong style="color:var(--amber)">XGBoost</strong> classifiers on the UCI HCV dataset.
+      The model achieving the highest <strong style="color:var(--text-primary)">macro-F1 score</strong>
+      is automatically selected and serialized to disk — ensuring the best performer is always
+      deployed without manual intervention.
+    </p>
+    <p style="margin-top:0.75rem; margin-bottom:0;">
+      The full bundle saved to <code style="background:var(--bg-raised); padding:0.15rem 0.4rem; border-radius:5px; font-family:var(--font-mono); font-size:0.85rem; color:var(--amber);">model/hcv_model.pkl</code>
+      includes the fitted imputer, scaler, trained classifier, feature names, and class labels —
+      enabling fully reproducible inference.
+    </p>
+  </div>
 
-    <h5 class="fw-bold mt-4 mb-3">Input Features (12 total)</h5>
+  <!-- PREPROCESSING PIPELINE -->
+  <div class="content-card fade-up" style="animation-delay:0.12s;">
+    <div class="card-header-label">Pipeline</div>
+    <h2 style="font-size:1.4rem; margin-bottom:1.5rem;">Preprocessing Pipeline</h2>
     <div class="row g-3">
-      {% for feat in features %}
-      <div class="col-md-3">
-        <div class="p-3 text-center" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05)); border-radius: 12px; border: 1px solid rgba(102, 126, 234, 0.2);">
-          <strong>{{ feat }}</strong>
+      <div class="col-md-4">
+        <div class="pipeline-step">
+          <div class="pipeline-step-num">01</div>
+          <div style="font-size:1.5rem; margin-bottom:0.6rem;">🧹</div>
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.4rem;">Imputation</div>
+          <div style="font-size:0.85rem; color:var(--text-muted);">Median fill for missing lab values — robust to outliers and clinical gaps</div>
         </div>
       </div>
+      <div class="col-md-4">
+        <div class="pipeline-step">
+          <div class="pipeline-step-num">02</div>
+          <div style="font-size:1.5rem; margin-bottom:0.6rem;">🏷️</div>
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.4rem;">Encoding</div>
+          <div style="font-size:0.85rem; color:var(--text-muted);">Label-encode Sex (M/F → 0/1) and ordinal target class labels</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="pipeline-step">
+          <div class="pipeline-step-num">03</div>
+          <div style="font-size:1.5rem; margin-bottom:0.6rem;">📐</div>
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.4rem;">Scaling</div>
+          <div style="font-size:0.85rem; color:var(--text-muted);">StandardScaler normalization — zero mean, unit variance across all features</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="content-card fade-up" style="animation-delay:0.14s;">
+    <div class="card-header-label">Features</div>
+    <h2 style="font-size:1.4rem; margin-bottom:1.25rem;">Input Features ({{ features|length }} total)</h2>
+    <div style="display:flex; flex-wrap:wrap;">
+      {% for feat in features %}
+        <div class="feature-pill">
+          <span style="color:var(--amber); font-size:0.65rem;">◆</span>
+          {{ feat }}
+        </div>
       {% endfor %}
     </div>
   </div>
 
-  <div class="content-card">
-    <h3 class="fw-bold mb-4">Disease Stages</h3>
-    <div class="row g-4">
+  <!-- DISEASE STAGES -->
+  <div class="content-card fade-up" style="animation-delay:0.16s;">
+    <div class="card-header-label">Classification Targets</div>
+    <h2 style="font-size:1.4rem; margin-bottom:0.75rem;">Disease Stages Classified</h2>
+
+    <!-- Spectrum bar -->
+    <div style="display:flex; border-radius:10px; overflow:hidden; height:8px; margin-bottom:1.5rem; gap:2px;">
+      <div style="flex:1; background:var(--healthy); border-radius:4px;"></div>
+      <div style="flex:1; background:var(--suspect); border-radius:4px;"></div>
+      <div style="flex:1; background:var(--hepatitis); border-radius:4px;"></div>
+      <div style="flex:1; background:var(--fibrosis); border-radius:4px;"></div>
+      <div style="flex:1; background:var(--cirrhosis); border-radius:4px;"></div>
+    </div>
+
+    <div class="row g-3">
       {% for s in stages %}
       <div class="col-md-6">
-        <div class="p-4" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.03), rgba(118, 75, 162, 0.03)); border-radius: 16px; border-left: 5px solid {{ s.color }};">
-          <h5 class="mb-2"><span class="dot" style="background:{{ s.color }}"></span> <strong>{{ s.name }}</strong></h5>
-          <p class="mb-0 text-muted">{{ s.desc }}</p>
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-left:4px solid {{ s.color }}; border-radius:12px; padding:1.25rem; transition:all 0.2s ease;"
+             onmouseover="this.style.borderLeftColor='{{ s.color }}'; this.style.transform='translateX(4px)';"
+             onmouseout="this.style.transform='';">
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.35rem; display:flex; align-items:center; gap:0.5rem;">
+            <span style="width:10px; height:10px; background:{{ s.color }}; border-radius:50%; display:inline-block; flex-shrink:0;"></span>
+            {{ s.name }}
+          </div>
+          <div style="font-size:0.85rem; color:var(--text-secondary);">{{ s.desc }}</div>
         </div>
       </div>
       {% endfor %}
     </div>
   </div>
 
-  <div class="content-card">
-    <h3 class="fw-bold mb-4">Dataset Information</h3>
+  <!-- DATASET -->
+  <div class="content-card fade-up" style="animation-delay:0.18s;">
+    <div class="card-header-label">Dataset</div>
+    <h2 style="font-size:1.4rem; margin-bottom:1.25rem;">UCI HCV Dataset</h2>
+
     <div class="row g-4">
       <div class="col-md-6">
-        <h5 class="mb-3"><strong>Source</strong></h5>
-        <p>UCI Machine Learning Repository — Hepatitis C Virus (HCV) for Egyptian patients</p>
-        <p class="mb-0"><code>hcvdat0.csv</code></p>
+        <div style="margin-bottom:1rem;">
+          <div style="font-size:0.72rem; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.5rem;">Source</div>
+          <div style="color:var(--text-secondary);">UCI Machine Learning Repository — Hepatitis C Virus for Egyptian patients</div>
+          <div style="font-family:var(--font-mono); font-size:0.82rem; color:var(--amber); margin-top:0.3rem;">hcvdat0.csv</div>
+        </div>
       </div>
       <div class="col-md-6">
-        <h5 class="mb-3"><strong>Composition</strong></h5>
-        <ul class="list-unstyled">
-          <li>✓ <strong>615</strong> patient records</li>
-          <li>✓ <strong>12</strong> laboratory features</li>
-          <li>✓ <strong>5</strong> target classes</li>
-        </ul>
-      </div>
-      <div class="col-12">
-        <h5 class="mb-3"><strong>Preprocessing Pipeline</strong></h5>
-        <div class="row g-3">
-          <div class="col-md-4 text-center">
-            <div class="p-3" style="background: rgba(102, 126, 234, 0.1); border-radius: 12px;">
-              <strong>1. Imputation</strong><br>
-              <small>Median fill for missing values</small>
-            </div>
-          </div>
-          <div class="col-md-4 text-center">
-            <div class="p-3" style="background: rgba(102, 126, 234, 0.1); border-radius: 12px;">
-              <strong>2. Encoding</strong><br>
-              <small>Label encode sex & target</small>
-            </div>
-          </div>
-          <div class="col-md-4 text-center">
-            <div class="p-3" style="background: rgba(102, 126, 234, 0.1); border-radius: 12px;">
-              <strong>3. Scaling</strong><br>
-              <small>Standard normalization</small>
-            </div>
+        <div style="margin-bottom:1rem;">
+          <div style="font-size:0.72rem; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.5rem;">Composition</div>
+          <div style="display:flex; flex-direction:column; gap:0.4rem;">
+            <div class="feature-pill" style="display:inline-flex; width:fit-content;">✓ <strong>615</strong>&nbsp;patient records</div>
+            <div class="feature-pill" style="display:inline-flex; width:fit-content;">✓ <strong>12</strong>&nbsp;laboratory features</div>
+            <div class="feature-pill" style="display:inline-flex; width:fit-content;">✓ <strong>5</strong>&nbsp;target classes</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="text-center">
-    <a href="{{ url_for('predict_view') }}" class="btn btn-primary btn-lg px-5">Try the Model</a>
+  <!-- CTA -->
+  <div style="text-align:center; margin-bottom:2rem;" class="fade-up" style="animation-delay:0.2s;">
+    <a href="{{ url_for('predict_view') }}" class="btn-primary" style="font-size:1rem; padding:0.9rem 2.5rem;">
+      🧬 Try the Model
+    </a>
   </div>
+
 </div>
 {% endblock %}

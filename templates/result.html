@@ -1,59 +1,106 @@
 {% extends "base.html" %}
-{% block title %}Prediction Result — {{ label }}{% endblock %}
+{% block title %}Prediction Result — {{ label }} · HCV Sentinel{% endblock %}
 {% block content %}
-<div class="container">
-  <div class="text-center mb-4">
-    <h1 class="fw-bold" style="color: #fff;">Prediction Complete</h1>
+<div style="max-width:1000px; margin:0 auto; padding:0 1.5rem;">
+
+  <div class="fade-up" style="margin-bottom:1.75rem;">
+    <div class="card-header-label" style="display:inline-flex; margin-bottom:0.6rem;">📊 Prediction Result</div>
+    <div style="font-size:1.8rem; font-weight:700; letter-spacing:-0.02em; color:var(--text-primary);">
+      Analysis Complete
+    </div>
   </div>
 
-  <div class="result-card mx-auto" style="max-width: 900px; border-left-color: {{ color }};">
-    <div class="text-center">
-      <div style="font-size: 4rem; margin-bottom: 1rem;">
-        {% if label == "Blood Donor" %}✅
-        {% elif label == "Suspect Blood Donor" %}⚠️
-        {% elif label == "Hepatitis" %}🔶
-        {% elif label == "Fibrosis" %}🔴
-        {% else %}🚨{% endif %}
+  <!-- RESULT HERO -->
+  {% set stage_colors = {
+    "Blood Donor": {"hex":"#10b981","rgb":"16,185,129"},
+    "Suspect Blood Donor": {"hex":"#f59e0b","rgb":"245,158,11"},
+    "Hepatitis": {"hex":"#f97316","rgb":"249,115,22"},
+    "Fibrosis": {"hex":"#ef4444","rgb":"239,68,68"},
+    "Cirrhosis": {"hex":"#fb7185","rgb":"251,113,133"}
+  } %}
+  {% set col = stage_colors.get(label, {"hex":"#ef4444","rgb":"239,68,68"}) %}
+  {% set icons = {
+    "Blood Donor":"✅","Suspect Blood Donor":"⚠️",
+    "Hepatitis":"🔶","Fibrosis":"🔴","Cirrhosis":"🚨"
+  } %}
+
+  <div class="result-hero fade-up" style="animation-delay:0.05s; border-color:rgba({{ col.rgb }},0.2);">
+    <div class="result-glow" style="background:radial-gradient(ellipse, rgba({{ col.rgb }},0.15) 0%, transparent 65%);"></div>
+
+    <div style="display:flex; align-items:flex-start; gap:1.5rem; flex-wrap:wrap; position:relative; z-index:1;">
+      <div style="font-size:4rem; line-height:1;">{{ icons.get(label, '📊') }}</div>
+      <div style="flex:1; min-width:240px;">
+        <div class="result-stage-label">PREDICTED STAGE</div>
+        <div class="result-stage-name" style="color:{{ col.hex }};">{{ label }}</div>
+        <div class="result-desc">{{ desc }}</div>
+        <div style="background:rgba({{ col.rgb }},0.1); border:1px solid rgba({{ col.rgb }},0.25); color:{{ col.hex }}; padding:0.5rem 1.1rem; border-radius:50px; font-weight:700; font-family:var(--font-mono); font-size:0.95rem; display:inline-flex; align-items:center; gap:0.4rem;">
+          🎯 {{ confidence }}% Confidence
+        </div>
       </div>
-      <h2 style="color: {{ color }};">{{ label }}</h2>
-      <div class="confidence-badge mb-3">{{ confidence }}% Confidence</div>
-      <p class="lead mb-0">{{ desc }}</p>
+    </div>
+
+    <!-- Biomarker flags -->
+    {% if flags %}
+    <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--border); position:relative; z-index:1;">
+      <div style="font-size:0.72rem; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">Biomarker Status Flags</div>
+      <div class="biomarker-grid">
+        {% for f in flags %}
+          {% if f.status == 'high' %}
+            <div class="biomarker-chip high">▲ {{ f.marker }}: {{ f.value }} (high)</div>
+          {% elif f.status == 'low' %}
+            <div class="biomarker-chip low">▼ {{ f.marker }}: {{ f.value }} (low)</div>
+          {% else %}
+            <div class="biomarker-chip normal">● {{ f.marker }}: {{ f.value }}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- PROBABILITY DISTRIBUTION -->
+  <div class="content-card fade-up" style="animation-delay:0.1s;">
+    <div class="card-header-label">Probability Distribution</div>
+    <h3 style="font-size:1.1rem; margin-bottom:1.25rem;">Classification Confidence Across All Stages</h3>
+
+    {% set pcolors = {
+      "Blood Donor":"#10b981","Suspect Blood Donor":"#f59e0b",
+      "Hepatitis":"#f97316","Fibrosis":"#ef4444","Cirrhosis":"#fb7185"
+    } %}
+
+    <div class="prob-table">
+      {% for p in probs %}
+      <div class="prob-row">
+        <div class="prob-rank">#{{ loop.index }}</div>
+        <div class="prob-name">{{ p.stage }}</div>
+        <div class="prob-bar-track">
+          <div class="prob-bar-fill" data-target="{{ p.value }}"
+            style="background:{{ pcolors.get(p.stage,'#888') }}; opacity:{{ '1' if p.value > 5 else '0.4' }}; width:0%;">
+          </div>
+        </div>
+        <div class="prob-value">{{ p.value }}%</div>
+      </div>
+      {% endfor %}
     </div>
   </div>
 
-  <div class="content-card mx-auto" style="max-width: 900px;">
-    <h4 class="fw-bold mb-4 text-center">Probability Distribution Across All Stages</h4>
-    <div class="table-responsive">
-      <table class="table table-hover align-middle">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Stage</th>
-            <th>Probability</th>
-            <th style="width:45%">Distribution</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for p in probs %}
-          <tr>
-            <td class="text-center"><strong>#{{ loop.index }}</strong></td>
-            <td><strong>{{ p.stage }}</strong></td>
-            <td><strong>{{ p.value }}%</strong></td>
-            <td>
-              <div class="progress" style="height: 24px;">
-                <div class="progress-bar" role="progressbar" style="width: {{ p.value }}%;" aria-valuenow="{{ p.value }}" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+  <!-- ACTIONS -->
+  <div style="display:flex; gap:0.75rem; flex-wrap:wrap; justify-content:center; margin-bottom:2rem;" class="fade-up" style="animation-delay:0.15s;">
+    <a href="{{ url_for('predict_view') }}" class="btn-primary">← New Prediction</a>
+    <a href="{{ url_for('home') }}"         class="btn-ghost">Home</a>
+    <a href="{{ url_for('about') }}"        class="btn-ghost">About Model</a>
   </div>
 
-  <div class="text-center mt-4">
-    <a href="{{ url_for('predict_view') }}" class="btn btn-outline-primary btn-lg px-4">← New Prediction</a>
-    <a href="{{ url_for('home') }}" class="btn btn-light btn-lg px-4 ms-2">Home</a>
-  </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Animate progress bars on load
+  window.addEventListener('load', function() {
+    document.querySelectorAll('.prob-bar-fill').forEach(bar => {
+      setTimeout(() => { bar.style.transition = 'width 1s cubic-bezier(0.22,1,0.36,1)'; bar.style.width = bar.dataset.target + '%'; }, 300);
+    });
+  });
+</script>
 {% endblock %}

@@ -1,225 +1,490 @@
 {% extends "base.html" %}
-{% block title %}Predict Stage — Hepatitis C Detection{% endblock %}
+{% block title %}Predict Stage — HCV Sentinel{% endblock %}
 {% block content %}
-<div class="container">
-  <div class="mb-4 fade-up">
-    <h1 class="fw-bold mb-2">Enter Laboratory Values</h1>
-    <p class="text-muted">Input standard liver function panel results for disease stage prediction</p>
+<div style="max-width:1100px; margin:0 auto; padding:0 1.5rem;">
+
+  <!-- Header -->
+  <div class="predict-header fade-up">
+    <div class="card-header-label" style="display:inline-flex; margin-bottom:0.75rem;">
+      🔬 Prediction Engine
+    </div>
+    <div class="predict-title">Enter Blood Panel Values</div>
+    <div class="predict-subtitle">
+      Fill in routine lab results below. Use the demo presets to explore different disease profiles.
+    </div>
   </div>
 
   {% if error %}
-  <div class="alert alert-danger mx-auto" style="max-width: 900px;">
+  <div class="alert-error fade-up" style="margin-bottom:1.5rem;">
     <strong>Error:</strong> {{ error }}
   </div>
   {% endif %}
 
-  <form id="predictForm" class="form-card mx-auto fade-up" style="max-width: 1000px;">
-    <div class="alert alert-info mb-4">
-      <strong>Quick test:</strong>
-      <button type="button" class="btn btn-sm btn-outline-primary ms-2" onclick="fillHealthy()">Healthy Donor</button>
-      <button type="button" class="btn btn-sm btn-outline-primary ms-1" onclick="fillHepatitis()">Hepatitis</button>
-      <button type="button" class="btn btn-sm btn-outline-primary ms-1" onclick="fillCirrhosis()">Cirrhosis</button>
-    </div>
+  <!-- Demo Presets Bar -->
+  <div class="demo-bar fade-up" style="animation-delay:0.08s">
+    <span class="demo-bar-label">📂 Demo Cases</span>
+
+    <button type="button" class="demo-btn healthy" id="demoHealthy" onclick="loadDemo('healthy')">
+      <div class="demo-btn-dot" style="background:var(--healthy)"></div>
+      Healthy Donor
+    </button>
+    <button type="button" class="demo-btn suspect" id="demoSuspect" onclick="loadDemo('suspect')">
+      <div class="demo-btn-dot" style="background:var(--suspect)"></div>
+      Suspect Donor
+    </button>
+    <button type="button" class="demo-btn hepatitis" id="demoHepatitis" onclick="loadDemo('hepatitis')">
+      <div class="demo-btn-dot" style="background:var(--hepatitis)"></div>
+      Hepatitis
+    </button>
+    <button type="button" class="demo-btn fibrosis" id="demoFibrosis" onclick="loadDemo('fibrosis')">
+      <div class="demo-btn-dot" style="background:var(--fibrosis)"></div>
+      Fibrosis
+    </button>
+    <button type="button" class="demo-btn cirrhosis" id="demoCirrhosis" onclick="loadDemo('cirrhosis')">
+      <div class="demo-btn-dot" style="background:var(--rose)"></div>
+      Cirrhosis
+    </button>
+
+    <span id="demoLabel" style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-muted); margin-left:auto; font-style:italic;"></span>
+  </div>
+
+  <!-- Form -->
+  <form id="predictForm" class="fade-up" style="animation-delay:0.12s;">
+
     <div class="row g-4">
-      <div class="col-md-6">
-        <h6 class="section-title">Patient Demographics</h6>
-        <div class="mb-3">
-          <label class="form-label">Age (years)</label>
-          <input type="number" step="1" min="1" max="120" class="form-control" name="age" value="45" required>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Sex</label>
-          <select class="form-select" name="sex" required>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
-      </div>
 
+      <!-- Demographics -->
       <div class="col-md-6">
-        <h6 class="section-title">Protein Markers</h6>
-        <div class="mb-3">
-          <label class="form-label">ALB — Albumin (g/L)</label>
-          <input type="number" step="0.1" class="form-control" name="alb" value="41.0" required>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">PROT — Total Protein (g/L)</label>
-          <input type="number" step="0.1" class="form-control" name="prot" value="72.0" required>
-        </div>
-      </div>
+        <div class="form-card">
+          <div class="form-section-title">Patient Demographics</div>
 
-      <div class="col-md-6">
-        <h6 class="section-title">Liver Enzymes</h6>
-        <div class="row g-3">
-          <div class="col-6">
-            <label class="form-label">ALT (U/L)</label>
-            <input type="number" step="0.1" class="form-control" name="alt" value="24.0" required>
+          <div style="margin-bottom:1.25rem;">
+            <label class="form-label">
+              <span class="form-label-name">Age</span>
+              <span class="form-label-unit"> — years</span>
+            </label>
+            <input type="number" step="1" min="1" max="120" class="form-control" name="age" id="fAge" value="45" required>
+            <div class="range-hint">Typical range: 18–90 years</div>
           </div>
-          <div class="col-6">
-            <label class="form-label">AST (U/L)</label>
-            <input type="number" step="0.1" class="form-control" name="ast" value="25.0" required>
-          </div>
-          <div class="col-6">
-            <label class="form-label">ALP (U/L)</label>
-            <input type="number" step="0.1" class="form-control" name="alp" value="68.0" required>
-          </div>
-          <div class="col-6">
-            <label class="form-label">GGT (U/L)</label>
-            <input type="number" step="0.1" class="form-control" name="ggt" value="25.0" required>
+
+          <div style="margin-bottom:0;">
+            <label class="form-label">
+              <span class="form-label-name">Sex</span>
+            </label>
+            <select class="form-select" name="sex" id="fSex" required>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
           </div>
         </div>
       </div>
 
+      <!-- Protein Markers -->
       <div class="col-md-6">
-        <h6 class="section-title">Metabolic Markers</h6>
-        <div class="row g-3">
-          <div class="col-6">
-            <label class="form-label">BIL (µmol/L)</label>
-            <input type="number" step="0.1" class="form-control" name="bil" value="7.0" required>
+        <div class="form-card">
+          <div class="form-section-title">Protein Markers</div>
+
+          <div style="margin-bottom:1.25rem;">
+            <label class="form-label">
+              <span class="form-label-name">ALB</span>
+              <span class="form-label-unit"> — Albumin (g/L)</span>
+            </label>
+            <input type="number" step="0.1" class="form-control" name="alb" id="fAlb" value="41.0" required>
+            <div class="range-hint">Normal: 35–50 g/L</div>
           </div>
-          <div class="col-6">
-            <label class="form-label">CHE (kU/L)</label>
-            <input type="number" step="0.1" class="form-control" name="che" value="8.0" required>
-          </div>
-          <div class="col-6">
-            <label class="form-label">CHOL (mmol/L)</label>
-            <input type="number" step="0.1" class="form-control" name="chol" value="5.2" required>
-          </div>
-          <div class="col-6">
-            <label class="form-label">CREA (µmol/L)</label>
-            <input type="number" step="0.1" class="form-control" name="crea" value="81.0" required>
+
+          <div style="margin-bottom:0;">
+            <label class="form-label">
+              <span class="form-label-name">PROT</span>
+              <span class="form-label-unit"> — Total Protein (g/L)</span>
+            </label>
+            <input type="number" step="0.1" class="form-control" name="prot" id="fProt" value="72.0" required>
+            <div class="range-hint">Normal: 64–83 g/L</div>
           </div>
         </div>
       </div>
+
+      <!-- Liver Enzymes -->
+      <div class="col-md-6">
+        <div class="form-card">
+          <div class="form-section-title">Liver Enzymes</div>
+          <div class="row g-3">
+            <div class="col-6">
+              <label class="form-label">
+                <span class="form-label-name">ALT</span>
+                <span class="form-label-unit"> (U/L)</span>
+              </label>
+              <input type="number" step="0.1" class="form-control" name="alt" id="fAlt" value="24.0" required>
+              <div class="range-hint">Normal: 7–56</div>
+            </div>
+            <div class="col-6">
+              <label class="form-label">
+                <span class="form-label-name">AST</span>
+                <span class="form-label-unit"> (U/L)</span>
+              </label>
+              <input type="number" step="0.1" class="form-control" name="ast" id="fAst" value="25.0" required>
+              <div class="range-hint">Normal: 10–40</div>
+            </div>
+            <div class="col-6">
+              <label class="form-label">
+                <span class="form-label-name">ALP</span>
+                <span class="form-label-unit"> (U/L)</span>
+              </label>
+              <input type="number" step="0.1" class="form-control" name="alp" id="fAlp" value="68.0" required>
+              <div class="range-hint">Normal: 40–130</div>
+            </div>
+            <div class="col-6">
+              <label class="form-label">
+                <span class="form-label-name">GGT</span>
+                <span class="form-label-unit"> (U/L)</span>
+              </label>
+              <input type="number" step="0.1" class="form-control" name="ggt" id="fGgt" value="25.0" required>
+              <div class="range-hint">Normal: 8–61</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metabolic Markers -->
+      <div class="col-md-6">
+        <div class="form-card">
+          <div class="form-section-title">Metabolic Markers</div>
+          <div class="row g-3">
+            <div class="col-6">
+              <label class="form-label">
+                <span class="form-label-name">BIL</span>
+                <span class="form-label-unit"> (µmol/L)</span>
+              </label>
+              <input type="number" step="0.1" class="form-control" name="bil" id="fBil" value="7.0" required>
+              <div class="range-hint">Normal: 3–17</div>
+            </div>
+            <div class="col-6">
+              <label class="form-label">
+                <span class="form-label-name">CHE</span>
+                <span class="form-label-unit"> (kU/L)</span>
+              </label>
+              <input type="number" step="0.1" class="form-control" name="che" id="fChe" value="8.0" required>
+              <div class="range-hint">Normal: 4.5–11.5</div>
+            </div>
+            <div class="col-6">
+              <label class="form-label">
+                <span class="form-label-name">CHOL</span>
+                <span class="form-label-unit"> (mmol/L)</span>
+              </label>
+              <input type="number" step="0.1" class="form-control" name="chol" id="fChol" value="5.2" required>
+              <div class="range-hint">Normal: 3.0–5.2</div>
+            </div>
+            <div class="col-6">
+              <label class="form-label">
+                <span class="form-label-name">CREA</span>
+                <span class="form-label-unit"> (µmol/L)</span>
+              </label>
+              <input type="number" step="0.1" class="form-control" name="crea" id="fCrea" value="81.0" required>
+              <div class="range-hint">Normal: 60–110</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <div class="text-center mt-4">
-      <button type="submit" class="btn btn-primary btn-lg px-5">Analyze & Predict Stage</button>
+    <!-- Submit -->
+    <div style="text-align:center; margin-top:2rem;">
+      <button type="submit" class="btn-analyze" id="submitBtn">
+        <span class="btn-analyze-icon">🧬</span>
+        Analyze &amp; Predict Stage
+      </button>
+      <div style="font-size:0.73rem; font-family:var(--font-mono); color:var(--text-muted); margin-top:0.75rem;">
+        Results appear below — no page reload required
+      </div>
     </div>
   </form>
 
-  <div id="resultSection" class="mt-4" style="max-width: 900px; margin-left:auto; margin-right:auto;"></div>
+  <!-- Result section -->
+  <div id="resultSection" style="margin-top:2rem;"></div>
+
 </div>
 
+<!-- ================================================================
+     SCAN OVERLAY
+     ================================================================ -->
 <div id="scanOverlay">
-  <div class="scan-box">
-    <div class="scan-ring"></div>
-    <div class="scan-title">Analyzing blood panel…</div>
-    <div id="scanSteps"></div>
-    <div class="scan-bar-track"><div class="scan-bar-fill" id="scanBarFill"></div></div>
+  <div class="scan-container">
+
+    <!-- DNA Spinner -->
+    <div class="dna-spinner">
+      <div class="dna-ring dna-ring-1"></div>
+      <div class="dna-ring dna-ring-2"></div>
+      <div class="dna-ring dna-ring-3"></div>
+      <div class="dna-core"></div>
+    </div>
+
+    <div class="scan-headline">Analyzing Blood Panel</div>
+    <div class="scan-sub" id="scanSubText">Initializing biomarker scan…</div>
+
+    <div class="scan-steps-list" id="scanStepsList"></div>
+
+    <div class="scan-progress-track">
+      <div class="scan-progress-fill" id="scanProgressFill"></div>
+    </div>
+    <div class="scan-percentage" id="scanPercent">0%</div>
   </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
 <script>
-const STAGE_COLORS = {
-  "Blood Donor": "#5c8a68",
-  "Suspect Blood Donor": "#c08a2e",
-  "Hepatitis": "#c08a2e",
-  "Fibrosis": "#a34630",
-  "Cirrhosis": "#6e2330",
+// ================================================================
+//  DEMO DATA PRESETS — 5 distinct clinical profiles
+// ================================================================
+const DEMOS = {
+  healthy: {
+    label: "Patient A — Healthy Blood Donor (32F, all values in normal range)",
+    data: { age:32, sex:"Female", alb:42.1, alp:55.0, alt:12.3, ast:18.5, bil:6.8, che:7.8, chol:4.6, crea:72, ggt:14.2, prot:74.0 }
+  },
+  suspect: {
+    label: "Patient B — Suspect Blood Donor (41M, borderline enzyme elevation)",
+    data: { age:41, sex:"Male", alb:37.4, alp:88.0, alt:38.0, ast:42.5, bil:13.5, che:6.1, chol:4.9, crea:91, ggt:52.0, prot:70.5 }
+  },
+  hepatitis: {
+    label: "Patient C — Active Hepatitis C (48M, elevated ALT/AST/GGT)",
+    data: { age:48, sex:"Male", alb:35.2, alp:98.5, alt:65.3, ast:58.7, bil:15.8, che:5.2, chol:4.1, crea:88, ggt:95.4, prot:65.0 }
+  },
+  fibrosis: {
+    label: "Patient D — Liver Fibrosis (54F, low ALB, high BIL, reduced CHE)",
+    data: { age:54, sex:"Female", alb:31.5, alp:118.0, alt:78.4, ast:84.2, bil:22.1, che:4.1, chol:3.5, crea:95, ggt:148.3, prot:60.8 }
+  },
+  cirrhosis: {
+    label: "Patient E — Cirrhosis (62M, critical values across all markers)",
+    data: { age:62, sex:"Male", alb:28.3, alp:145.8, alt:92.5, ast:108.3, bil:28.4, che:3.1, chol:2.9, crea:102, ggt:215.6, prot:55.2 }
+  }
 };
 
+// Field ID mapping
+const FIELD_MAP = {
+  age:"fAge", sex:"fSex", alb:"fAlb", alp:"fAlp", alt:"fAlt",
+  ast:"fAst", bil:"fBil", che:"fChe", chol:"fChol", crea:"fCrea",
+  ggt:"fGgt", prot:"fProt"
+};
+
+function loadDemo(key) {
+  const demo = DEMOS[key];
+  if (!demo) return;
+
+  // Animate form fields
+  Object.entries(demo.data).forEach(([k, v], i) => {
+    setTimeout(() => {
+      const el = document.getElementById(FIELD_MAP[k]);
+      if (!el) return;
+      el.style.transition = 'background 0.3s ease, transform 0.2s ease';
+      el.style.background = 'rgba(245,158,11,0.1)';
+      el.style.transform = 'scale(1.02)';
+      el.value = v;
+      setTimeout(() => {
+        el.style.background = '';
+        el.style.transform = '';
+      }, 600);
+    }, i * 40);
+  });
+
+  // Update label
+  document.getElementById('demoLabel').textContent = demo.label;
+
+  // Highlight active demo btn
+  document.querySelectorAll('.demo-btn').forEach(b => b.style.outline = 'none');
+  document.getElementById('demo' + key.charAt(0).toUpperCase() + key.slice(1)).style.outline = '2px solid currentColor';
+
+  // Clear results
+  const res = document.getElementById('resultSection');
+  res.style.display = 'none';
+  res.innerHTML = '';
+}
+
+// ================================================================
+//  SCAN OVERLAY ANIMATION
+// ================================================================
 const SCAN_STEPS = [
   "Validating input ranges",
-  "Checking protein markers (ALB, PROT)",
+  "Normalizing protein markers (ALB, PROT)",
   "Scanning liver enzymes (ALT, AST, ALP, GGT)",
   "Evaluating metabolic markers (BIL, CHE, CHOL, CREA)",
-  "Normalizing feature vector",
+  "Imputing & scaling feature vector",
   "Running XGBoost classifier",
   "Computing stage probabilities",
+  "Generating biomarker flags"
 ];
 
-function fillHealthy() {
-  const v = {age:32, sex:"Male", alb:38.5, alp:52.5, alt:7.7, ast:22.1, bil:7.5, che:6.93, chol:3.23, crea:106, ggt:12.1, prot:69};
-  Object.entries(v).forEach(([k, val]) => document.querySelector(`[name="${k}"]`).value = val);
-}
-function fillHepatitis() {
-  const v = {age:48, sex:"Male", alb:35.2, alp:98.5, alt:65.3, ast:58.7, bil:15.8, che:5.2, chol:4.1, crea:88, ggt:95.4, prot:65};
-  Object.entries(v).forEach(([k, val]) => document.querySelector(`[name="${k}"]`).value = val);
-}
-function fillCirrhosis() {
-  const v = {age:62, sex:"Male", alb:28.3, alp:145.8, alt:92.5, ast:108.3, bil:28.4, che:3.1, chol:2.9, crea:102, ggt:215.6, prot:55.2};
-  Object.entries(v).forEach(([k, val]) => document.querySelector(`[name="${k}"]`).value = val);
-}
-
 function renderScanSteps() {
-  const box = document.getElementById("scanSteps");
-  box.innerHTML = SCAN_STEPS.map((s, i) =>
-    `<div class="scan-step" id="step-${i}"><span class="mark"></span><span>${s}</span></div>`
-  ).join("");
+  document.getElementById('scanStepsList').innerHTML = SCAN_STEPS.map((s, i) =>
+    `<div class="scan-step" id="sstep-${i}">
+       <div class="scan-step-marker" id="smark-${i}"></div>
+       <span>${s}</span>
+     </div>`
+  ).join('');
 }
 
 function runScanAnimation() {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     renderScanSteps();
-    const overlay = document.getElementById("scanOverlay");
-    const bar = document.getElementById("scanBarFill");
-    overlay.classList.add("active");
+    const overlay = document.getElementById('scanOverlay');
+    const fill    = document.getElementById('scanProgressFill');
+    const pct     = document.getElementById('scanPercent');
+    const sub     = document.getElementById('scanSubText');
+
+    overlay.classList.add('active');
+    fill.style.width = '0%';
+    pct.textContent  = '0%';
+    sub.textContent  = 'Initializing biomarker scan…';
+
     let i = 0;
-    const stepDelay = 260;
+    const delay = 280;
+
     function tick() {
-      if (i > 0) document.getElementById(`step-${i-1}`).classList.replace("active", "done");
+      if (i > 0) {
+        document.getElementById(`sstep-${i-1}`).classList.remove('active');
+        document.getElementById(`sstep-${i-1}`).classList.add('done');
+        document.getElementById(`smark-${i-1}`).textContent = '✓';
+      }
       if (i < SCAN_STEPS.length) {
-        document.getElementById(`step-${i}`).classList.add("active");
-        bar.style.width = `${((i + 1) / SCAN_STEPS.length) * 100}%`;
+        document.getElementById(`sstep-${i}`).classList.add('active');
+        const progress = Math.round(((i + 1) / SCAN_STEPS.length) * 100);
+        fill.style.width = progress + '%';
+        pct.textContent  = progress + '%';
+        sub.textContent  = SCAN_STEPS[i] + '…';
         i++;
-        setTimeout(tick, stepDelay);
+        setTimeout(tick, delay);
       } else {
-        setTimeout(() => { overlay.classList.remove("active"); resolve(); }, 220);
+        fill.style.width = '100%';
+        pct.textContent  = '100%';
+        sub.textContent  = 'Classification complete';
+        setTimeout(() => {
+          overlay.classList.remove('active');
+          resolve();
+        }, 350);
       }
     }
     tick();
   });
 }
 
-function markerLabel(m) {
-  const names = {ALB:"Albumin", ALP:"Alk. Phosphatase", ALT:"ALT", AST:"AST", BIL:"Bilirubin",
-    CHE:"Cholinesterase", CHOL:"Cholesterol", CREA:"Creatinine", GGT:"GGT", PROT:"Total Protein"};
-  return names[m] || m;
-}
+// ================================================================
+//  RESULT RENDERING
+// ================================================================
+const STAGE_COLORS = {
+  "Blood Donor":        { hex: "#10b981", rgb: "16,185,129" },
+  "Suspect Blood Donor":{ hex: "#f59e0b", rgb: "245,158,11" },
+  "Hepatitis":          { hex: "#f97316", rgb: "249,115,22" },
+  "Fibrosis":           { hex: "#ef4444", rgb: "239,68,68"  },
+  "Cirrhosis":          { hex: "#fb7185", rgb: "251,113,133" },
+};
+
+const STAGE_ICONS = {
+  "Blood Donor": "✅", "Suspect Blood Donor": "⚠️",
+  "Hepatitis": "🔶",   "Fibrosis": "🔴",  "Cirrhosis": "🚨"
+};
+
+const MARKER_LABELS = {
+  ALB:"Albumin", ALP:"Alk.Phosphatase", ALT:"ALT", AST:"AST",
+  BIL:"Bilirubin", CHE:"Cholinesterase", CHOL:"Cholesterol",
+  CREA:"Creatinine", GGT:"GGT", PROT:"Total Protein"
+};
 
 function renderResult(data) {
-  const section = document.getElementById("resultSection");
-  const color = STAGE_COLORS[data.label] || "#2f6f62";
-  const chips = data.flags.map(f =>
-    `<span class="marker-chip ${f.status}">${markerLabel(f.marker)}: ${f.value} ${f.status !== "normal" ? "("+f.status+")" : ""}</span>`
-  ).join(" ");
-  const rows = data.probs.map((p, idx) => `
-    <tr>
-      <td class="text-center"><strong>#${idx+1}</strong></td>
-      <td><strong>${p.stage}</strong></td>
-      <td><strong>${p.value}%</strong></td>
-      <td><div class="progress"><div class="progress-bar" style="width:0%" data-target="${p.value}"></div></div></td>
-    </tr>`).join("");
+  const section = document.getElementById('resultSection');
+  const col     = STAGE_COLORS[data.label] || { hex: "#ef4444", rgb: "239,68,68" };
+  const icon    = STAGE_ICONS[data.label] || "📊";
+
+  // Confidence badge styling
+  const confStyle = `background:rgba(${col.rgb},0.1); border:1px solid rgba(${col.rgb},0.25); color:${col.hex}; padding:0.5rem 1.1rem; border-radius:50px; font-weight:700; font-family:var(--font-mono); font-size:1rem; display:inline-flex; align-items:center; gap:0.4rem;`;
+
+  // Biomarker chips
+  const chips = data.flags.map(f => {
+    const cls = f.status;
+    const icons = { normal: '●', low: '▼', high: '▲' };
+    return `<div class="biomarker-chip ${cls}">
+      <span class="biomarker-chip-icon">${icons[f.status]||'●'}</span>
+      ${MARKER_LABELS[f.marker]||f.marker}: <strong>${f.value}</strong>
+      ${f.status !== 'normal' ? `(${f.status})` : ''}
+    </div>`;
+  }).join('');
+
+  // Probability rows
+  const probRows = data.probs.map((p, idx) => {
+    const c = STAGE_COLORS[p.stage] || { hex: "#888", rgb: "136,136,136" };
+    return `<div class="prob-row">
+      <div class="prob-rank">#${idx+1}</div>
+      <div class="prob-name">${p.stage}</div>
+      <div class="prob-bar-track">
+        <div class="prob-bar-fill" data-target="${p.value}" style="background:${c.hex}; opacity:${p.value > 5 ? 1 : 0.4};"></div>
+      </div>
+      <div class="prob-value">${p.value}%</div>
+    </div>`;
+  }).join('');
 
   section.innerHTML = `
-    <div class="result-card" style="border-left-color: ${color};">
-      <h2 style="color: ${color};" class="fw-bold mb-2">${data.label}</h2>
-      <div class="confidence-badge mb-3">${data.confidence}% confidence</div>
-      <p class="mb-3">${data.desc}</p>
-      <div class="d-flex flex-wrap gap-2">${chips}</div>
+    <!-- Result Hero -->
+    <div class="result-hero" style="--result-color:${col.hex}; --result-rgb:${col.rgb}; border-color:rgba(${col.rgb},0.2);">
+      <div class="result-hero-bg"></div>
+      <div class="result-glow"></div>
+      <div style="display:flex; align-items:flex-start; gap:1.5rem; flex-wrap:wrap; position:relative; z-index:1;">
+        <div style="font-size:3.5rem; line-height:1;">${icon}</div>
+        <div style="flex:1; min-width:240px;">
+          <div class="result-stage-label">PREDICTED STAGE</div>
+          <div class="result-stage-name" style="color:${col.hex};">${data.label}</div>
+          <div class="result-desc">${data.desc}</div>
+          <div style="display:inline-block;" class="result-confidence">
+            <div style="${confStyle}">
+              <span>🎯</span>
+              ${data.confidence}% Confidence
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biomarker flags -->
+      <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--border); position:relative; z-index:1;">
+        <div style="font-size:0.72rem; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">Biomarker Status Flags</div>
+        <div class="biomarker-grid">${chips}</div>
+      </div>
     </div>
+
+    <!-- Probability distribution -->
     <div class="content-card">
-      <h4 class="fw-bold mb-3">Probability distribution</h4>
-      <table class="table table-hover align-middle">
-        <thead><tr><th>Rank</th><th>Stage</th><th>Probability</th><th style="width:40%">Distribution</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
+      <div class="card-header-label">Probability Distribution</div>
+      <h3 style="font-size:1.1rem; margin-bottom:1.25rem;">Classification Confidence Across All Stages</h3>
+      <div class="prob-table">${probRows}</div>
     </div>
-    <div class="text-center">
-      <a href="#predictForm" class="btn btn-outline-primary" onclick="document.getElementById('resultSection').classList.remove('active'); return true;">Run another prediction</a>
+
+    <!-- Actions -->
+    <div style="display:flex; gap:0.75rem; flex-wrap:wrap; justify-content:center; margin-top:1rem; margin-bottom:2rem;">
+      <button onclick="clearResult()" class="btn-ghost">← New Prediction</button>
+      <a href="{{ url_for('about') }}" class="btn-ghost">About the Model</a>
     </div>
   `;
-  section.classList.add("active");
+
+  section.style.display = 'block';
+
+  // Animate progress bars
   requestAnimationFrame(() => {
-    section.querySelectorAll(".progress-bar").forEach(bar => {
-      setTimeout(() => { bar.style.width = bar.dataset.target + "%"; }, 50);
+    section.querySelectorAll('.prob-bar-fill').forEach(bar => {
+      setTimeout(() => { bar.style.width = bar.dataset.target + '%'; }, 100);
     });
   });
-  section.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-document.getElementById("predictForm").addEventListener("submit", async function (e) {
+function clearResult() {
+  const s = document.getElementById('resultSection');
+  s.style.display = 'none';
+  s.innerHTML = '';
+  document.getElementById('predictForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ================================================================
+//  FORM SUBMIT
+// ================================================================
+document.getElementById('predictForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   const fd = new FormData(this);
   const payload = Object.fromEntries(fd.entries());
@@ -227,15 +492,15 @@ document.getElementById("predictForm").addEventListener("submit", async function
   const [, response] = await Promise.all([
     runScanAnimation(),
     fetch("{{ url_for('api_predict') }}", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    }),
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
   ]);
 
   const data = await response.json();
   if (!response.ok) {
-    alert(data.error || "Prediction failed.");
+    alert(data.error || 'Prediction failed.');
     return;
   }
   renderResult(data);
