@@ -8,9 +8,9 @@
     <div class="card-header-label" style="display:inline-flex; margin-bottom:0.75rem;">
       🔬 Prediction Engine
     </div>
-    <div class="predict-title">Enter Blood Panel Values</div>
+    <div class="predict-title">HCV Staging &amp; Diagnostic Intake</div>
     <div class="predict-subtitle">
-      Fill in routine lab results below. Use the demo presets to explore different disease profiles.
+      Don't have complete lab data? Use verified <strong>Clinical Patient Scenarios</strong>, scan a blood report photo with <strong>Gemini Vision</strong>, or use the <strong>AI Symptom Screener</strong>.
     </div>
   </div>
 
@@ -20,37 +20,310 @@
   </div>
   {% endif %}
 
-  <!-- Demo Presets Bar -->
-  <div class="demo-bar fade-up" style="animation-delay:0.08s">
-    <span class="demo-bar-label">📂 Demo Cases</span>
-
-    <button type="button" class="demo-btn healthy" id="demoHealthy" onclick="loadDemo('healthy')">
-      <div class="demo-btn-dot" style="background:var(--healthy)"></div>
-      Healthy Donor
+  <!-- Workflow Mode Switcher -->
+  <div class="workflow-switcher fade-up" style="animation-delay:0.05s;">
+    <button type="button" class="workflow-btn active" id="tabBtnScenarios" onclick="switchWorkflow('scenarios')">
+      <span>🧑‍⚕️</span> Clinical Patient Cases (Solution 3)
     </button>
-    <button type="button" class="demo-btn suspect" id="demoSuspect" onclick="loadDemo('suspect')">
-      <div class="demo-btn-dot" style="background:var(--suspect)"></div>
-      Suspect Donor
+    <button type="button" class="workflow-btn" id="tabBtnScanner" onclick="switchWorkflow('scanner')">
+      <span>📸</span> AI Lab Report Scanner (Solution 4)
     </button>
-    <button type="button" class="demo-btn hepatitis" id="demoHepatitis" onclick="loadDemo('hepatitis')">
-      <div class="demo-btn-dot" style="background:var(--hepatitis)"></div>
-      Hepatitis
+    <button type="button" class="workflow-btn" id="tabBtnScreener" onclick="switchWorkflow('screener')">
+      <span>🩺</span> AI Symptom &amp; Risk Screener
     </button>
-    <button type="button" class="demo-btn fibrosis" id="demoFibrosis" onclick="loadDemo('fibrosis')">
-      <div class="demo-btn-dot" style="background:var(--fibrosis)"></div>
-      Fibrosis
+    <button type="button" class="workflow-btn-api" onclick="toggleApiKeyModal()">
+      <span>🔑</span> <span id="apiKeyStatusText">Gemini API Key</span>
     </button>
-    <button type="button" class="demo-btn cirrhosis" id="demoCirrhosis" onclick="loadDemo('cirrhosis')">
-      <div class="demo-btn-dot" style="background:var(--rose)"></div>
-      Cirrhosis
-    </button>
-
-    <span id="demoLabel" style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-muted); margin-left:auto; font-style:italic;"></span>
   </div>
 
-  <!-- Form -->
-  <form id="predictForm" class="fade-up" style="animation-delay:0.12s;">
+  <!-- API Key Banner / Modal (Collapsible) -->
+  <div id="apiKeyBanner" class="api-key-banner fade-up" style="display:none;">
+    <div style="flex:1; min-width:260px;">
+      <strong style="color:var(--text-primary); display:block; margin-bottom:0.25rem;">
+        🔑 Google Gemini API Configuration
+      </strong>
+      <div style="color:var(--text-secondary); font-size:0.78rem;">
+        Used for live photo OCR extraction and symptom screening. Get a free API key at
+        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--red); font-weight:600;">Google AI Studio ↗</a>.
+        (Note: Built-in sample reports and clinical case studies work 100% offline without a key!)
+      </div>
+    </div>
+    <div style="display:flex; gap:0.5rem; align-items:center;">
+      <input type="password" id="geminiApiKeyInput" class="form-control" style="width:240px; padding:0.4rem 0.75rem; font-size:0.8rem;" placeholder="Paste AI Studio Key...">
+      <button type="button" class="btn-primary" style="padding:0.4rem 0.9rem; font-size:0.8rem;" onclick="saveApiKey()">Save</button>
+      <button type="button" class="btn-ghost" style="padding:0.4rem 0.75rem; font-size:0.8rem;" onclick="toggleApiKeyModal()">Close</button>
+    </div>
+  </div>
 
+  <!-- ============================================================
+       TAB 1: CLINICAL PATIENT CASES (SOLUTION 3)
+       ============================================================ -->
+  <div id="tabPanelScenarios" class="fade-up" style="animation-delay:0.08s;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+      <div style="font-size:0.82rem; font-family:var(--font-mono); font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;">
+        Select a Clinical Patient Persona (Pre-Loaded for Presentations)
+      </div>
+      <div style="font-size:0.75rem; color:var(--text-muted);">
+        Click any case to inspect patient history and auto-fill data
+      </div>
+    </div>
+
+    <!-- Case Selection Grid -->
+    <div class="case-selector-grid">
+      <button type="button" class="case-card-btn active" id="caseBtn_healthy" onclick="selectCase('healthy')">
+        <div class="case-card-head">
+          <span class="case-card-title">Case 1: Healthy Donor</span>
+          <span class="case-stage-dot" style="background:var(--healthy);"></span>
+        </div>
+        <div class="case-card-sub">32F · Annual Physical Checkup</div>
+      </button>
+
+      <button type="button" class="case-card-btn" id="caseBtn_suspect" onclick="selectCase('suspect')">
+        <div class="case-card-head">
+          <span class="case-card-title">Case 2: Deferred Donor</span>
+          <span class="case-stage-dot" style="background:var(--suspect);"></span>
+        </div>
+        <div class="case-card-sub">41M · Borderline Transaminases</div>
+      </button>
+
+      <button type="button" class="case-card-btn" id="caseBtn_hepatitis" onclick="selectCase('hepatitis')">
+        <div class="case-card-head">
+          <span class="case-card-title">Case 3: Active Hepatitis</span>
+          <span class="case-stage-dot" style="background:var(--hepatitis);"></span>
+        </div>
+        <div class="case-card-sub">48M · Acute Infection (ALT 184)</div>
+      </button>
+
+      <button type="button" class="case-card-btn" id="caseBtn_fibrosis" onclick="selectCase('fibrosis')">
+        <div class="case-card-head">
+          <span class="case-card-title">Case 4: Hepatic Fibrosis</span>
+          <span class="case-stage-dot" style="background:var(--fibrosis);"></span>
+        </div>
+        <div class="case-card-sub">54F · Scar Tissue Progression</div>
+      </button>
+
+      <button type="button" class="case-card-btn" id="caseBtn_cirrhosis" onclick="selectCase('cirrhosis')">
+        <div class="case-card-head">
+          <span class="case-card-title">Case 5: Cirrhosis</span>
+          <span class="case-stage-dot" style="background:var(--cirrhosis);"></span>
+        </div>
+        <div class="case-card-sub">62M · End-Stage Liver Disease</div>
+      </button>
+    </div>
+
+    <!-- Active Narrative Box -->
+    <div class="case-narrative-box" id="caseNarrativeBox">
+      <div class="case-narrative-title">
+        <span id="caseNarrativeIcon">🟢</span>
+        <span id="caseNarrativeHeading">Patient Case 1: Healthy Blood Donor (Annual Checkup)</span>
+      </div>
+      <div class="case-narrative-text" id="caseNarrativeText">
+        32-year-old female presenting for routine corporate annual screening. Reports zero symptoms, no history of blood transfusions, and maintains an active lifestyle. All biochemical markers within ideal clinical ranges.
+      </div>
+      <div style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-muted); font-weight:600; text-transform:uppercase; margin-top:0.35rem;">
+        Biomarker Pattern &amp; Key Findings:
+      </div>
+      <div class="case-anomalies-list" id="caseAnomaliesList">
+        <span class="case-anomaly-chip" style="color:var(--healthy);">ALT: 12.3 U/L (Normal)</span>
+        <span class="case-anomaly-chip" style="color:var(--healthy);">AST: 18.5 U/L (Normal)</span>
+        <span class="case-anomaly-chip" style="color:var(--healthy);">ALB: 42.1 g/L (Optimal Synthesis)</span>
+        <span class="case-anomaly-chip" style="color:var(--healthy);">BIL: 6.8 µmol/L (Healthy Clearance)</span>
+      </div>
+      <div style="margin-top:0.5rem;">
+        <button type="button" class="btn-primary" style="padding:0.45rem 1.1rem; font-size:0.82rem;" onclick="applyCaseToForm()">
+          ✓ Case Values Loaded into Form Below
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TAB 2: AI LAB REPORT SCANNER (SOLUTION 4 - GEMINI VISION)
+       ============================================================ -->
+  <div id="tabPanelScanner" class="fade-up" style="display:none;">
+    <div class="screener-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+        <div class="card-header-label" style="margin-bottom:0;">📸 Multimodal Vision OCR</div>
+        <div style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-muted);">
+          Powered by Google Gemini 1.5 Flash
+        </div>
+      </div>
+      <h3 style="font-size:1.15rem; margin-bottom:0.5rem;">Extract Biomarkers from Lab Test Photos or PDFs</h3>
+      <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:1.25rem;">
+        Upload a photo or scanned copy of a blood test report. The multimodal AI will extract all 12 biomarkers and automatically populate the fields.
+      </p>
+
+      <!-- Dropzone -->
+      <div class="scanner-dropzone" id="scannerDropzone" onclick="document.getElementById('reportFileInput').click()">
+        <input type="file" id="reportFileInput" accept="image/*,.pdf" style="display:none;" onchange="handleFileUpload(event)">
+        <div class="scanner-icon">📄</div>
+        <div class="scanner-title" id="dropzoneTitle">Click to browse or Drag &amp; Drop lab report photo</div>
+        <div class="scanner-sub" id="dropzoneSub">Supports JPG, PNG, WebP, PDF medical reports</div>
+      </div>
+
+      <!-- Sample Report Buttons (Offline demonstration) -->
+      <div class="sample-reports-bar">
+        <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-muted); font-weight:600; text-transform:uppercase;">
+          Or Test Built-In Sample Reports:
+        </span>
+        <button type="button" class="sample-report-btn" onclick="scanSampleReport('sample_donor')">
+          <span>📋</span> Normal Donor Panel
+        </button>
+        <button type="button" class="sample-report-btn" onclick="scanSampleReport('sample_hepatitis')">
+          <span>📋</span> Active Hepatitis LFP
+        </button>
+        <button type="button" class="sample-report-btn" onclick="scanSampleReport('sample_cirrhosis')">
+          <span>📋</span> Cirrhosis Panel
+        </button>
+      </div>
+
+      <!-- Scan status feedback -->
+      <div id="scanResultFeedback" style="display:none; padding:1rem 1.25rem; background:var(--bg-subtle); border:1px solid var(--border); border-radius:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <strong style="color:var(--text-primary); font-size:0.9rem;" id="feedbackReportTitle">Report Extracted</strong>
+          <span class="hero-pill" style="color:var(--healthy); font-weight:700;" id="feedbackReportSource">✓ OCR Verified</span>
+        </div>
+        <div style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.75rem;" id="feedbackReportNotes"></div>
+        <div style="font-size:0.78rem; font-family:var(--font-mono); color:var(--healthy); font-weight:600;">
+          ✓ All extracted biomarker values have been transferred to the prediction form below!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TAB 3: AI SYMPTOM & RISK SCREENER (SOLUTION 4 - ZERO LAB DATA)
+       ============================================================ -->
+  <div id="tabPanelScreener" class="fade-up" style="display:none;">
+    <div class="screener-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+        <div class="card-header-label" style="margin-bottom:0;">🩺 Zero-Data Screener</div>
+        <div style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-muted);">
+          Evidence-Based Risk Stratification
+        </div>
+      </div>
+      <h3 style="font-size:1.15rem; margin-bottom:0.5rem;">Don't Have Lab Test Values? Check Clinical Risk Factors</h3>
+      <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:1.5rem;">
+        Select any applicable symptoms or exposure histories below. The clinical screener calculates risk probability and estimates an indicative biomarker panel to simulate staging.
+      </p>
+
+      <div class="screener-grid">
+        <label class="symptom-item">
+          <input type="checkbox" id="symp_jaundice">
+          <div>
+            <span class="symptom-label">Jaundice / Yellowing</span>
+            <span class="symptom-desc">Yellow discoloration of the whites of eyes or skin</span>
+          </div>
+        </label>
+
+        <label class="symptom-item">
+          <input type="checkbox" id="symp_dark_urine">
+          <div>
+            <span class="symptom-label">Dark / Tea-Colored Urine</span>
+            <span class="symptom-desc">Unusually dark urine indicating excess bilirubin</span>
+          </div>
+        </label>
+
+        <label class="symptom-item">
+          <input type="checkbox" id="symp_fatigue">
+          <div>
+            <span class="symptom-label">Chronic Unexplained Fatigue</span>
+            <span class="symptom-desc">Persistent exhaustion not relieved by sleep</span>
+          </div>
+        </label>
+
+        <label class="symptom-item">
+          <input type="checkbox" id="symp_abdominal_pain">
+          <div>
+            <span class="symptom-label">Right Upper Abdominal Discomfort</span>
+            <span class="symptom-desc">Dull ache or fullness in the right rib cage area</span>
+          </div>
+        </label>
+
+        <label class="symptom-item">
+          <input type="checkbox" id="symp_transfusion">
+          <div>
+            <span class="symptom-label">Blood Transfusion (Pre-1992)</span>
+            <span class="symptom-desc">Received blood or organ donation before universal HCV screening</span>
+          </div>
+        </label>
+
+        <label class="symptom-item">
+          <input type="checkbox" id="symp_tattoos">
+          <div>
+            <span class="symptom-label">Tattoos or Body Piercings</span>
+            <span class="symptom-desc">Unregulated inks, non-sterile needles, or medical procedures</span>
+          </div>
+        </label>
+
+        <label class="symptom-item">
+          <input type="checkbox" id="symp_alcohol">
+          <div>
+            <span class="symptom-label">Heavy / Regular Alcohol History</span>
+            <span class="symptom-desc">Accelerates viral replication and liver fibrosis rate</span>
+          </div>
+        </label>
+
+        <label class="symptom-item">
+          <input type="checkbox" id="symp_family">
+          <div>
+            <span class="symptom-label">Family History of Liver Disease</span>
+            <span class="symptom-desc">Direct relative with Hepatitis B/C, Cirrhosis, or Hepatoma</span>
+          </div>
+        </label>
+      </div>
+
+      <div style="text-align:center;">
+        <button type="button" class="btn-primary" onclick="evaluateSymptoms()">
+          <span>🩺</span> Evaluate Clinical Risk &amp; Generate Estimated Panel
+        </button>
+      </div>
+
+      <!-- Screener result box -->
+      <div id="screenerResultBox" class="screener-result-box" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+          <div style="font-size:0.75rem; font-family:var(--font-mono); font-weight:700; text-transform:uppercase; color:var(--text-muted);">
+            AI Clinical Assessment
+          </div>
+          <div style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.3rem 0.85rem; border-radius:50px; font-weight:700; font-family:var(--font-mono); font-size:0.85rem;" id="screenerRiskBadge">
+            <span id="screenerRiskDot">●</span> <span id="screenerRiskLevel">Moderate Risk</span>
+          </div>
+        </div>
+        <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1rem;" id="screenerRationale"></p>
+        <div style="font-size:0.78rem; font-family:var(--font-mono); font-weight:700; color:var(--text-primary); margin-bottom:0.35rem;">
+          Recommended Physician Action:
+        </div>
+        <ul style="font-size:0.82rem; color:var(--text-secondary); line-height:1.6; padding-left:1.25rem; margin-bottom:1.25rem;" id="screenerRecsList"></ul>
+        <div>
+          <button type="button" class="btn-primary" style="padding:0.55rem 1.25rem; font-size:0.86rem;" onclick="applyScreenerPanelToForm()">
+            ✨ Apply Estimated Biomarkers to Prediction Form Below ↓
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PREDICTION FORM (Active Intake)
+       ============================================================ -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2rem; margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
+    <div>
+      <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:0.2rem;">Biomarker Input Data</h3>
+      <div style="font-size:0.78rem; font-family:var(--font-mono); color:var(--text-muted);">
+        All fields optional · Missing values are imputed with trained clinical medians
+      </div>
+    </div>
+    <div style="display:flex; gap:0.5rem;">
+      <button type="button" class="sample-report-btn" onclick="populateNormalBaselines()" title="Fills standard healthy reference averages">
+        <span>✨</span> Fill Normal Baselines
+      </button>
+      <button type="button" class="sample-report-btn" onclick="clearAllFormFields()" title="Clears all inputs">
+        <span>🧹</span> Clear Fields
+      </button>
+    </div>
+  </div>
+
+  <form id="predictForm" class="fade-up" style="animation-delay:0.12s;">
     <div class="row g-4">
 
       <!-- Demographics -->
@@ -63,7 +336,7 @@
               <span class="form-label-name">Age</span>
               <span class="form-label-unit"> — years</span>
             </label>
-            <input type="number" step="1" min="1" max="120" class="form-control" name="age" id="fAge" value="45" required>
+            <input type="number" step="1" min="1" max="120" class="form-control" name="age" id="fAge" value="32">
             <div class="range-hint">Typical range: 18–90 years</div>
           </div>
 
@@ -71,9 +344,9 @@
             <label class="form-label">
               <span class="form-label-name">Sex</span>
             </label>
-            <select class="form-select" name="sex" id="fSex" required>
-              <option value="Male">Male</option>
+            <select class="form-select" name="sex" id="fSex">
               <option value="Female">Female</option>
+              <option value="Male">Male</option>
             </select>
           </div>
         </div>
@@ -89,7 +362,7 @@
               <span class="form-label-name">ALB</span>
               <span class="form-label-unit"> — Albumin (g/L)</span>
             </label>
-            <input type="number" step="0.1" class="form-control" name="alb" id="fAlb" value="41.0" required>
+            <input type="number" step="0.1" class="form-control" name="alb" id="fAlb" value="42.1">
             <div class="range-hint">Normal: 35–50 g/L</div>
           </div>
 
@@ -98,7 +371,7 @@
               <span class="form-label-name">PROT</span>
               <span class="form-label-unit"> — Total Protein (g/L)</span>
             </label>
-            <input type="number" step="0.1" class="form-control" name="prot" id="fProt" value="72.0" required>
+            <input type="number" step="0.1" class="form-control" name="prot" id="fProt" value="74.0">
             <div class="range-hint">Normal: 64–83 g/L</div>
           </div>
         </div>
@@ -114,7 +387,7 @@
                 <span class="form-label-name">ALT</span>
                 <span class="form-label-unit"> (U/L)</span>
               </label>
-              <input type="number" step="0.1" class="form-control" name="alt" id="fAlt" value="24.0" required>
+              <input type="number" step="0.1" class="form-control" name="alt" id="fAlt" value="12.3">
               <div class="range-hint">Normal: 7–56</div>
             </div>
             <div class="col-6">
@@ -122,7 +395,7 @@
                 <span class="form-label-name">AST</span>
                 <span class="form-label-unit"> (U/L)</span>
               </label>
-              <input type="number" step="0.1" class="form-control" name="ast" id="fAst" value="25.0" required>
+              <input type="number" step="0.1" class="form-control" name="ast" id="fAst" value="18.5">
               <div class="range-hint">Normal: 10–40</div>
             </div>
             <div class="col-6">
@@ -130,7 +403,7 @@
                 <span class="form-label-name">ALP</span>
                 <span class="form-label-unit"> (U/L)</span>
               </label>
-              <input type="number" step="0.1" class="form-control" name="alp" id="fAlp" value="68.0" required>
+              <input type="number" step="0.1" class="form-control" name="alp" id="fAlp" value="55.0">
               <div class="range-hint">Normal: 40–130</div>
             </div>
             <div class="col-6">
@@ -138,7 +411,7 @@
                 <span class="form-label-name">GGT</span>
                 <span class="form-label-unit"> (U/L)</span>
               </label>
-              <input type="number" step="0.1" class="form-control" name="ggt" id="fGgt" value="25.0" required>
+              <input type="number" step="0.1" class="form-control" name="ggt" id="fGgt" value="14.2">
               <div class="range-hint">Normal: 8–61</div>
             </div>
           </div>
@@ -155,7 +428,7 @@
                 <span class="form-label-name">BIL</span>
                 <span class="form-label-unit"> (µmol/L)</span>
               </label>
-              <input type="number" step="0.1" class="form-control" name="bil" id="fBil" value="7.0" required>
+              <input type="number" step="0.1" class="form-control" name="bil" id="fBil" value="6.8">
               <div class="range-hint">Normal: 3–17</div>
             </div>
             <div class="col-6">
@@ -163,7 +436,7 @@
                 <span class="form-label-name">CHE</span>
                 <span class="form-label-unit"> (kU/L)</span>
               </label>
-              <input type="number" step="0.1" class="form-control" name="che" id="fChe" value="8.0" required>
+              <input type="number" step="0.1" class="form-control" name="che" id="fChe" value="7.8">
               <div class="range-hint">Normal: 4.5–11.5</div>
             </div>
             <div class="col-6">
@@ -171,7 +444,7 @@
                 <span class="form-label-name">CHOL</span>
                 <span class="form-label-unit"> (mmol/L)</span>
               </label>
-              <input type="number" step="0.1" class="form-control" name="chol" id="fChol" value="5.2" required>
+              <input type="number" step="0.1" class="form-control" name="chol" id="fChol" value="4.6">
               <div class="range-hint">Normal: 3.0–5.2</div>
             </div>
             <div class="col-6">
@@ -179,7 +452,7 @@
                 <span class="form-label-name">CREA</span>
                 <span class="form-label-unit"> (µmol/L)</span>
               </label>
-              <input type="number" step="0.1" class="form-control" name="crea" id="fCrea" value="81.0" required>
+              <input type="number" step="0.1" class="form-control" name="crea" id="fCrea" value="72.0">
               <div class="range-hint">Normal: 60–110</div>
             </div>
           </div>
@@ -188,20 +461,20 @@
 
     </div>
 
-    <!-- Submit -->
-    <div style="text-align:center; margin-top:2rem;">
+    <!-- Submit Action -->
+    <div style="text-align:center; margin-top:2.25rem;">
       <button type="submit" class="btn-analyze" id="submitBtn">
         <span class="btn-analyze-icon">🧬</span>
         Analyze &amp; Predict Stage
       </button>
-      <div style="font-size:0.73rem; font-family:var(--font-mono); color:var(--text-muted); margin-top:0.75rem;">
-        Results appear below — no page reload required
+      <div style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-muted); margin-top:0.75rem;">
+        Partial data accepted · Missing fields automatically imputed with training medians
       </div>
     </div>
   </form>
 
   <!-- Result section -->
-  <div id="resultSection" style="margin-top:2rem;"></div>
+  <div id="resultSection" style="margin-top:2.5rem;"></div>
 
 </div>
 
@@ -210,8 +483,6 @@
      ================================================================ -->
 <div id="scanOverlay">
   <div class="scan-container">
-
-    <!-- DNA Spinner -->
     <div class="dna-spinner">
       <div class="dna-ring dna-ring-1"></div>
       <div class="dna-ring dna-ring-2"></div>
@@ -235,118 +506,357 @@
 {% block scripts %}
 <script>
 // ================================================================
-//  DEMO DATA PRESETS — 5 distinct clinical profiles
+//  PATIENT CASE PERSONAS DATA (SOLUTION 3)
 // ================================================================
-const DEMOS = {
+const PATIENT_CASES = {
   healthy: {
-    label: "Patient A — Healthy Blood Donor (32F, all values in normal range)",
-    data: { age:32, sex:"Female", alb:42.1, alp:55.0, alt:12.3, ast:18.5, bil:6.8, che:7.8, chol:4.6, crea:72, ggt:14.2, prot:74.0 }
+    heading: "Patient Case 1: Healthy Blood Donor (Annual Checkup)",
+    icon: "🟢",
+    text: "32-year-old female presenting for routine corporate annual screening. Reports zero symptoms, no history of blood transfusions, and maintains an active lifestyle. All biochemical markers within ideal clinical ranges.",
+    anomalies: [
+      { text: "ALT: 12.3 U/L (Healthy)", color: "var(--healthy)" },
+      { text: "AST: 18.5 U/L (Healthy)", color: "var(--healthy)" },
+      { text: "ALB: 42.1 g/L (Optimal Synthesis)", color: "var(--healthy)" },
+      { text: "BIL: 6.8 µmol/L (Healthy Clearance)", color: "var(--healthy)" }
+    ],
+    data: { age: 32, sex: "Female", alb: 42.1, alp: 55.0, alt: 12.3, ast: 18.5, bil: 6.8, che: 7.8, chol: 4.6, crea: 72.0, ggt: 14.2, prot: 74.0 }
   },
   suspect: {
-    label: "Patient B — Suspect Blood Donor (41M, borderline enzyme elevation)",
-    data: { age:41, sex:"Male", alb:37.4, alp:88.0, alt:38.0, ast:42.5, bil:13.5, che:6.1, chol:4.9, crea:91, ggt:52.0, prot:70.5 }
+    heading: "Patient Case 2: Borderline / Deferred Blood Donor",
+    icon: "🟡",
+    text: "41-year-old male deferred during a community blood drive due to borderline transaminase elevation. Patient reports mild general fatigue and occasional alcohol consumption. Markers show slight cellular leakage needing 6-month monitoring.",
+    anomalies: [
+      { text: "ALT: 38.0 U/L (Borderline High)", color: "var(--suspect)" },
+      { text: "AST: 42.5 U/L (Mild Elevation)", color: "var(--suspect)" },
+      { text: "GGT: 52.0 U/L (Upper Normal Limit)", color: "var(--suspect)" },
+      { text: "ALB: 37.4 g/L (Preserved Synthesis)", color: "var(--healthy)" }
+    ],
+    data: { age: 41, sex: "Male", alb: 37.4, alp: 88.0, alt: 38.0, ast: 42.5, bil: 13.5, che: 6.1, chol: 4.9, crea: 91.0, ggt: 52.0, prot: 70.5 }
   },
   hepatitis: {
-    label: "Patient C — Active Hepatitis C (48M, elevated ALT/AST/GGT)",
-    data: { age:48, sex:"Male", alb:35.2, alp:98.5, alt:65.3, ast:58.7, bil:15.8, che:5.2, chol:4.1, crea:88, ggt:95.4, prot:65.0 }
+    heading: "Patient Case 3: Acute Active Hepatitis C Infection",
+    icon: "🟠",
+    text: "48-year-old male presenting with tea-colored dark urine, right upper quadrant discomfort, and mild scleral icterus (yellow eyes). Laboratory findings exhibit severe acute transaminitis consistent with an active cytotoxic immune attack on hepatocytes.",
+    anomalies: [
+      { text: "ALT: 184.0 U/L (Marked 3x ULN Transaminitis)", color: "var(--hepatitis)" },
+      { text: "AST: 152.0 U/L (Marked Cytotoxic Release)", color: "var(--hepatitis)" },
+      { text: "GGT: 96.0 U/L (Biliary Stress)", color: "var(--hepatitis)" },
+      { text: "BIL: 22.4 µmol/L (Hyperbilirubinemia)", color: "var(--hepatitis)" }
+    ],
+    data: { age: 48, sex: "Male", alb: 37.5, alp: 95.0, alt: 184.0, ast: 152.0, bil: 22.4, che: 6.4, chol: 4.6, crea: 88.0, ggt: 96.0, prot: 71.0 }
   },
   fibrosis: {
-    label: "Patient D — Liver Fibrosis (54F, low ALB, high BIL, reduced CHE)",
-    data: { age:54, sex:"Female", alb:31.5, alp:118.0, alt:78.4, ast:84.2, bil:22.1, che:4.1, chol:3.5, crea:95, ggt:148.3, prot:60.8 }
+    heading: "Patient Case 4: Chronic HCV with Hepatic Fibrosis",
+    icon: "🔴",
+    text: "54-year-old female diagnosed with Hepatitis C 14 years ago without completed antiviral cure. Shows emerging clinical signs of structural liver scarring, progressive collagen deposition, and declining functional protein synthesis.",
+    anomalies: [
+      { text: "ALB: 31.5 g/L (Declining Albumin Synthesis)", color: "var(--fibrosis)" },
+      { text: "CHE: 4.1 kU/L (Decreased Cholinesterase)", color: "var(--fibrosis)" },
+      { text: "GGT: 148.3 U/L (Significant Elevation)", color: "var(--fibrosis)" },
+      { text: "AST/ALT Ratio: ~1.07 (Fibrotic Transition)", color: "var(--fibrosis)" }
+    ],
+    data: { age: 54, sex: "Female", alb: 31.5, alp: 118.0, alt: 78.4, ast: 84.2, bil: 22.1, che: 4.1, chol: 3.5, crea: 95.0, ggt: 148.3, prot: 60.8 }
   },
   cirrhosis: {
-    label: "Patient E — Cirrhosis (62M, critical values across all markers)",
-    data: { age:62, sex:"Male", alb:28.3, alp:145.8, alt:92.5, ast:108.3, bil:28.4, che:3.1, chol:2.9, crea:102, ggt:215.6, prot:55.2 }
+    heading: "Patient Case 5: Decompensated Cirrhosis (End Stage)",
+    icon: "🚨",
+    text: "62-year-old male with long-standing untreated HCV presenting with abdominal distension (ascites), spider angiomas, and jaundice. Critical biochemical derangements confirm advanced architectural distortion, portal hypertension, and functional hepatic failure.",
+    anomalies: [
+      { text: "ALB: 24.5 g/L (Severe Hypoalbuminemia)", color: "var(--cirrhosis)" },
+      { text: "CHE: 2.8 kU/L (Severely Depressed Synthesis)", color: "var(--cirrhosis)" },
+      { text: "BIL: 62.0 µmol/L (Severe Jaundice)", color: "var(--cirrhosis)" },
+      { text: "AST > ALT: 112 / 78 (Inverted Ratio)", color: "var(--cirrhosis)" }
+    ],
+    data: { age: 62, sex: "Male", alb: 24.5, alp: 165.0, alt: 78.0, ast: 112.0, bil: 62.0, che: 2.8, chol: 2.4, crea: 135.0, ggt: 142.0, prot: 58.0 }
   }
 };
 
-// Field ID mapping
-const FIELD_MAP = {
-  age:"fAge", sex:"fSex", alb:"fAlb", alp:"fAlp", alt:"fAlt",
-  ast:"fAst", bil:"fBil", che:"fChe", chol:"fChol", crea:"fCrea",
-  ggt:"fGgt", prot:"fProt"
-};
+let currentCaseKey = "healthy";
 
-function loadDemo(key) {
-  const demo = DEMOS[key];
-  if (!demo) return;
+function selectCase(caseKey) {
+  currentCaseKey = caseKey;
+  const p = PATIENT_CASES[caseKey];
+  if (!p) return;
 
-  // Animate form fields
-  Object.entries(demo.data).forEach(([k, v], i) => {
-    setTimeout(() => {
-      const el = document.getElementById(FIELD_MAP[k]);
-      if (!el) return;
-      el.style.transition = 'background 0.3s ease, transform 0.2s ease';
-      el.style.background = 'rgba(245,158,11,0.1)';
-      el.style.transform = 'scale(1.02)';
-      el.value = v;
-      setTimeout(() => {
-        el.style.background = '';
-        el.style.transform = '';
-      }, 600);
-    }, i * 40);
-  });
+  // Update active button state
+  document.querySelectorAll('.case-card-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.getElementById('caseBtn_' + caseKey);
+  if (activeBtn) activeBtn.classList.add('active');
 
-  // Update label
-  document.getElementById('demoLabel').textContent = demo.label;
+  // Update narrative display
+  document.getElementById('caseNarrativeIcon').textContent = p.icon;
+  document.getElementById('caseNarrativeHeading').textContent = p.heading;
+  document.getElementById('caseNarrativeText').textContent = p.text;
 
-  // Highlight active demo btn
-  document.querySelectorAll('.demo-btn').forEach(b => b.style.outline = 'none');
-  document.getElementById('demo' + key.charAt(0).toUpperCase() + key.slice(1)).style.outline = '2px solid currentColor';
+  const anomContainer = document.getElementById('caseAnomaliesList');
+  anomContainer.innerHTML = p.anomalies.map(a => `<span class="case-anomaly-chip" style="color:${a.color};">${a.text}</span>`).join('');
 
-  // Clear results
-  const res = document.getElementById('resultSection');
-  res.style.display = 'none';
-  res.innerHTML = '';
+  // Populate form
+  applyCaseToForm();
+}
+
+function applyCaseToForm() {
+  const p = PATIENT_CASES[currentCaseKey];
+  if (!p) return;
+  fillFormFields(p.data);
 }
 
 // ================================================================
-//  SCAN OVERLAY ANIMATION
+//  WORKFLOW SWITCHER
+// ================================================================
+function switchWorkflow(mode) {
+  // Tabs
+  ['scenarios', 'scanner', 'screener'].forEach(m => {
+    const btn = document.getElementById('tabBtn' + m.charAt(0).toUpperCase() + m.slice(1));
+    const panel = document.getElementById('tabPanel' + m.charAt(0).toUpperCase() + m.slice(1));
+    if (m === mode) {
+      if (btn) btn.classList.add('active');
+      if (panel) panel.style.display = 'block';
+    } else {
+      if (btn) btn.classList.remove('active');
+      if (panel) panel.style.display = 'none';
+    }
+  });
+}
+
+function toggleApiKeyModal() {
+  const banner = document.getElementById('apiKeyBanner');
+  banner.style.display = (banner.style.display === 'none' || banner.style.display === '') ? 'flex' : 'none';
+  const savedKey = localStorage.getItem('gemini_api_key') || '';
+  document.getElementById('geminiApiKeyInput').value = savedKey;
+}
+
+function saveApiKey() {
+  const input = document.getElementById('geminiApiKeyInput');
+  const key = (input.value || '').trim();
+  if (key) {
+    localStorage.setItem('gemini_api_key', key);
+    document.getElementById('apiKeyStatusText').textContent = 'Key Active ✓';
+    alert('Gemini API Key saved successfully in your local browser storage!');
+  } else {
+    localStorage.removeItem('gemini_api_key');
+    document.getElementById('apiKeyStatusText').textContent = 'Gemini API Key';
+  }
+  document.getElementById('apiKeyBanner').style.display = 'none';
+}
+
+// ================================================================
+//  AI LAB REPORT SCANNER (SOLUTION 4)
+// ================================================================
+async function scanSampleReport(sampleId) {
+  try {
+    const res = await fetch(`/api/scan-lab-report?sample=${sampleId}`, { method: 'POST' });
+    const json = await res.json();
+    if (json.status === 'success') {
+      showScanFeedback(json);
+      fillFormFields(json.data);
+      document.getElementById('predictForm').scrollIntoView({ behavior: 'smooth' });
+    }
+  } catch (err) {
+    alert('Failed to load sample report: ' + err);
+  }
+}
+
+async function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const dropzoneTitle = document.getElementById('dropzoneTitle');
+  const dropzoneSub = document.getElementById('dropzoneSub');
+  dropzoneTitle.textContent = `Scanning: ${file.name}…`;
+  dropzoneSub.textContent = `Extracting liver function panel via Gemini Vision AI…`;
+
+  const apiKey = localStorage.getItem('gemini_api_key') || '';
+  const formData = new FormData();
+  formData.append('file', file);
+  if (apiKey) formData.append('apiKey', apiKey);
+
+  try {
+    const res = await fetch('/api/scan-lab-report', {
+      method: 'POST',
+      headers: apiKey ? { 'X-Gemini-Key': apiKey } : {},
+      body: formData
+    });
+    const json = await res.json();
+
+    if (json.status === 'api_key_required') {
+      dropzoneTitle.textContent = 'Gemini API Key Required';
+      dropzoneSub.textContent = json.error;
+      toggleApiKeyModal();
+      return;
+    }
+
+    if (json.status === 'success') {
+      dropzoneTitle.textContent = `Extracted: ${file.name}`;
+      dropzoneSub.textContent = `12 biomarkers parsed successfully`;
+      showScanFeedback(json);
+      fillFormFields(json.data);
+      document.getElementById('predictForm').scrollIntoView({ behavior: 'smooth' });
+    } else {
+      alert(json.error || 'Failed to extract lab report.');
+    }
+  } catch (err) {
+    alert('Scanning failed: ' + err);
+  }
+}
+
+function showScanFeedback(json) {
+  const box = document.getElementById('scanResultFeedback');
+  document.getElementById('feedbackReportTitle').textContent = json.report_title || 'Blood Test Report';
+  document.getElementById('feedbackReportNotes').textContent = json.notes || '';
+  box.style.display = 'block';
+}
+
+// Drag & drop handlers
+const dropzone = document.getElementById('scannerDropzone');
+['dragenter', 'dragover'].forEach(eventName => {
+  dropzone.addEventListener(eventName, (e) => { e.preventDefault(); dropzone.classList.add('drag-over'); }, false);
+});
+['dragleave', 'drop'].forEach(eventName => {
+  dropzone.addEventListener(eventName, (e) => { e.preventDefault(); dropzone.classList.remove('drag-over'); }, false);
+});
+dropzone.addEventListener('drop', (e) => {
+  const dt = e.dataTransfer;
+  const files = dt.files;
+  if (files.length) {
+    document.getElementById('reportFileInput').files = files;
+    handleFileUpload({ target: { files: files } });
+  }
+});
+
+// ================================================================
+//  AI SYMPTOM & RISK SCREENER (SOLUTION 4)
+// ================================================================
+let currentEstimatedPanel = null;
+
+async function evaluateSymptoms() {
+  const payload = {
+    age: parseFloat(document.getElementById('fAge').value) || 45,
+    sex: document.getElementById('fSex').value || "Male",
+    jaundice: document.getElementById('symp_jaundice').checked,
+    dark_urine: document.getElementById('symp_dark_urine').checked,
+    fatigue: document.getElementById('symp_fatigue').checked,
+    abdominal_pain: document.getElementById('symp_abdominal_pain').checked,
+    transfusion: document.getElementById('symp_transfusion').checked,
+    tattoos: document.getElementById('symp_tattoos').checked,
+    alcohol: document.getElementById('symp_alcohol').checked,
+    family_history: document.getElementById('symp_family').checked,
+  };
+
+  try {
+    const res = await fetch('/api/symptom-screener', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const json = await res.json();
+
+    const box = document.getElementById('screenerResultBox');
+    const badge = document.getElementById('screenerRiskBadge');
+    const level = document.getElementById('screenerRiskLevel');
+    const rationale = document.getElementById('screenerRationale');
+    const recsList = document.getElementById('screenerRecsList');
+
+    level.textContent = `${json.risk_level} Risk (${json.risk_score}%)`;
+    badge.style.background = `${json.risk_color}18`;
+    badge.style.color = json.risk_color;
+    badge.style.border = `1px solid ${json.risk_color}40`;
+    rationale.textContent = json.rationale;
+
+    recsList.innerHTML = json.recommendations.map(r => `<li>${r}</li>`).join('');
+    currentEstimatedPanel = json.estimated_panel;
+
+    box.style.display = 'block';
+  } catch (err) {
+    alert('Symptom evaluation failed: ' + err);
+  }
+}
+
+function applyScreenerPanelToForm() {
+  if (currentEstimatedPanel) {
+    fillFormFields(currentEstimatedPanel);
+    document.getElementById('predictForm').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+// ================================================================
+//  HELPER FORM FILLERS
+// ================================================================
+function fillFormFields(d) {
+  if (!d) return;
+  if (d.age !== undefined && d.age !== null) document.getElementById('fAge').value = d.age;
+  if (d.sex !== undefined && d.sex !== null) {
+    document.getElementById('fSex').value = d.sex === 1 || d.sex === "Male" ? "Male" : "Female";
+  }
+  const markers = ['alb', 'alp', 'alt', 'ast', 'bil', 'che', 'chol', 'crea', 'ggt', 'prot'];
+  markers.forEach(m => {
+    const el = document.getElementById('f' + m.charAt(0).toUpperCase() + m.slice(1));
+    if (el && d[m] !== undefined && d[m] !== null) {
+      el.value = d[m];
+    }
+  });
+}
+
+function populateNormalBaselines() {
+  const normalBaseline = {
+    age: 38, sex: "Female",
+    alb: 44.0, alp: 65.0, alt: 22.0, ast: 24.0,
+    bil: 8.5, che: 8.0, chol: 4.8, crea: 75.0,
+    ggt: 20.0, prot: 74.0
+  };
+  fillFormFields(normalBaseline);
+}
+
+function clearAllFormFields() {
+  const markers = ['alb', 'alp', 'alt', 'ast', 'bil', 'che', 'chol', 'crea', 'ggt', 'prot'];
+  markers.forEach(m => {
+    const el = document.getElementById('f' + m.charAt(0).toUpperCase() + m.slice(1));
+    if (el) el.value = '';
+  });
+}
+
+// ================================================================
+//  SCAN OVERLAY & ANIMATION
 // ================================================================
 const SCAN_STEPS = [
-  "Validating input ranges",
-  "Normalizing protein markers (ALB, PROT)",
-  "Scanning liver enzymes (ALT, AST, ALP, GGT)",
-  "Evaluating metabolic markers (BIL, CHE, CHOL, CREA)",
-  "Imputing & scaling feature vector",
-  "Running XGBoost classifier",
-  "Computing stage probabilities",
-  "Generating biomarker flags"
+  "Reading patient demographics & enzyme biomarkers",
+  "Checking missing values against Median Imputer",
+  "StandardScaler normalizing input vector",
+  "XGBoost gradient boosting evaluating decision trees",
+  "Calculating 5-stage softprob distribution"
 ];
 
-function renderScanSteps() {
-  document.getElementById('scanStepsList').innerHTML = SCAN_STEPS.map((s, i) =>
-    `<div class="scan-step" id="sstep-${i}">
-       <div class="scan-step-marker" id="smark-${i}"></div>
-       <span>${s}</span>
-     </div>`
-  ).join('');
-}
-
 function runScanAnimation() {
-  return new Promise(resolve => {
-    renderScanSteps();
+  return new Promise((resolve) => {
     const overlay = document.getElementById('scanOverlay');
     const fill    = document.getElementById('scanProgressFill');
     const pct     = document.getElementById('scanPercent');
     const sub     = document.getElementById('scanSubText');
+    const list    = document.getElementById('scanStepsList');
+
+    list.innerHTML = SCAN_STEPS.map((s, i) => `
+      <div class="scan-step" id="step_${i}">
+        <div class="scan-step-marker">✓</div>
+        <span>${s}</span>
+      </div>
+    `).join('');
 
     overlay.classList.add('active');
     fill.style.width = '0%';
     pct.textContent  = '0%';
-    sub.textContent  = 'Initializing biomarker scan…';
 
     let i = 0;
-    const delay = 280;
+    const delay = 220;
 
     function tick() {
-      if (i > 0) {
-        document.getElementById(`sstep-${i-1}`).classList.remove('active');
-        document.getElementById(`sstep-${i-1}`).classList.add('done');
-        document.getElementById(`smark-${i-1}`).textContent = '✓';
-      }
       if (i < SCAN_STEPS.length) {
-        document.getElementById(`sstep-${i}`).classList.add('active');
+        if (i > 0) {
+          const prev = document.getElementById('step_' + (i - 1));
+          if (prev) { prev.classList.remove('active'); prev.classList.add('done'); }
+        }
+        const cur = document.getElementById('step_' + i);
+        if (cur) cur.classList.add('active');
+
         const progress = Math.round(((i + 1) / SCAN_STEPS.length) * 100);
         fill.style.width = progress + '%';
         pct.textContent  = progress + '%';
@@ -360,7 +870,7 @@ function runScanAnimation() {
         setTimeout(() => {
           overlay.classList.remove('active');
           resolve();
-        }, 350);
+        }, 320);
       }
     }
     tick();
@@ -394,13 +904,26 @@ function renderResult(data) {
   const col     = STAGE_COLORS[data.label] || { hex: "#ef4444", rgb: "239,68,68" };
   const icon    = STAGE_ICONS[data.label] || "📊";
 
-  // Confidence badge styling
   const confStyle = `background:rgba(${col.rgb},0.1); border:1px solid rgba(${col.rgb},0.25); color:${col.hex}; padding:0.5rem 1.1rem; border-radius:50px; font-weight:700; font-family:var(--font-mono); font-size:1rem; display:inline-flex; align-items:center; gap:0.4rem;`;
+
+  // Imputed data alert banner if any markers were imputed
+  let imputedBanner = '';
+  if (data.imputed_markers && data.imputed_markers.length > 0) {
+    imputedBanner = `
+      <div style="margin-top:1.25rem; padding:0.85rem 1.15rem; background:rgba(217,119,6,0.08); border:1px solid rgba(217,119,6,0.25); border-radius:10px; font-size:0.82rem; color:var(--text-secondary); display:flex; align-items:center; gap:0.65rem;">
+        <span style="font-size:1.1rem;">⚙️</span>
+        <div>
+          <strong style="color:var(--amber);">Partial Data Imputation Active:</strong>
+          ${12 - data.imputed_markers.length} markers measured. ${data.imputed_markers.length} missing values (${data.imputed_markers.join(', ')}) were automatically estimated via clinical population medians.
+        </div>
+      </div>
+    `;
+  }
 
   // Biomarker chips
   const chips = data.flags.map(f => {
     const cls = f.status;
-    const icons = { normal: '●', low: '▼', high: '▲' };
+    const icons = { normal: '●', low: '▼', high: '▲', imputed: '⚙️' };
     return `<div class="biomarker-chip ${cls}">
       <span class="biomarker-chip-icon">${icons[f.status]||'●'}</span>
       ${MARKER_LABELS[f.marker]||f.marker}: <strong>${f.value}</strong>
@@ -441,6 +964,8 @@ function renderResult(data) {
         </div>
       </div>
 
+      ${imputedBanner}
+
       <!-- Biomarker flags -->
       <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--border); position:relative; z-index:1;">
         <div style="font-size:0.72rem; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">Biomarker Status Flags</div>
@@ -464,7 +989,6 @@ function renderResult(data) {
 
   section.style.display = 'block';
 
-  // Animate progress bars
   requestAnimationFrame(() => {
     section.querySelectorAll('.prob-bar-fill').forEach(bar => {
       setTimeout(() => { bar.style.width = bar.dataset.target + '%'; }, 100);
@@ -482,7 +1006,7 @@ function clearResult() {
 }
 
 // ================================================================
-//  FORM SUBMIT
+//  FORM SUBMISSION
 // ================================================================
 document.getElementById('predictForm').addEventListener('submit', async function(e) {
   e.preventDefault();
@@ -504,6 +1028,15 @@ document.getElementById('predictForm').addEventListener('submit', async function
     return;
   }
   renderResult(data);
+});
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  const savedKey = localStorage.getItem('gemini_api_key');
+  if (savedKey) {
+    document.getElementById('apiKeyStatusText').textContent = 'Key Active ✓';
+  }
+  selectCase('healthy');
 });
 </script>
 {% endblock %}

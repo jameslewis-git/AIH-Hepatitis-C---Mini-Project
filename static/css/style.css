@@ -1681,6 +1681,291 @@ main {
 .footer-dot { color: var(--border-mid); margin: 0 0.4rem; }
 
 /* ================================================================
+   WORKFLOW MODES (Solution 3 & Solution 4)
+   ================================================================ */
+.workflow-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.4rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+}
+.workflow-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.workflow-btn:hover {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+.workflow-btn.active {
+  background: var(--red);
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.28);
+}
+.workflow-btn-api {
+  margin-left: auto;
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+.workflow-btn-api:hover {
+  border-color: var(--border-mid);
+  color: var(--text-primary);
+}
+
+/* ================================================================
+   PATIENT CASE PERSONAS (Solution 3)
+   ================================================================ */
+.case-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.case-card-btn {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+}
+.case-card-btn:hover {
+  border-color: var(--border-mid);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.case-card-btn.active {
+  border-color: var(--red);
+  background: var(--red-light);
+  box-shadow: 0 0 0 2px var(--red-border);
+}
+.case-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.case-stage-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.case-card-title {
+  font-weight: 700;
+  font-size: 0.86rem;
+  color: var(--text-primary);
+}
+.case-card-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.case-narrative-box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.case-narrative-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.case-narrative-text {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.case-anomalies-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+}
+.case-anomaly-chip {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  color: var(--red);
+  font-weight: 600;
+}
+
+/* ================================================================
+   AI LAB REPORT SCANNER (Solution 4 - Gemini Vision OCR)
+   ================================================================ */
+.scanner-dropzone {
+  border: 2px dashed var(--border-mid);
+  border-radius: 16px;
+  padding: 2.25rem 1.5rem;
+  text-align: center;
+  background: var(--bg-subtle);
+  cursor: pointer;
+  transition: all 0.22s ease;
+  margin-bottom: 1.25rem;
+}
+.scanner-dropzone:hover,
+.scanner-dropzone.drag-over {
+  border-color: var(--red);
+  background: var(--red-light);
+}
+.scanner-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.6rem;
+}
+.scanner-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+.scanner-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.sample-reports-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.sample-report-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.sample-report-btn:hover {
+  border-color: var(--red-border);
+  color: var(--red);
+  background: var(--red-light);
+}
+
+/* ================================================================
+   AI SYMPTOM & RISK SCREENER (Solution 4 - Zero Lab Data)
+   ================================================================ */
+.screener-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+.screener-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.symptom-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.symptom-item:hover {
+  border-color: var(--border-mid);
+  background: var(--bg-muted);
+}
+.symptom-item input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--red);
+  cursor: pointer;
+}
+.symptom-label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+}
+.symptom-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin-top: 2px;
+}
+.screener-result-box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+/* API Key Banner */
+.api-key-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+  font-size: 0.82rem;
+}
+
+/* ================================================================
    RESPONSIVE
    ================================================================ */
 @media (max-width: 768px) {
@@ -1689,4 +1974,5 @@ main {
   .hero-cta-secondary { margin-left: 0; margin-top: 0.5rem; }
   .prob-name { width: 110px; }
   .result-stage-name { font-size: 1.75rem; }
+  .workflow-switcher { flex-wrap: nowrap; overflow-x: scroll; }
 }
