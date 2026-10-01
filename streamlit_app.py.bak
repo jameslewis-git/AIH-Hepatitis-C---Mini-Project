@@ -61,11 +61,13 @@ def predict(bundle, inputs: dict):
 
 
 def sidebar_nav():
-    st.sidebar.markdown("## 🩺 HCV-ML")
+    if os.path.exists("static/img/app_logo.jpg"):
+        st.sidebar.image("static/img/app_logo.jpg", width=64)
+    st.sidebar.markdown("### Hepatitis C ML")
     page = st.sidebar.radio("Navigate", ["Home", "Predict", "About the Model"])
     st.sidebar.markdown("---")
     st.sidebar.caption("AI for Healthcare: Mini Project")
-    st.sidebar.caption("Hepatitis C Detection & Staging")
+    st.sidebar.caption("Hepatitis C Detection and Staging using Machine Learning")
     return page
 
 

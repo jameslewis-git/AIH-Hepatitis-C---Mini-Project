@@ -3,8 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="HCV Sentinel: AI-powered Hepatitis C detection and staging using machine learning on routine blood panel values.">
-  <title>{% block title %}HCV Sentinel: AI Liver Staging{% endblock %}</title>
+  <meta name="description" content="Hepatitis C Detection and Staging using Machine Learning: AI-powered diagnostic platform trained on routine blood panel values.">
+  <title>{% block title %}Hepatitis C Detection and Staging using Machine Learning{% endblock %}</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='img/app_logo.jpg') }}">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,7 +34,7 @@
     <div class="preloader-dna">
       <div class="preloader-dna-inner"></div>
     </div>
-    <div class="preloader-text">Initializing HCV Sentinel</div>
+    <div class="preloader-text">Initializing Diagnostic Engine</div>
     <div class="preloader-bar">
       <div class="preloader-bar-fill"></div>
     </div>
@@ -42,10 +45,10 @@
     <div style="max-width:1200px; margin:0 auto; padding:0 1.5rem; display:flex; align-items:center; justify-content:space-between;">
 
       <a class="navbar-brand" href="{{ url_for('home') }}" style="text-decoration:none;">
-        <div class="brand-icon">🧬</div>
+        <img src="{{ url_for('static', filename='img/app_logo.jpg') }}" alt="Hepatitis C Detection and Staging Logo" class="brand-logo-img">
         <div>
-          <div class="brand-name" style="line-height:1.1; font-weight:700; color:var(--text-primary);">HCV Sentinel</div>
-          <div class="brand-sub">AI for Healthcare</div>
+          <div class="brand-name">Hepatitis C Detection &amp; Staging</div>
+          <div class="brand-sub">Machine Learning Platform</div>
         </div>
       </a>
 
@@ -90,7 +93,8 @@
 
   <footer class="app-footer">
     <div class="footer-text">
-      HCV Sentinel <span class="footer-dot">·</span> AI for Healthcare Mini Project
+      <img src="{{ url_for('static', filename='img/app_logo.jpg') }}" alt="Logo" style="width:18px; height:18px; border-radius:4px; vertical-align:middle; margin-right:0.35rem; display:inline-block;">
+      Hepatitis C Detection and Staging using Machine Learning <span class="footer-dot">·</span> AI for Healthcare Mini Project
       <span class="footer-dot">·</span> Academic use only (not a certified medical device)
       <span class="footer-dot">·</span> UCI HCV Dataset
     </div>

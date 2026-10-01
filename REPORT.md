@@ -2,6 +2,10 @@
 ## Hepatitis C Detection and Staging using Machine Learning
 ### Subject: AI for Healthcare
 
+<p align="center">
+  <img src="static/img/app_logo.jpg" alt="Hepatitis C Detection and Staging Logo" width="100" style="border-radius:14px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+</p>
+
 ---
 
 ## 1. Introduction
