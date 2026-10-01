@@ -128,7 +128,7 @@
         </div>
       </div>
       <div class="case-narrative-visual">
-        <img id="caseVisualImg" src="{{ url_for('static', filename='img/liver_stages.jpg') }}" alt="Hepatic Pathology Stages" class="case-visual-img">
+        <img id="caseVisualImg" src="{{ url_for('static', filename='img/case_healthy.jpg') }}" alt="Patient Scenario Context" class="case-visual-img">
         <div class="case-visual-caption">
           <span class="stage-indicator-pill" id="caseStageIndicator">Normal Liver Architecture (No Fibrosis)</span>
         </div>
@@ -543,6 +543,7 @@ const PATIENT_CASES = {
   healthy: {
     heading: "Patient Case 1: Healthy Blood Donor (Annual Checkup)",
     icon: "🟢",
+    image: "/static/img/case_healthy.jpg",
     text: "32-year-old female presenting for routine corporate annual screening. Reports zero symptoms, no history of blood transfusions, and maintains an active lifestyle. All biochemical markers within ideal clinical ranges.",
     anomalies: [
       { text: "ALT: 12.3 U/L (Healthy)", color: "var(--healthy)" },
@@ -556,6 +557,7 @@ const PATIENT_CASES = {
   suspect: {
     heading: "Patient Case 2: Borderline / Deferred Blood Donor",
     icon: "🟡",
+    image: "/static/img/case_suspect.jpg",
     text: "41-year-old male deferred during a community blood drive due to borderline transaminase elevation. Patient reports mild general fatigue and occasional alcohol consumption. Markers show slight cellular leakage needing 6-month monitoring.",
     anomalies: [
       { text: "ALT: 38.0 U/L (Borderline High)", color: "var(--suspect)" },
@@ -569,6 +571,7 @@ const PATIENT_CASES = {
   hepatitis: {
     heading: "Patient Case 3: Acute Active Hepatitis C Infection",
     icon: "🟠",
+    image: "/static/img/case_hepatitis.jpg",
     text: "48-year-old male presenting with tea-colored dark urine, right upper quadrant discomfort, and mild scleral icterus (yellow eyes). Laboratory findings exhibit severe acute transaminitis consistent with an active cytotoxic immune attack on hepatocytes.",
     anomalies: [
       { text: "ALT: 184.0 U/L (Marked 3x ULN Transaminitis)", color: "var(--hepatitis)" },
@@ -582,6 +585,7 @@ const PATIENT_CASES = {
   fibrosis: {
     heading: "Patient Case 4: Chronic HCV with Hepatic Fibrosis",
     icon: "🔴",
+    image: "/static/img/case_fibrosis.jpg",
     text: "54-year-old female diagnosed with Hepatitis C 14 years ago without completed antiviral cure. Shows emerging clinical signs of structural liver scarring, progressive collagen deposition, and declining functional protein synthesis.",
     anomalies: [
       { text: "ALB: 31.5 g/L (Declining Albumin Synthesis)", color: "var(--fibrosis)" },
@@ -595,6 +599,7 @@ const PATIENT_CASES = {
   cirrhosis: {
     heading: "Patient Case 5: Decompensated Cirrhosis (End Stage)",
     icon: "🚨",
+    image: "/static/img/case_cirrhosis.jpg",
     text: "62-year-old male with long-standing untreated HCV presenting with abdominal distension (ascites), spider angiomas, and jaundice. Critical biochemical derangements confirm advanced architectural distortion, portal hypertension, and functional hepatic failure.",
     anomalies: [
       { text: "ALB: 24.5 g/L (Severe Hypoalbuminemia)", color: "var(--cirrhosis)" },
@@ -623,6 +628,13 @@ function selectCase(caseKey) {
   document.getElementById('caseNarrativeIcon').textContent = p.icon;
   document.getElementById('caseNarrativeHeading').textContent = p.heading;
   document.getElementById('caseNarrativeText').textContent = p.text;
+
+  // Dynamically update scenario image
+  const imgEl = document.getElementById('caseVisualImg');
+  if (imgEl && p.image) {
+    imgEl.src = p.image;
+    imgEl.alt = p.heading;
+  }
 
   const stageInd = document.getElementById('caseStageIndicator');
   if (stageInd && p.pathology) stageInd.textContent = p.pathology;
