@@ -1,5 +1,5 @@
 /* ================================================================
-   HCV Sentinel — Clean White Medical Theme
+   HCV Sentinel - Clean White Medical Theme
    Professional, clinical, modern healthcare UI
    ================================================================ */
 
@@ -22,7 +22,7 @@
   --border:       #e5e7eb;
   --border-mid:   #d1d5db;
 
-  /* Accent — medical red */
+  /* Accent: medical red */
   --red:          #dc2626;
   --red-dark:     #b91c1c;
   --red-light:    #fef2f2;
@@ -33,7 +33,7 @@
   --amber-light:  #fffbeb;
   --amber-border: #fde68a;
 
-  /* Health spectrum — kept vivid for stage chips */
+  /* Health spectrum: kept vivid for stage chips */
   --healthy:      #059669;
   --healthy-bg:   #ecfdf5;
   --suspect:      #d97706;
@@ -77,7 +77,7 @@
   --border:         #24334a;
   --border-mid:     #344968;
 
-  /* Accent — medical red in dark mode */
+  /* Accent: medical red in dark mode */
   --red:            #ef4444;
   --red-dark:       #dc2626;
   --red-light:      rgba(239, 68, 68, 0.16);
@@ -1276,7 +1276,7 @@ main {
 }
 
 /* ================================================================
-   ABOUT PAGE — feature pills, pipeline, table
+   ABOUT PAGE: feature pills, pipeline, table
    ================================================================ */
 .feature-pill {
   display: inline-flex;

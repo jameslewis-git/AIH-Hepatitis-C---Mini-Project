@@ -25,7 +25,7 @@ STAGE_INFO = {
     },
     "Suspect Blood Donor": {
         "color": "#f1c40f",
-        "desc": "Borderline values. Not a confirmed donor profile — further testing recommended.",
+        "desc": "Borderline values. Not a confirmed donor profile: further testing recommended.",
     },
     "Hepatitis": {
         "color": "#e67e22",
@@ -64,7 +64,7 @@ def sidebar_nav():
     st.sidebar.markdown("## 🩺 HCV-ML")
     page = st.sidebar.radio("Navigate", ["Home", "Predict", "About the Model"])
     st.sidebar.markdown("---")
-    st.sidebar.caption("AI for Healthcare — Mini Project")
+    st.sidebar.caption("AI for Healthcare: Mini Project")
     st.sidebar.caption("Hepatitis C Detection & Staging")
     return page
 
@@ -91,14 +91,14 @@ def page_home():
     st.markdown(
         """
         Hepatitis C is a blood-borne viral infection that silently damages the liver over years,
-        progressing through measurable stages — from a healthy state to **Hepatitis**, **Fibrosis**,
+        progressing through measurable stages, from a healthy state to **Hepatitis**, **Fibrosis**,
         and finally **Cirrhosis**. Early staging from inexpensive blood panel values (instead of invasive
         liver biopsy) can help clinicians triage patients faster and prioritize specialist referral.
 
-        This application uses **12 routine laboratory features** — Age, Sex, Albumin (ALB),
+        This application uses **12 routine laboratory features** (Age, Sex, Albumin (ALB),
         Alkaline Phosphatase (ALP), Alanine Aminotransferase (ALT), Aspartate Aminotransferase (AST),
         Bilirubin (BIL), Cholinesterase (CHE), Cholesterol (CHOL), Creatinine (CREA),
-        Gamma-Glutamyl Transferase (GGT), and Total Protein (PROT) — to classify a patient's
+        Gamma-Glutamyl Transferase (GGT), and Total Protein (PROT)) to classify a patient's
         likely disease stage using a supervised ML model trained on the **UCI HCV dataset**.
         """
     )
@@ -126,18 +126,18 @@ def page_predict():
         with c1:
             age = st.number_input("Age (years)", min_value=1, max_value=120, value=45)
             sex = st.selectbox("Sex", ["Male", "Female"])
-            alb = st.number_input("ALB — Albumin (g/L)", min_value=0.0, value=41.0, step=0.1)
-            alp = st.number_input("ALP — Alkaline Phosphatase (U/L)", min_value=0.0, value=68.0, step=0.1)
+            alb = st.number_input("ALB: Albumin (g/L)", min_value=0.0, value=41.0, step=0.1)
+            alp = st.number_input("ALP: Alkaline Phosphatase (U/L)", min_value=0.0, value=68.0, step=0.1)
         with c2:
-            alt = st.number_input("ALT — Alanine Aminotransferase (U/L)", min_value=0.0, value=24.0, step=0.1)
-            ast = st.number_input("AST — Aspartate Aminotransferase (U/L)", min_value=0.0, value=25.0, step=0.1)
-            bil = st.number_input("BIL — Bilirubin (µmol/L)", min_value=0.0, value=7.0, step=0.1)
-            che = st.number_input("CHE — Cholinesterase (kU/L)", min_value=0.0, value=8.0, step=0.1)
+            alt = st.number_input("ALT: Alanine Aminotransferase (U/L)", min_value=0.0, value=24.0, step=0.1)
+            ast = st.number_input("AST: Aspartate Aminotransferase (U/L)", min_value=0.0, value=25.0, step=0.1)
+            bil = st.number_input("BIL: Bilirubin (µmol/L)", min_value=0.0, value=7.0, step=0.1)
+            che = st.number_input("CHE: Cholinesterase (kU/L)", min_value=0.0, value=8.0, step=0.1)
         with c3:
-            chol = st.number_input("CHOL — Cholesterol (mmol/L)", min_value=0.0, value=5.2, step=0.1)
-            crea = st.number_input("CREA — Creatinine (µmol/L)", min_value=0.0, value=81.0, step=0.1)
-            ggt = st.number_input("GGT — Gamma-Glutamyl Transferase (U/L)", min_value=0.0, value=25.0, step=0.1)
-            prot = st.number_input("PROT — Total Protein (g/L)", min_value=0.0, value=72.0, step=0.1)
+            chol = st.number_input("CHOL: Cholesterol (mmol/L)", min_value=0.0, value=5.2, step=0.1)
+            crea = st.number_input("CREA: Creatinine (µmol/L)", min_value=0.0, value=81.0, step=0.1)
+            ggt = st.number_input("GGT: Gamma-Glutamyl Transferase (U/L)", min_value=0.0, value=25.0, step=0.1)
+            prot = st.number_input("PROT: Total Protein (g/L)", min_value=0.0, value=72.0, step=0.1)
 
         submitted = st.form_submit_button("🔍 Predict", type="primary", use_container_width=True)
 
@@ -186,14 +186,14 @@ def page_about():
     st.subheader("Disease stages")
     for label, info in STAGE_INFO.items():
         st.markdown(
-            f"<span style='color:{info['color']};font-weight:bold;'>● {label}</span> — {info['desc']}",
+            f"<span style='color:{info['color']};font-weight:bold;'>● {label}</span>: {info['desc']}",
             unsafe_allow_html=True,
         )
 
     st.subheader("Dataset")
     st.markdown(
         """
-        - **Source:** UCI Machine Learning Repository — *Hepatitis C Virus (HCV) for Egyptian patients /
+        - **Source:** UCI Machine Learning Repository: *Hepatitis C Virus (HCV) for Egyptian patients /
           HCV dataset* (`hcvdat0.csv`)
         - **Samples:** 615 patients
         - **Target:** Blood Donor, Suspect Blood Donor, Hepatitis, Fibrosis, Cirrhosis

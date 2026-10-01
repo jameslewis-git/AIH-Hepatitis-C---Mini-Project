@@ -44,7 +44,7 @@ STAGE_INFO = {
     },
     "Suspect Blood Donor": {
         "color": "#f59e0b",
-        "desc": "Borderline values. Not a confirmed donor profile — further clinical monitoring recommended.",
+        "desc": "Borderline values. Not a confirmed donor profile: further clinical monitoring recommended.",
     },
     "Hepatitis": {
         "color": "#f97316",
@@ -64,7 +64,7 @@ _bundle = None
 
 SAMPLE_LAB_REPORTS = {
     "sample_donor": {
-        "title": "General Health Center — Annual Executive Lab Panel",
+        "title": "General Health Center - Annual Executive Lab Panel",
         "patient": "Jane Doe, 34F",
         "age": 34, "sex": "Female",
         "alb": 44.2, "alp": 62.0, "alt": 18.5, "ast": 21.0,
@@ -73,7 +73,7 @@ SAMPLE_LAB_REPORTS = {
         "notes": "All 12 markers within standard clinical reference ranges. Normal hepatic function."
     },
     "sample_hepatitis": {
-        "title": "Metropolitan Liver Clinic — Viral Hepatitis Serology & LFP",
+        "title": "Metropolitan Liver Clinic - Viral Hepatitis Serology & LFP",
         "patient": "Mark Smith, 46M",
         "age": 46, "sex": "Male",
         "alb": 37.5, "alp": 95.0, "alt": 184.0, "ast": 152.0,
@@ -82,7 +82,7 @@ SAMPLE_LAB_REPORTS = {
         "notes": "Marked acute transaminitis (ALT 184 U/L, AST 152 U/L). Findings highly indicative of active viral hepatitis."
     },
     "sample_cirrhosis": {
-        "title": "University Hepatology Division — Comprehensive Staging Assessment",
+        "title": "University Hepatology Division - Comprehensive Staging Assessment",
         "patient": "Robert Lee, 58M",
         "age": 58, "sex": "Male",
         "alb": 24.5, "alp": 165.0, "alt": 78.0, "ast": 112.0,

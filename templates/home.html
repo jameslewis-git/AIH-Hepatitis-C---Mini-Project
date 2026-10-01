@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block title %}HCV Sentinel — Hepatitis C AI Detection & Staging{% endblock %}
+{% block title %}HCV Sentinel · Hepatitis C AI Detection & Staging{% endblock %}
 {% block content %}
 <div style="max-width:1200px; margin:0 auto; padding:0 1.5rem;">
 
   <!-- ============================================================
-       HERO — 2-Column with Interactive Diagnostic Simulator
+       HERO: 2-Column with Interactive Diagnostic Simulator
        ============================================================ -->
   <section class="hero fade-up">
     <div class="row align-items-center g-4">
@@ -24,7 +24,7 @@
         <p class="lead">
           An XGBoost machine learning model trained on 615 real UCI patient records.
           Enter 12 routine liver function panel values to receive a probability-weighted
-          disease stage classification — from healthy donor to advanced cirrhosis.
+          disease stage classification, from healthy donor to advanced cirrhosis.
         </p>
 
         <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
@@ -153,7 +153,7 @@
   </div>
 
   <!-- ============================================================
-       THE PROBLEM — with blood lab image
+       THE PROBLEM: with blood lab image
        ============================================================ -->
   <div class="content-card fade-up" id="how-it-works" style="margin-bottom:1.5rem;">
     <div class="row g-0 align-items-center">
@@ -172,7 +172,7 @@
         </p>
         <p style="margin-bottom:0.85rem;">
           Left untreated, HCV progresses from inflammation → fibrosis → cirrhosis → liver cancer.
-          Traditional staging requires an <strong style="color:var(--rose);">invasive liver biopsy</strong> — a painful
+          Traditional staging requires an <strong style="color:var(--rose);">invasive liver biopsy</strong>, a painful
           procedure with risk of bleeding and complications.
         </p>
         <p style="margin-bottom:0; font-size:0.85rem; font-family:var(--font-mono); color:var(--text-muted);">
@@ -184,7 +184,7 @@
   </div>
 
   <!-- ============================================================
-       LIVER DISEASE STAGES — with annotated liver image
+       LIVER DISEASE STAGES: with annotated liver image
        ============================================================ -->
   <div class="content-card fade-up" style="margin-bottom:1.5rem;">
     <div class="card-header-label">🫀 Disease Progression</div>
@@ -252,7 +252,7 @@
   </div>
 
   <!-- ============================================================
-       WHAT THE MODEL READS — biomarker table
+       WHAT THE MODEL READS: biomarker table
        ============================================================ -->
   <div class="content-card fade-up" style="margin-bottom:1.5rem;">
     <div class="row g-5 align-items-start">
@@ -260,8 +260,8 @@
         <div class="card-header-label" style="display:inline-flex; margin-bottom:0.75rem;">🔬 Input Features</div>
         <h2 style="font-size:1.4rem; margin-bottom:0.75rem;">What the Model Reads</h2>
         <p style="margin-bottom:1.25rem; color:var(--text-secondary);">
-          All 12 features come from a <strong style="color:var(--text-primary)">standard Liver Function Panel (LFP)</strong>
-          — a common blood test ordered in routine checkups. No special equipment or invasive procedures needed.
+          All 12 features come from a <strong style="color:var(--text-primary)">standard Liver Function Panel (LFP)</strong>,
+          a common blood test ordered in routine checkups. No special equipment or invasive procedures needed.
         </p>
 
         <table class="data-table">
@@ -293,7 +293,7 @@
           <div style="font-size:0.78rem; font-family:var(--font-mono); color:var(--red); font-weight:600; margin-bottom:0.35rem;">WHY THIS MATTERS</div>
           <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
             A liver biopsy costs $1,500–$5,000 and carries real medical risk. These same
-            12 markers cost &lt;$50 and are already collected during routine checkups — meaning
+            12 markers cost &lt;$50 and are already collected during routine checkups, meaning
             AI staging could be deployed with zero additional cost to the patient.
           </div>
         </div>
@@ -302,7 +302,7 @@
   </div>
 
   <!-- ============================================================
-       HOW THE AI WORKS — with ML image
+       HOW THE AI WORKS: with ML image
        ============================================================ -->
   <div class="content-card fade-up" style="margin-bottom:1.5rem;">
     <div class="row g-5 align-items-center">
@@ -330,7 +330,7 @@
           <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
             Both <strong style="color:var(--text-primary)">Random Forest</strong> and <strong style="color:var(--text-primary)">XGBoost</strong>
             are trained on the same dataset. The one with higher <strong style="color:var(--text-primary)">macro-F1 score</strong>
-            is automatically selected — ensuring the best model is always deployed.
+            is automatically selected, ensuring the best model is always deployed.
           </div>
         </div>
 
@@ -612,7 +612,7 @@
     <div class="row g-4 align-items-center">
       <div class="col-lg-8">
         <div class="card-header-label" style="display:inline-flex; margin-bottom:0.75rem;">📦 Dataset</div>
-        <h2 style="font-size:1.4rem; margin-bottom:1rem;">UCI HCV Dataset — Real Patient Data</h2>
+        <h2 style="font-size:1.4rem; margin-bottom:1rem;">UCI HCV Dataset: Real Patient Data</h2>
         <div class="row g-3">
           <div class="col-sm-6">
             <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:10px; padding:1rem;">
@@ -625,9 +625,9 @@
             <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:10px; padding:1rem;">
               <div style="font-size:0.7rem; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.4rem;">Class Distribution</div>
               <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.7;">
-                Blood Donor — 540 · Suspect — 7<br>
-                Hepatitis — 24 · Fibrosis — 21<br>
-                Cirrhosis — 30
+                Blood Donor: 540 · Suspect: 7<br>
+                Hepatitis: 24 · Fibrosis: 21<br>
+                Cirrhosis: 30
               </div>
             </div>
           </div>

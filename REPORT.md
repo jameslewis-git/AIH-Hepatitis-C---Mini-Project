@@ -7,7 +7,7 @@
 ## 1. Introduction
 
 Hepatitis C is a blood-borne viral infection caused by the Hepatitis C Virus (HCV) that
-primarily attacks the liver. If left undetected, it progresses silently through stages —
+primarily attacks the liver. If left undetected, it progresses silently through stages:
 from a healthy carrier state to active **Hepatitis**, then **Fibrosis** (early scarring), and
 finally **Cirrhosis** (severe, often irreversible scarring). Traditional staging relies on
 liver biopsy, which is invasive, costly, and carries procedural risk.
@@ -25,15 +25,15 @@ classifier trained on the public **UCI HCV dataset** (615 patient records, 12 la
 - **Reduces dependency on invasive biopsy.** Liver biopsy is the clinical gold standard but
   is invasive and not scalable for population-level screening. ML-based staging from blood
   markers (ALT, AST, GGT, Bilirubin, etc.) offers a cheap, repeatable alternative.
-- **Supports healthcare AI education.** Demonstrates an end-to-end applied AI pipeline —
+- **Supports healthcare AI education.** Demonstrates an end-to-end applied AI pipeline:
   data preprocessing, model selection, evaluation, and deployment via a usable web interface
-  — directly relevant to the "AI for Healthcare" curriculum.
+  (directly relevant to the "AI for Healthcare" curriculum).
 - **Resource-constrained settings.** In regions with limited access to biopsy or imaging,
   a blood-test-driven triage tool can meaningfully extend diagnostic reach.
 
 ## 3. Methodology (Summary)
 
-1. **Data:** UCI HCV dataset — Age, Sex, ALB, ALP, ALT, AST, BIL, CHE, CHOL, CREA, GGT,
+1. **Data:** UCI HCV dataset: Age, Sex, ALB, ALP, ALT, AST, BIL, CHE, CHOL, CREA, GGT,
    PROT, and target `Category` (Blood Donor / Suspect Blood Donor / Hepatitis / Fibrosis /
    Cirrhosis).
 2. **Preprocessing:** Median imputation for missing lab values, label encoding for Sex and
@@ -51,8 +51,8 @@ This project demonstrates a complete, working pipeline for applying machine lear
 real healthcare staging problem: from a public clinical dataset, through preprocessing and
 model selection, to a usable web interface that outputs an interpretable prediction with
 confidence scores. While the current model is trained on a relatively small, imbalanced
-dataset and is **not fit for real clinical deployment**, it illustrates how AI can augment —
-not replace — clinical judgment by surfacing early warning signals from inexpensive,
+dataset and is **not fit for real clinical deployment**, it illustrates how AI can augment
+(not replace) clinical judgment by surfacing early warning signals from inexpensive,
 routinely-collected blood test data. Future improvements could include larger multi-center
 datasets, SHAP-based explainability for each prediction, and calibrated probability outputs
 for clinical-grade confidence reporting.

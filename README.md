@@ -1,6 +1,6 @@
 # Hepatitis C Detection and Staging using Machine Learning
 
-AI for Healthcare — Mini Project
+AI for Healthcare: Mini Project
 
 ## Project structure
 ```
@@ -50,12 +50,12 @@ Open `http://localhost:5000` in your browser.
 
 ## 4. Using the app
 
-1. **Home** (`/`) — project overview, model stats, disease stage legend.
-2. **Predict** (`/predict`) — enter the 12 lab values (Age, Sex, ALB, ALP, ALT, AST, BIL,
+1. **Home** (`/`): project overview, model stats, disease stage legend.
+2. **Predict** (`/predict`): enter the 12 lab values (Age, Sex, ALB, ALP, ALT, AST, BIL,
    CHE, CHOL, CREA, GGT, PROT) and click **Predict Stage**.
-3. **About Model** (`/about`) — model accuracy, feature list, stage descriptions, dataset info.
+3. **About Model** (`/about`): model accuracy, feature list, stage descriptions, dataset info.
 
 ## Dataset
 
-UCI Machine Learning Repository — Hepatitis C Virus (HCV) dataset, 615 real patient
+UCI Machine Learning Repository: Hepatitis C Virus (HCV) dataset, 615 real patient
 records, 5 target classes: Blood Donor, Suspect Blood Donor, Hepatitis, Fibrosis, Cirrhosis.
