@@ -1720,21 +1720,7 @@ main {
   color: #fff !important;
   box-shadow: 0 2px 8px rgba(220, 38, 38, 0.28);
 }
-.workflow-btn-api {
-  margin-left: auto;
-  border: 1px solid var(--border);
-  background: var(--bg-subtle);
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  padding: 0.45rem 0.85rem;
-  border-radius: 8px;
-  cursor: pointer;
-  color: var(--text-secondary);
-}
-.workflow-btn-api:hover {
-  border-color: var(--border-mid);
-  color: var(--text-primary);
-}
+
 
 /* ================================================================
    PATIENT CASE PERSONAS
@@ -1950,20 +1936,7 @@ main {
   margin-top: 1.25rem;
 }
 
-/* API Key Banner */
-.api-key-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  padding: 0.85rem 1.25rem;
-  background: var(--bg-subtle);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  margin-bottom: 1.25rem;
-  font-size: 0.82rem;
-}
+
 
 /* ================================================================
    RESPONSIVE

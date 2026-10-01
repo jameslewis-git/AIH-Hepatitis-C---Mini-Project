@@ -31,28 +31,6 @@
     <button type="button" class="workflow-btn" id="tabBtnScreener" onclick="switchWorkflow('screener')">
       <span>🩺</span> Symptom &amp; Risk Screener
     </button>
-    <button type="button" class="workflow-btn-api" onclick="toggleApiKeyModal()">
-      <span>🔑</span> <span id="apiKeyStatusText">{% if has_gemini_key %}Gemini Active (.env) ✓{% else %}Gemini API Key{% endif %}</span>
-    </button>
-  </div>
-
-  <!-- API Key Banner / Modal (Collapsible) -->
-  <div id="apiKeyBanner" class="api-key-banner fade-up" style="display:none;">
-    <div style="flex:1; min-width:260px;">
-      <strong style="color:var(--text-primary); display:block; margin-bottom:0.25rem;">
-        🔑 Google Gemini API Configuration
-      </strong>
-      <div style="color:var(--text-secondary); font-size:0.78rem;">
-        Used for live photo OCR extraction and symptom screening. Get a free API key at
-        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--red); font-weight:600;">Google AI Studio ↗</a>.
-        (Note: Built-in sample reports and clinical case studies work 100% offline without a key!)
-      </div>
-    </div>
-    <div style="display:flex; gap:0.5rem; align-items:center;">
-      <input type="password" id="geminiApiKeyInput" class="form-control" style="width:240px; padding:0.4rem 0.75rem; font-size:0.8rem;" placeholder="Paste AI Studio Key...">
-      <button type="button" class="btn-primary" style="padding:0.4rem 0.9rem; font-size:0.8rem;" onclick="saveApiKey()">Save</button>
-      <button type="button" class="btn-ghost" style="padding:0.4rem 0.75rem; font-size:0.8rem;" onclick="toggleApiKeyModal()">Close</button>
-    </div>
   </div>
 
   <!-- ============================================================
@@ -619,26 +597,6 @@ function switchWorkflow(mode) {
   });
 }
 
-function toggleApiKeyModal() {
-  const banner = document.getElementById('apiKeyBanner');
-  banner.style.display = (banner.style.display === 'none' || banner.style.display === '') ? 'flex' : 'none';
-  const savedKey = localStorage.getItem('gemini_api_key') || '';
-  document.getElementById('geminiApiKeyInput').value = savedKey;
-}
-
-function saveApiKey() {
-  const input = document.getElementById('geminiApiKeyInput');
-  const key = (input.value || '').trim();
-  if (key) {
-    localStorage.setItem('gemini_api_key', key);
-    document.getElementById('apiKeyStatusText').textContent = 'Key Active ✓';
-    alert('Gemini API Key saved successfully in your local browser storage!');
-  } else {
-    localStorage.removeItem('gemini_api_key');
-    document.getElementById('apiKeyStatusText').textContent = 'Gemini API Key';
-  }
-  document.getElementById('apiKeyBanner').style.display = 'none';
-}
 
 // ================================================================
 //  AI LAB REPORT SCANNER
@@ -680,9 +638,8 @@ async function handleFileUpload(e) {
     const json = await res.json();
 
     if (json.status === 'api_key_required') {
-      dropzoneTitle.textContent = 'Gemini API Key Required';
+      dropzoneTitle.textContent = 'Scanner Error';
       dropzoneSub.textContent = json.error;
-      toggleApiKeyModal();
       return;
     }
 
@@ -1032,10 +989,6 @@ document.getElementById('predictForm').addEventListener('submit', async function
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-  const savedKey = localStorage.getItem('gemini_api_key');
-  if (savedKey) {
-    document.getElementById('apiKeyStatusText').textContent = 'Key Active ✓';
-  }
   selectCase('healthy');
 });
 </script>
