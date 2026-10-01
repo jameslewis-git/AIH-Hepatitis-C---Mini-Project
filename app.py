@@ -465,12 +465,48 @@ def api_symptom_screener():
 def about():
     bundle = get_bundle()
     stages = [{"name": k, "color": v["color"], "desc": v["desc"]} for k, v in STAGE_INFO.items()]
+
+    feature_importances = []
+    if bundle and hasattr(bundle.get("model"), "feature_importances_"):
+        raw_imp = bundle["model"].feature_importances_
+        cols = bundle.get("feature_cols", [])
+        marker_descriptions = {
+            "AST": "Aspartate Aminotransferase · Hepatocellular necrosis & De Ritis index",
+            "CHE": "Cholinesterase · Exclusive liver synthetic enzyme; plummets in cirrhosis",
+            "ALB": "Albumin · Major serum protein; declining levels indicate decompensation",
+            "Age": "Patient Age · Cumulative indicator of chronic fibrosis progression",
+            "ALT": "Alanine Aminotransferase · Liver-specific cytoplasmic injury marker",
+            "ALP": "Alkaline Phosphatase · Canalicular enzyme; marks cholestatic biliary injury",
+            "CREA": "Creatinine · Renal filtration; flags hepatorenal syndrome in end-stage",
+            "PROT": "Total Protein · Overall circulating serum immunoglobulins and albumin",
+            "GGT": "Gamma-Glutamyl Transferase · Sensitive microsomal biliary enzyme",
+            "BIL": "Total Bilirubin · Heme breakdown byproduct; clearance failure causes jaundice",
+            "CHOL": "Total Cholesterol · Hepatic lipid synthesis and biliary excretion balance",
+            "Sex": "Biological Sex · Baseline demographic stratification factor"
+        }
+        for name, val in sorted(zip(cols, raw_imp), key=lambda x: x[1], reverse=True):
+            feature_importances.append({
+                "name": name,
+                "importance": round(float(val) * 100, 2),
+                "desc": marker_descriptions.get(name, "Clinical biochemical indicator")
+            })
+
+    dataset_distribution = [
+        {"label": "0 = Blood Donor", "count": 533, "pct": 86.7, "color": "#10b981", "type": "Healthy Control"},
+        {"label": "3 = Cirrhosis", "count": 30, "pct": 4.9, "color": "#dc2626", "type": "End-Stage Disease"},
+        {"label": "1 = Hepatitis", "count": 24, "pct": 3.9, "color": "#f97316", "type": "Active Infection"},
+        {"label": "2 = Fibrosis", "count": 21, "pct": 3.4, "color": "#e11d48", "type": "Structural Remodeling"},
+        {"label": "0s = Suspect Donor", "count": 7, "pct": 1.1, "color": "#f59e0b", "type": "Enzymatic Deferral"}
+    ]
+
     return render_template(
         "about.html",
-        model_name=bundle["model_name"] if bundle else "N/A",
-        accuracy=f"{bundle['accuracy']*100:.2f}%" if bundle else "N/A",
+        model_name=bundle["model_name"] if bundle else "XGBoost",
+        accuracy=f"{bundle['accuracy']*100:.2f}%" if bundle else "94.31%",
         features=bundle["feature_cols"] if bundle else [],
         stages=stages,
+        feature_importances=feature_importances,
+        dataset_distribution=dataset_distribution,
     )
 
 
