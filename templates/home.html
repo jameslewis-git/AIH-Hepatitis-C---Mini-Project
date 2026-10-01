@@ -3,14 +3,16 @@
 {% block content %}
 <div style="max-width:1200px; margin:0 auto; padding:0 1.5rem;">
 
-  <!-- HERO -->
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
   <section class="hero fade-up">
     <div class="hero-bg-glow"></div>
     <div class="hero-bg-glow-2"></div>
 
     <div class="hero-badge">
       <div class="hero-badge-dot"></div>
-      AI-Powered · Non-Invasive · Real-time
+      AI-Powered · Non-Invasive · Real-time Classification
     </div>
 
     <h1>
@@ -20,9 +22,9 @@
     </h1>
 
     <p class="lead">
-      Machine learning model trained on 615 real patient records. Enter 12 routine
-      lab values to receive probability-weighted disease stage classification — from
-      healthy donor to advanced cirrhosis.
+      An XGBoost machine learning model trained on 615 real UCI patient records.
+      Enter 12 routine liver function panel values to receive a probability-weighted
+      disease stage classification — from healthy donor to advanced cirrhosis.
     </p>
 
     <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
@@ -30,14 +32,16 @@
         Run Prediction
         <span class="hero-cta-arrow">→</span>
       </a>
-      <a href="{{ url_for('about') }}" class="hero-cta-secondary">
-        View Model Details
+      <a href="#how-it-works" class="hero-cta-secondary">
+        How It Works ↓
       </a>
     </div>
   </section>
 
-  <!-- STATS ROW -->
-  <div class="row g-3 mb-4 stagger" style="--bs-gutter-x:1rem;">
+  <!-- ============================================================
+       STAT CARDS
+       ============================================================ -->
+  <div class="row g-3 mb-4 stagger">
     <div class="col-6 col-md-3">
       <div class="stat-card text-center">
         <div class="stat-icon">🧪</div>
@@ -68,120 +72,399 @@
     </div>
   </div>
 
-  <!-- ABOUT + STAGES -->
-  <div class="row g-4 mb-4">
-    <div class="col-lg-7 fade-up" style="animation-delay:0.1s">
-      <div class="content-card" style="height:100%;">
-        <div class="card-header-label">About the Project</div>
-        <h2 style="font-size:1.5rem; margin-bottom:1rem;">Non-Invasive Liver Staging via AI</h2>
-        <p style="margin-bottom:1rem;">
-          Hepatitis C progressively damages the liver through distinct clinical stages.
-          Traditional staging requires an invasive <strong style="color:var(--text-primary)">liver biopsy</strong>.
-          This model offers a non-invasive alternative using <strong style="color:var(--amber)">XGBoost</strong>
-          trained on the UCI HCV dataset.
-        </p>
-        <p style="margin-bottom:1.25rem;">
-          The algorithm analyzes 12 routine blood panel markers simultaneously to detect
-          patterns that correlate with each disease stage, returning a probability distribution
-          across all 5 classes.
-        </p>
-        <p style="font-size:0.82rem; font-family:var(--font-mono); color:var(--text-muted); margin:0;">
-          Biomarkers: Age · Sex · ALB · ALP · ALT · AST · BIL · CHE · CHOL · CREA · GGT · PROT
-        </p>
+  <!-- ============================================================
+       THE PROBLEM — with blood lab image
+       ============================================================ -->
+  <div class="content-card fade-up" id="how-it-works" style="margin-bottom:1.5rem;">
+    <div class="row g-0 align-items-center">
+      <div class="col-lg-5" style="padding-right:0;">
+        <img src="{{ url_for('static', filename='img/lab_blood.jpg') }}"
+             alt="Blood samples in a medical laboratory"
+             style="width:100%; height:300px; object-fit:cover; border-radius:12px 0 0 12px; display:block;">
       </div>
-    </div>
-
-    <div class="col-lg-5 fade-up" style="animation-delay:0.15s">
-      <div class="content-card" style="height:100%;">
-        <div class="card-header-label">Disease Stages</div>
-
-        <!-- Spectrum bar -->
-        <div class="stage-spectrum">
-          <div class="stage-spectrum-seg" style="background:var(--healthy);"></div>
-          <div class="stage-spectrum-seg" style="background:var(--suspect);"></div>
-          <div class="stage-spectrum-seg" style="background:var(--hepatitis);"></div>
-          <div class="stage-spectrum-seg" style="background:var(--fibrosis);"></div>
-          <div class="stage-spectrum-seg" style="background:var(--cirrhosis);"></div>
-        </div>
-
-        <div class="stage-badge" style="background:rgba(16,185,129,0.06);">
-          <div class="stage-dot" style="background:var(--healthy);"></div>
-          <div>
-            <div class="stage-name">Blood Donor</div>
-            <div class="stage-desc">Healthy profile, within normal ranges</div>
-          </div>
-        </div>
-        <div class="stage-badge" style="background:rgba(245,158,11,0.05);">
-          <div class="stage-dot" style="background:var(--suspect);"></div>
-          <div>
-            <div class="stage-name">Suspect Donor</div>
-            <div class="stage-desc">Borderline — further evaluation needed</div>
-          </div>
-        </div>
-        <div class="stage-badge" style="background:rgba(249,115,22,0.05);">
-          <div class="stage-dot" style="background:var(--hepatitis);"></div>
-          <div>
-            <div class="stage-name">Hepatitis</div>
-            <div class="stage-desc">Active viral infection markers detected</div>
-          </div>
-        </div>
-        <div class="stage-badge" style="background:rgba(239,68,68,0.05);">
-          <div class="stage-dot" style="background:var(--fibrosis);"></div>
-          <div>
-            <div class="stage-name">Fibrosis</div>
-            <div class="stage-desc">Early liver scarring — disease progression</div>
-          </div>
-        </div>
-        <div class="stage-badge" style="background:rgba(155,34,38,0.05);">
-          <div class="stage-dot" style="background:var(--cirrhosis);"></div>
-          <div>
-            <div class="stage-name">Cirrhosis</div>
-            <div class="stage-desc">Advanced scarring — urgent specialist referral</div>
-          </div>
-        </div>
+      <div class="col-lg-7" style="padding:2rem 2.25rem;">
+        <div class="card-header-label" style="display:inline-flex; margin-bottom:0.75rem;">🩸 The Problem</div>
+        <h2 style="font-size:1.5rem; margin-bottom:1rem;">Hepatitis C Kills Silently</h2>
+        <p style="margin-bottom:0.85rem;">
+          <strong style="color:var(--text-primary);">Hepatitis C virus (HCV)</strong> infects the liver and progresses
+          silently over decades. An estimated <strong style="color:var(--amber);">58 million</strong> people worldwide
+          are living with chronic HCV infection (WHO, 2023), and most don't know it.
+        </p>
+        <p style="margin-bottom:0.85rem;">
+          Left untreated, HCV progresses from inflammation → fibrosis → cirrhosis → liver cancer.
+          Traditional staging requires an <strong style="color:var(--rose);">invasive liver biopsy</strong> — a painful
+          procedure with risk of bleeding and complications.
+        </p>
+        <p style="margin-bottom:0; font-size:0.85rem; font-family:var(--font-mono); color:var(--text-muted);">
+          → This project proposes a <strong style="color:var(--amber);">non-invasive ML alternative</strong> using
+          routine blood panel values collected during standard checkups.
+        </p>
       </div>
     </div>
   </div>
 
-  <!-- HOW IT WORKS -->
-  <div class="content-card fade-up" style="animation-delay:0.2s">
-    <div class="card-header-label">Workflow</div>
-    <h2 style="font-size:1.4rem; margin-bottom:2rem;">How It Works</h2>
+  <!-- ============================================================
+       LIVER DISEASE STAGES — with annotated liver image
+       ============================================================ -->
+  <div class="content-card fade-up" style="margin-bottom:1.5rem;">
+    <div class="card-header-label">🫀 Disease Progression</div>
+    <h2 style="font-size:1.4rem; margin-bottom:1rem;">5 Stages the Model Classifies</h2>
+    <p style="margin-bottom:1.5rem; color:var(--text-secondary);">
+      HCV damage advances through distinct, measurable stages. Each stage produces a characteristic
+      pattern in liver enzyme and metabolic blood markers, which the AI model learns to recognize.
+    </p>
+
+    <img src="{{ url_for('static', filename='img/liver_stages.jpg') }}"
+         alt="Liver disease stages from healthy to cirrhosis"
+         style="width:100%; border-radius:12px; margin-bottom:1.75rem; max-height:360px; object-fit:cover; object-position:center top;">
+
+    <!-- Stage spectrum bar -->
+    <div style="display:flex; border-radius:10px; overflow:hidden; height:8px; margin-bottom:1.25rem; gap:2px;">
+      <div style="flex:1; background:var(--healthy);"></div>
+      <div style="flex:1; background:var(--suspect);"></div>
+      <div style="flex:1; background:var(--hepatitis);"></div>
+      <div style="flex:1; background:var(--fibrosis);"></div>
+      <div style="flex:1; background:var(--cirrhosis);"></div>
+    </div>
+
     <div class="row g-3">
-      <div class="col-md-4">
-        <div class="step-card">
-          <div class="step-icon">📋</div>
-          <div class="step-number">01</div>
-          <div class="step-title">Enter Lab Values</div>
-          <div class="step-desc">Input 12 standard liver function panel values or use pre-filled demo data for presentation</div>
+      <div class="col-md-6 col-lg" style="min-width:180px;">
+        <div style="border:1px solid rgba(16,185,129,0.2); border-left:3px solid var(--healthy); border-radius:10px; padding:1rem; background:rgba(16,185,129,0.04); height:100%;">
+          <div style="font-weight:700; color:var(--healthy); margin-bottom:0.35rem; font-size:0.85rem;">🟢 Blood Donor</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
+            All liver markers within normal ranges. No HCV activity detected. Patient is a safe blood donor.
+          </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="step-card">
-          <div class="step-icon">🧠</div>
-          <div class="step-number">02</div>
-          <div class="step-title">AI Analysis</div>
-          <div class="step-desc">{{ model_name }} classifies biomarker patterns through a pre-trained preprocessing pipeline</div>
+      <div class="col-md-6 col-lg" style="min-width:180px;">
+        <div style="border:1px solid rgba(245,158,11,0.2); border-left:3px solid var(--suspect); border-radius:10px; padding:1rem; background:rgba(245,158,11,0.04); height:100%;">
+          <div style="font-weight:700; color:var(--suspect); margin-bottom:0.35rem; font-size:0.85rem;">🟡 Suspect Donor</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
+            Borderline elevations in enzymes (ALT, GGT). Not confirmable as donor. Monitoring required.
+          </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="step-card">
-          <div class="step-icon">📊</div>
-          <div class="step-number">03</div>
-          <div class="step-title">Stage Prediction</div>
-          <div class="step-desc">Receive a confidence-rated diagnosis with probability distribution across all 5 disease stages</div>
+      <div class="col-md-6 col-lg" style="min-width:180px;">
+        <div style="border:1px solid rgba(249,115,22,0.2); border-left:3px solid var(--hepatitis); border-radius:10px; padding:1rem; background:rgba(249,115,22,0.04); height:100%;">
+          <div style="font-weight:700; color:var(--hepatitis); margin-bottom:0.35rem; font-size:0.85rem;">🟠 Hepatitis</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
+            Active viral inflammation. Elevated ALT, AST, GGT. Liver is under active immune attack.
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg" style="min-width:180px;">
+        <div style="border:1px solid rgba(239,68,68,0.2); border-left:3px solid var(--fibrosis); border-radius:10px; padding:1rem; background:rgba(239,68,68,0.04); height:100%;">
+          <div style="font-weight:700; color:var(--fibrosis); margin-bottom:0.35rem; font-size:0.85rem;">🔴 Fibrosis</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
+            Scar tissue forming (collagen deposit). Low ALB and CHE signal reduced liver function.
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg" style="min-width:180px;">
+        <div style="border:1px solid rgba(155,34,38,0.2); border-left:3px solid var(--cirrhosis); border-radius:10px; padding:1rem; background:rgba(155,34,38,0.04); height:100%;">
+          <div style="font-weight:700; color:var(--rose); margin-bottom:0.35rem; font-size:0.85rem;">🔴 Cirrhosis</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
+            Advanced scarring. Critically low ALB, CHE, CHOL. High BIL, GGT. Organ failure risk.
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- DISCLAIMER -->
-  <div class="alert-caution fade-up" style="animation-delay:0.25s; margin-bottom:2rem;">
+  <!-- ============================================================
+       WHAT THE MODEL READS — biomarker table
+       ============================================================ -->
+  <div class="content-card fade-up" style="margin-bottom:1.5rem;">
+    <div class="row g-5 align-items-start">
+      <div class="col-lg-6">
+        <div class="card-header-label" style="display:inline-flex; margin-bottom:0.75rem;">🔬 Input Features</div>
+        <h2 style="font-size:1.4rem; margin-bottom:0.75rem;">What the Model Reads</h2>
+        <p style="margin-bottom:1.25rem; color:var(--text-secondary);">
+          All 12 features come from a <strong style="color:var(--text-primary)">standard Liver Function Panel (LFP)</strong>
+          — a common blood test ordered in routine checkups. No special equipment or invasive procedures needed.
+        </p>
+
+        <table class="data-table">
+          <thead>
+            <tr><th>Marker</th><th>Full Name</th><th>Clinical Significance</th></tr>
+          </thead>
+          <tbody>
+            <tr><td style="color:var(--amber); font-family:var(--font-mono);">Age</td><td style="color:var(--text-secondary);">Patient Age</td><td style="color:var(--text-muted); font-size:0.8rem;">Older → higher risk</td></tr>
+            <tr><td style="color:var(--amber); font-family:var(--font-mono);">Sex</td><td style="color:var(--text-secondary);">Biological Sex</td><td style="color:var(--text-muted); font-size:0.8rem;">Sex-related enzyme variation</td></tr>
+            <tr><td style="color:var(--amber); font-family:var(--font-mono);">ALB</td><td style="color:var(--text-secondary);">Albumin (g/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↓ signals liver damage</td></tr>
+            <tr><td style="color:var(--amber); font-family:var(--font-mono);">ALP</td><td style="color:var(--text-secondary);">Alkaline Phosphatase</td><td style="color:var(--text-muted); font-size:0.8rem;">↑ in biliary disease</td></tr>
+            <tr><td style="color:var(--amber); font-family:var(--font-mono);">ALT</td><td style="color:var(--text-secondary);">Alanine Aminotransferase</td><td style="color:var(--text-muted); font-size:0.8rem;">Key hepatitis marker</td></tr>
+            <tr><td style="color:var(--amber); font-family:var(--font-mono);">AST</td><td style="color:var(--text-secondary);">Aspartate Aminotransferase</td><td style="color:var(--text-muted); font-size:0.8rem;">↑ in cell damage</td></tr>
+            <tr><td style="color:var(--amber); font-family:var(--font-mono);">BIL</td><td style="color:var(--text-secondary);">Bilirubin (µmol/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↑ = poor bile excretion</td></tr>
+            <tr><td style="color:var(--amber); font-family:var(--font-mono);">CHE</td><td style="color:var(--text-secondary);">Cholinesterase (kU/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↓ = reduced liver synthesis</td></tr>
+            <tr><td style="color:var(--amber); font-family:var(--font-mono);">CHOL</td><td style="color:var(--text-secondary);">Cholesterol (mmol/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↓ in late cirrhosis</td></tr>
+            <tr><td style="color:var(--amber); font-family:var(--font-mono);">CREA</td><td style="color:var(--text-secondary);">Creatinine (µmol/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">Kidney co-function</td></tr>
+            <tr><td style="color:var(--amber); font-family:var(--font-mono);">GGT</td><td style="color:var(--text-secondary);">Gamma-GT (U/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↑ with alcohol/liver damage</td></tr>
+            <tr><td style="color:var(--amber); font-family:var(--font-mono);">PROT</td><td style="color:var(--text-secondary);">Total Protein (g/L)</td><td style="color:var(--text-muted); font-size:0.8rem;">↓ in liver failure</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-lg-6">
+        <img src="{{ url_for('static', filename='img/doctor_results.jpg') }}"
+             alt="Doctor reviewing liver function panel on tablet"
+             style="width:100%; border-radius:14px; object-fit:cover; height:420px;">
+        <div style="margin-top:1rem; padding:1rem 1.25rem; background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.12); border-radius:10px;">
+          <div style="font-size:0.78rem; font-family:var(--font-mono); color:var(--amber); font-weight:600; margin-bottom:0.35rem;">WHY THIS MATTERS</div>
+          <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
+            A liver biopsy costs $1,500–$5,000 and carries real medical risk. These same
+            12 markers cost &lt;$50 and are already collected during routine checkups — meaning
+            AI staging could be deployed with zero additional cost to the patient.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       HOW THE AI WORKS — with ML image
+       ============================================================ -->
+  <div class="content-card fade-up" style="margin-bottom:1.5rem;">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-6">
+        <img src="{{ url_for('static', filename='img/ml_ai.jpg') }}"
+             alt="XGBoost machine learning gradient boosting visualization"
+             style="width:100%; border-radius:14px; object-fit:cover; height:360px;">
+      </div>
+      <div class="col-lg-6">
+        <div class="card-header-label" style="display:inline-flex; margin-bottom:0.75rem;">🤖 The AI Engine</div>
+        <h2 style="font-size:1.4rem; margin-bottom:1rem;">How the Model Works</h2>
+
+        <!-- XGBoost explanation -->
+        <div style="margin-bottom:1.25rem;">
+          <div style="font-weight:700; color:var(--amber); font-size:0.9rem; margin-bottom:0.4rem;">1. XGBoost (Extreme Gradient Boosting)</div>
+          <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
+            XGBoost builds an <strong style="color:var(--text-primary)">ensemble of decision trees</strong> sequentially.
+            Each tree corrects errors from the previous one, minimizing a loss function using gradient descent.
+            This makes it exceptionally good at tabular medical data with imbalanced classes.
+          </div>
+        </div>
+
+        <div style="margin-bottom:1.25rem;">
+          <div style="font-weight:700; color:var(--amber); font-size:0.9rem; margin-bottom:0.4rem;">2. Training vs Random Forest</div>
+          <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
+            Both <strong style="color:var(--text-primary)">Random Forest</strong> and <strong style="color:var(--text-primary)">XGBoost</strong>
+            are trained on the same dataset. The one with higher <strong style="color:var(--text-primary)">macro-F1 score</strong>
+            is automatically selected — ensuring the best model is always deployed.
+          </div>
+        </div>
+
+        <div style="margin-bottom:1.25rem;">
+          <div style="font-weight:700; color:var(--amber); font-size:0.9rem; margin-bottom:0.4rem;">3. Macro-F1 as the Evaluation Metric</div>
+          <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
+            Regular accuracy fails with imbalanced classes (e.g., few Cirrhosis vs many Blood Donors).
+            <strong style="color:var(--text-primary)">Macro-F1</strong> averages precision & recall equally across all 5 classes,
+            penalizing models that ignore minority stages.
+          </div>
+        </div>
+
+        <div style="margin-bottom:0;">
+          <div style="font-weight:700; color:var(--amber); font-size:0.9rem; margin-bottom:0.4rem;">4. Output: Probability Distribution</div>
+          <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
+            Instead of a single label, the model uses <code style="background:var(--bg-raised); padding:0.1rem 0.35rem; border-radius:4px; color:var(--amber); font-size:0.82rem;">predict_proba()</code>
+            to return a <strong style="color:var(--text-primary)">confidence score for each stage</strong>,
+            giving clinicians actionable probabilistic insight rather than a binary decision.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PIPELINE FLOW (technical summary for presentation)
+       ============================================================ -->
+  <div class="content-card fade-up" style="margin-bottom:1.5rem;">
+    <div class="card-header-label">⚙️ Full Technical Pipeline</div>
+    <h2 style="font-size:1.4rem; margin-bottom:1.75rem;">End-to-End System Architecture</h2>
+
+    <div class="row g-3 align-items-stretch">
+
+      <!-- Step 1 -->
+      <div class="col-md-6 col-lg">
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:14px; padding:1.25rem; height:100%; position:relative;">
+          <div style="width:28px; height:28px; background:linear-gradient(135deg, var(--crimson), var(--blood)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 4px 12px rgba(220,38,38,0.3);">01</div>
+          <div style="font-size:1.25rem; margin-bottom:0.5rem;">🗄️</div>
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.4rem; font-size:0.9rem;">UCI Dataset</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
+            615 Egyptian patients<br>
+            5 classes, 12 features<br>
+            Real clinical records
+          </div>
+        </div>
+      </div>
+
+      <div class="col-auto d-flex align-items-center" style="padding:0 0.25rem;">
+        <div style="color:var(--text-muted); font-size:1.2rem;">→</div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="col-md-6 col-lg">
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:14px; padding:1.25rem; height:100%;">
+          <div style="width:28px; height:28px; background:linear-gradient(135deg, var(--crimson), var(--blood)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 4px 12px rgba(220,38,38,0.3);">02</div>
+          <div style="font-size:1.25rem; margin-bottom:0.5rem;">🧹</div>
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.4rem; font-size:0.9rem;">Preprocessing</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
+            Median imputation<br>
+            Label encoding (Sex)<br>
+            StandardScaler
+          </div>
+        </div>
+      </div>
+
+      <div class="col-auto d-flex align-items-center" style="padding:0 0.25rem;">
+        <div style="color:var(--text-muted); font-size:1.2rem;">→</div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="col-md-6 col-lg">
+        <div style="background:var(--bg-raised); border:1px solid rgba(245,158,11,0.2); border-radius:14px; padding:1.25rem; height:100%;">
+          <div style="width:28px; height:28px; background:linear-gradient(135deg, var(--crimson), var(--blood)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 4px 12px rgba(220,38,38,0.3);">03</div>
+          <div style="font-size:1.25rem; margin-bottom:0.5rem;">🤖</div>
+          <div style="font-weight:700; color:var(--amber); margin-bottom:0.4rem; font-size:0.9rem;">XGBoost Train</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
+            Gradient boosting<br>
+            Best macro-F1 selected<br>
+            vs. Random Forest
+          </div>
+        </div>
+      </div>
+
+      <div class="col-auto d-flex align-items-center" style="padding:0 0.25rem;">
+        <div style="color:var(--text-muted); font-size:1.2rem;">→</div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="col-md-6 col-lg">
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:14px; padding:1.25rem; height:100%;">
+          <div style="width:28px; height:28px; background:linear-gradient(135deg, var(--crimson), var(--blood)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 4px 12px rgba(220,38,38,0.3);">04</div>
+          <div style="font-size:1.25rem; margin-bottom:0.5rem;">💾</div>
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.4rem; font-size:0.9rem;">Model Bundle</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
+            joblib pickle<br>
+            Imputer + Scaler +<br>
+            Classifier + Labels
+          </div>
+        </div>
+      </div>
+
+      <div class="col-auto d-flex align-items-center" style="padding:0 0.25rem;">
+        <div style="color:var(--text-muted); font-size:1.2rem;">→</div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="col-md-6 col-lg">
+        <div style="background:var(--bg-raised); border:1px solid rgba(16,185,129,0.2); border-radius:14px; padding:1.25rem; height:100%;">
+          <div style="width:28px; height:28px; background:linear-gradient(135deg, var(--crimson), var(--blood)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:1rem; box-shadow:0 4px 12px rgba(220,38,38,0.3);">05</div>
+          <div style="font-size:1.25rem; margin-bottom:0.5rem;">🌐</div>
+          <div style="font-weight:700; color:var(--healthy); margin-bottom:0.4rem; font-size:0.9rem;">Flask API</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
+            REST endpoint<br>
+            JSON predict_proba<br>
+            Biomarker flagging
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Data flow note -->
+    <div style="margin-top:1.5rem; padding:1rem 1.25rem; background:rgba(245,158,11,0.05); border:1px solid rgba(245,158,11,0.1); border-radius:10px; font-size:0.82rem; font-family:var(--font-mono); color:var(--text-muted);">
+      <span style="color:var(--amber); font-weight:600;">INFERENCE FLOW:</span>
+      User Input → Pandas DataFrame → Imputer.transform() → Scaler.transform() → XGBoost.predict_proba() → JSON Response
+    </div>
+  </div>
+
+  <!-- ============================================================
+       DATASET FACTS
+       ============================================================ -->
+  <div class="content-card fade-up" style="margin-bottom:1.5rem;">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-8">
+        <div class="card-header-label" style="display:inline-flex; margin-bottom:0.75rem;">📦 Dataset</div>
+        <h2 style="font-size:1.4rem; margin-bottom:1rem;">UCI HCV Dataset — Real Patient Data</h2>
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:10px; padding:1rem;">
+              <div style="font-size:0.7rem; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.4rem;">Source</div>
+              <div style="font-weight:600; color:var(--text-primary); font-size:0.9rem;">UCI Machine Learning Repository</div>
+              <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.25rem;">Egyptian HCV patient cohort</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:10px; padding:1rem;">
+              <div style="font-size:0.7rem; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.4rem;">Class Distribution</div>
+              <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.7;">
+                Blood Donor — 540 · Suspect — 7<br>
+                Hepatitis — 24 · Fibrosis — 21<br>
+                Cirrhosis — 30
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:10px; padding:1rem;">
+              <div style="font-size:0.7rem; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.4rem;">Split Strategy</div>
+              <div style="font-weight:600; color:var(--text-primary); font-size:0.9rem;">80 / 20 Train-Test</div>
+              <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.25rem;">Stratified by class label</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:10px; padding:1rem;">
+              <div style="font-size:0.7rem; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.4rem;">Key Challenge</div>
+              <div style="font-weight:600; color:var(--text-primary); font-size:0.9rem;">Class Imbalance</div>
+              <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.25rem;">88% healthy, 12% disease → macro-F1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <!-- Class distribution visual -->
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:14px; padding:1.5rem;">
+          <div style="font-size:0.72rem; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1rem;">Class Balance</div>
+          {% set classes = [
+            ("Blood Donor", 540, "#10b981"),
+            ("Suspect", 7, "#f59e0b"),
+            ("Hepatitis", 24, "#f97316"),
+            ("Fibrosis", 21, "#ef4444"),
+            ("Cirrhosis", 30, "#fb7185")
+          ] %}
+          {% for name, count, color in classes %}
+          <div style="margin-bottom:0.65rem;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.2rem;">
+              <span style="font-size:0.78rem; color:var(--text-secondary);">{{ name }}</span>
+              <span style="font-size:0.78rem; font-family:var(--font-mono); color:{{ color }};">{{ count }}</span>
+            </div>
+            <div style="height:5px; background:var(--bg-card); border-radius:3px; overflow:hidden;">
+              <div style="height:100%; width:{{ (count / 615 * 100) | round(1) }}%; background:{{ color }}; border-radius:3px;"></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       DISCLAIMER + CTA
+       ============================================================ -->
+  <div class="alert-caution fade-up" style="margin-bottom:1.5rem;">
     <div style="font-size:1.1rem;">⚠️</div>
     <div>
       <strong style="color:var(--amber);">Academic Demonstration Only</strong><br>
-      This tool is not a certified medical device and must never be used for clinical diagnosis or patient management.
+      This tool is not a certified medical device. Results are for educational and research purposes
+      only and must never be used for clinical diagnosis or patient management.
     </div>
+  </div>
+
+  <div style="text-align:center; margin-bottom:2.5rem;" class="fade-up">
+    <a href="{{ url_for('predict_view') }}" class="hero-cta" style="font-size:1rem; padding:1rem 2.5rem;">
+      🧬 Try the Prediction Demo
+      <span class="hero-cta-arrow">→</span>
+    </a>
   </div>
 
 </div>
