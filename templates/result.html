@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Prediction Result — {{ label }}{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="text-center mb-4">
+    <h1 class="fw-bold" style="color: #fff;">Prediction Complete</h1>
+  </div>
+
+  <div class="result-card mx-auto" style="max-width: 900px; border-left-color: {{ color }};">
+    <div class="text-center">
+      <div style="font-size: 4rem; margin-bottom: 1rem;">
+        {% if label == "Blood Donor" %}✅
+        {% elif label == "Suspect Blood Donor" %}⚠️
+        {% elif label == "Hepatitis" %}🔶
+        {% elif label == "Fibrosis" %}🔴
+        {% else %}🚨{% endif %}
+      </div>
+      <h2 style="color: {{ color }};">{{ label }}</h2>
+      <div class="confidence-badge mb-3">{{ confidence }}% Confidence</div>
+      <p class="lead mb-0">{{ desc }}</p>
+    </div>
+  </div>
+
+  <div class="content-card mx-auto" style="max-width: 900px;">
+    <h4 class="fw-bold mb-4 text-center">Probability Distribution Across All Stages</h4>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Stage</th>
+            <th>Probability</th>
+            <th style="width:45%">Distribution</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in probs %}
+          <tr>
+            <td class="text-center"><strong>#{{ loop.index }}</strong></td>
+            <td><strong>{{ p.stage }}</strong></td>
+            <td><strong>{{ p.value }}%</strong></td>
+            <td>
+              <div class="progress" style="height: 24px;">
+                <div class="progress-bar" role="progressbar" style="width: {{ p.value }}%;" aria-valuenow="{{ p.value }}" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="{{ url_for('predict_view') }}" class="btn btn-outline-primary btn-lg px-4">← New Prediction</a>
+    <a href="{{ url_for('home') }}" class="btn btn-light btn-lg px-4 ms-2">Home</a>
+  </div>
+</div>
+{% endblock %}

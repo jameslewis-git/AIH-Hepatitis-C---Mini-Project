@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Hepatitis C Detection & Staging — AI for Healthcare{% endblock %}
+{% block content %}
+<div class="container">
+  <section class="hero fade-up">
+    <h1>Hepatitis C Detection & Staging</h1>
+    <p class="lead">Advanced machine learning model for non-invasive liver disease staging from routine blood panel values</p>
+    <a href="{{ url_for('predict_view') }}" class="btn btn-light btn-lg fw-semibold">Start Prediction →</a>
+  </section>
+
+  <div class="row g-4 mb-5 fade-up" style="animation-delay:0.1s">
+    <div class="col-md-4">
+      <div class="stat-card text-center">
+        <div class="stat-value">615</div>
+        <div class="stat-label">Patient Records</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card text-center">
+        <div class="stat-value">{{ accuracy }}</div>
+        <div class="stat-label">Model Accuracy</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card text-center">
+        <div class="stat-value">5</div>
+        <div class="stat-label">Disease Stages</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-5 align-items-center">
+    <div class="col-lg-7">
+      <div class="content-card">
+        <h2>About This Project</h2>
+        <p>Hepatitis C is a blood-borne viral infection that progressively damages the liver, advancing through distinct clinical stages — from a healthy baseline to <strong>Hepatitis</strong>, <strong>Fibrosis</strong>, and ultimately <strong>Cirrhosis</strong>.</p>
+        <p>Traditional staging relies on invasive liver biopsy. This application offers a non-invasive alternative using <strong>machine learning</strong> to predict disease stage from 12 routine laboratory markers:</p>
+        <p class="mb-0"><strong>Age, Sex, Albumin (ALB), Alkaline Phosphatase (ALP), ALT, AST, Bilirubin (BIL), Cholinesterase (CHE), Cholesterol (CHOL), Creatinine (CREA), GGT, Total Protein (PROT)</strong></p>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="info-panel">
+        <h5>Disease Stages Detected</h5>
+        <ul class="list-unstyled mb-0">
+          <li><span class="dot" style="background:#5c8a68"></span> <strong>Blood Donor</strong> — Healthy</li>
+          <li><span class="dot" style="background:#c08a2e"></span> <strong>Suspect</strong> — Borderline</li>
+          <li><span class="dot" style="background:#c08a2e"></span> <strong>Hepatitis</strong> — Active infection</li>
+          <li><span class="dot" style="background:#a34630"></span> <strong>Fibrosis</strong> — Early scarring</li>
+          <li><span class="dot" style="background:#6e2330"></span> <strong>Cirrhosis</strong> — Advanced damage</li>
+        </ul>
+      </div>
+      <div class="alert alert-warning mt-4">
+        <strong>⚠️ Academic Demonstration Only</strong><br>
+        This tool is not a certified medical device and must never be used for clinical diagnosis.
+      </div>
+    </div>
+  </div>
+
+  <div class="content-card mt-5">
+    <h2>How It Works</h2>
+    <div class="row g-4 mt-2">
+      <div class="col-md-4 text-center">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+        <h5>1. Input Lab Values</h5>
+        <p class="text-muted">Enter results from a standard liver function blood panel</p>
+      </div>
+      <div class="col-md-4 text-center">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🤖</div>
+        <h5>2. AI Analysis</h5>
+        <p class="text-muted">{{ model_name }} model analyzes patterns across 12 biomarkers</p>
+      </div>
+      <div class="col-md-4 text-center">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+        <h5>3. Stage Prediction</h5>
+        <p class="text-muted">Receive probability-weighted disease stage classification</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

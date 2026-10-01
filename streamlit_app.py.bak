@@ -1,0 +1,220 @@
+"""
+Hepatitis C Detection and Staging using Machine Learning
+Streamlit web application.
+Run: streamlit run app.py
+"""
+import streamlit as st
+import pandas as pd
+import numpy as np
+import joblib
+import os
+
+st.set_page_config(
+    page_title="Hepatitis C Detection & Staging",
+    page_icon="🩺",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+MODEL_PATH = "model/hcv_model.pkl"
+
+STAGE_INFO = {
+    "Blood Donor": {
+        "color": "#2ecc71",
+        "desc": "No indication of liver disease. Lab values are within a healthy donor range.",
+    },
+    "Suspect Blood Donor": {
+        "color": "#f1c40f",
+        "desc": "Borderline values. Not a confirmed donor profile — further testing recommended.",
+    },
+    "Hepatitis": {
+        "color": "#e67e22",
+        "desc": "Pattern consistent with active Hepatitis C infection. Clinical follow-up advised.",
+    },
+    "Fibrosis": {
+        "color": "#e74c3c",
+        "desc": "Signs of liver fibrosis (scarring) consistent with disease progression.",
+    },
+    "Cirrhosis": {
+        "color": "#8e0000",
+        "desc": "Advanced liver scarring. Urgent specialist consultation strongly recommended.",
+    },
+}
+
+
+@st.cache_resource
+def load_model():
+    if not os.path.exists(MODEL_PATH):
+        return None
+    return joblib.load(MODEL_PATH)
+
+
+def predict(bundle, inputs: dict):
+    feature_cols = bundle["feature_cols"]
+    row = pd.DataFrame([inputs])[feature_cols]
+    row_imputed = bundle["imputer"].transform(row)
+    row_scaled = bundle["scaler"].transform(row_imputed)
+    proba = bundle["model"].predict_proba(row_scaled)[0]
+    pred_idx = int(np.argmax(proba))
+    label = bundle["class_labels"][pred_idx]
+    return label, proba, bundle["class_labels"]
+
+
+def sidebar_nav():
+    st.sidebar.markdown("## 🩺 HCV-ML")
+    page = st.sidebar.radio("Navigate", ["Home", "Predict", "About the Model"])
+    st.sidebar.markdown("---")
+    st.sidebar.caption("AI for Healthcare — Mini Project")
+    st.sidebar.caption("Hepatitis C Detection & Staging")
+    return page
+
+
+def page_home():
+    st.markdown(
+        """
+        <div style="background: linear-gradient(90deg,#0f6e8c,#13a3ad); padding: 2rem; border-radius: 12px; color: white;">
+        <h1>🩺 Hepatitis C Detection and Staging</h1>
+        <p style="font-size:1.1rem;">A machine-learning powered clinical decision support tool that estimates
+        Hepatitis C disease stage from routine blood test values.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.write("")
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Dataset", "UCI HCV", "615 patients")
+    col2.metric("Model", "RandomForest / XGBoost", "Best selected")
+    col3.metric("Stages detected", "5", "Donor → Cirrhosis")
+
+    st.write("")
+    st.subheader("About this project")
+    st.markdown(
+        """
+        Hepatitis C is a blood-borne viral infection that silently damages the liver over years,
+        progressing through measurable stages — from a healthy state to **Hepatitis**, **Fibrosis**,
+        and finally **Cirrhosis**. Early staging from inexpensive blood panel values (instead of invasive
+        liver biopsy) can help clinicians triage patients faster and prioritize specialist referral.
+
+        This application uses **12 routine laboratory features** — Age, Sex, Albumin (ALB),
+        Alkaline Phosphatase (ALP), Alanine Aminotransferase (ALT), Aspartate Aminotransferase (AST),
+        Bilirubin (BIL), Cholinesterase (CHE), Cholesterol (CHOL), Creatinine (CREA),
+        Gamma-Glutamyl Transferase (GGT), and Total Protein (PROT) — to classify a patient's
+        likely disease stage using a supervised ML model trained on the **UCI HCV dataset**.
+        """
+    )
+
+    st.info("⚠️ **Disclaimer:** This is an academic mini-project demonstration tool only. "
+            "It is NOT a certified medical device and must never be used for real diagnosis.")
+
+    st.write("")
+    if st.button("➡️ Go to Prediction Form", type="primary"):
+        st.session_state["page_override"] = "Predict"
+        st.rerun()
+
+
+def page_predict():
+    st.title("🧪 Enter Laboratory Values")
+    bundle = load_model()
+    if bundle is None:
+        st.error("Model not found. Run `python train_model.py` first to generate model/hcv_model.pkl.")
+        return
+
+    st.caption("All values below should come from a standard liver function blood panel.")
+
+    with st.form("predict_form"):
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            age = st.number_input("Age (years)", min_value=1, max_value=120, value=45)
+            sex = st.selectbox("Sex", ["Male", "Female"])
+            alb = st.number_input("ALB — Albumin (g/L)", min_value=0.0, value=41.0, step=0.1)
+            alp = st.number_input("ALP — Alkaline Phosphatase (U/L)", min_value=0.0, value=68.0, step=0.1)
+        with c2:
+            alt = st.number_input("ALT — Alanine Aminotransferase (U/L)", min_value=0.0, value=24.0, step=0.1)
+            ast = st.number_input("AST — Aspartate Aminotransferase (U/L)", min_value=0.0, value=25.0, step=0.1)
+            bil = st.number_input("BIL — Bilirubin (µmol/L)", min_value=0.0, value=7.0, step=0.1)
+            che = st.number_input("CHE — Cholinesterase (kU/L)", min_value=0.0, value=8.0, step=0.1)
+        with c3:
+            chol = st.number_input("CHOL — Cholesterol (mmol/L)", min_value=0.0, value=5.2, step=0.1)
+            crea = st.number_input("CREA — Creatinine (µmol/L)", min_value=0.0, value=81.0, step=0.1)
+            ggt = st.number_input("GGT — Gamma-Glutamyl Transferase (U/L)", min_value=0.0, value=25.0, step=0.1)
+            prot = st.number_input("PROT — Total Protein (g/L)", min_value=0.0, value=72.0, step=0.1)
+
+        submitted = st.form_submit_button("🔍 Predict", type="primary", use_container_width=True)
+
+    if submitted:
+        inputs = {
+            "Age": age, "Sex": 1 if sex == "Male" else 0,
+            "ALB": alb, "ALP": alp, "ALT": alt, "AST": ast, "BIL": bil,
+            "CHE": che, "CHOL": chol, "CREA": crea, "GGT": ggt, "PROT": prot,
+        }
+        label, proba, class_labels = predict(bundle, inputs)
+        info = STAGE_INFO[label]
+        confidence = float(np.max(proba)) * 100
+
+        st.markdown("---")
+        st.markdown(
+            f"""
+            <div style="border-left: 8px solid {info['color']}; background:#f8f9fa; padding:1.2rem 1.5rem; border-radius:8px;">
+            <h2 style="margin:0;color:{info['color']};">Predicted Stage: {label}</h2>
+            <p style="font-size:1.1rem;margin-top:0.5rem;">Confidence: <b>{confidence:.1f}%</b></p>
+            <p>{info['desc']}</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        st.subheader("Probability breakdown")
+        proba_df = pd.DataFrame({
+            "Stage": [class_labels[i] for i in range(len(proba))],
+            "Probability": proba,
+        }).sort_values("Probability", ascending=False)
+        st.bar_chart(proba_df.set_index("Stage"))
+        st.dataframe(proba_df.style.format({"Probability": "{:.2%}"}), use_container_width=True)
+
+
+def page_about():
+    st.title("📊 About the Model")
+    bundle = load_model()
+    if bundle is None:
+        st.error("Model not found. Run `python train_model.py` first.")
+        return
+
+    st.markdown(f"**Selected model:** `{bundle['model_name']}`")
+    st.markdown(f"**Test accuracy:** `{bundle['accuracy']*100:.2f}%`")
+    st.markdown(f"**Features used:** {', '.join(bundle['feature_cols'])}")
+
+    st.subheader("Disease stages")
+    for label, info in STAGE_INFO.items():
+        st.markdown(
+            f"<span style='color:{info['color']};font-weight:bold;'>● {label}</span> — {info['desc']}",
+            unsafe_allow_html=True,
+        )
+
+    st.subheader("Dataset")
+    st.markdown(
+        """
+        - **Source:** UCI Machine Learning Repository — *Hepatitis C Virus (HCV) for Egyptian patients /
+          HCV dataset* (`hcvdat0.csv`)
+        - **Samples:** 615 patients
+        - **Target:** Blood Donor, Suspect Blood Donor, Hepatitis, Fibrosis, Cirrhosis
+        - **Preprocessing:** median imputation for missing lab values, standard scaling, label
+          encoding of sex and target class.
+        """
+    )
+
+
+def main():
+    page = sidebar_nav()
+    if "page_override" in st.session_state:
+        page = st.session_state.pop("page_override")
+
+    if page == "Home":
+        page_home()
+    elif page == "Predict":
+        page_predict()
+    else:
+        page_about()
+
+
+if __name__ == "__main__":
+    main()

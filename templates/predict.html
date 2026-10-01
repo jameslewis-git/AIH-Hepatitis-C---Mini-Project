@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% block title %}Predict Stage — Hepatitis C Detection{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="mb-4 fade-up">
+    <h1 class="fw-bold mb-2">Enter Laboratory Values</h1>
+    <p class="text-muted">Input standard liver function panel results for disease stage prediction</p>
+  </div>
+
+  {% if error %}
+  <div class="alert alert-danger mx-auto" style="max-width: 900px;">
+    <strong>Error:</strong> {{ error }}
+  </div>
+  {% endif %}
+
+  <form id="predictForm" class="form-card mx-auto fade-up" style="max-width: 1000px;">
+    <div class="alert alert-info mb-4">
+      <strong>Quick test:</strong>
+      <button type="button" class="btn btn-sm btn-outline-primary ms-2" onclick="fillHealthy()">Healthy Donor</button>
+      <button type="button" class="btn btn-sm btn-outline-primary ms-1" onclick="fillHepatitis()">Hepatitis</button>
+      <button type="button" class="btn btn-sm btn-outline-primary ms-1" onclick="fillCirrhosis()">Cirrhosis</button>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <h6 class="section-title">Patient Demographics</h6>
+        <div class="mb-3">
+          <label class="form-label">Age (years)</label>
+          <input type="number" step="1" min="1" max="120" class="form-control" name="age" value="45" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Sex</label>
+          <select class="form-select" name="sex" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <h6 class="section-title">Protein Markers</h6>
+        <div class="mb-3">
+          <label class="form-label">ALB — Albumin (g/L)</label>
+          <input type="number" step="0.1" class="form-control" name="alb" value="41.0" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">PROT — Total Protein (g/L)</label>
+          <input type="number" step="0.1" class="form-control" name="prot" value="72.0" required>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <h6 class="section-title">Liver Enzymes</h6>
+        <div class="row g-3">
+          <div class="col-6">
+            <label class="form-label">ALT (U/L)</label>
+            <input type="number" step="0.1" class="form-control" name="alt" value="24.0" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label">AST (U/L)</label>
+            <input type="number" step="0.1" class="form-control" name="ast" value="25.0" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label">ALP (U/L)</label>
+            <input type="number" step="0.1" class="form-control" name="alp" value="68.0" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label">GGT (U/L)</label>
+            <input type="number" step="0.1" class="form-control" name="ggt" value="25.0" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <h6 class="section-title">Metabolic Markers</h6>
+        <div class="row g-3">
+          <div class="col-6">
+            <label class="form-label">BIL (µmol/L)</label>
+            <input type="number" step="0.1" class="form-control" name="bil" value="7.0" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label">CHE (kU/L)</label>
+            <input type="number" step="0.1" class="form-control" name="che" value="8.0" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label">CHOL (mmol/L)</label>
+            <input type="number" step="0.1" class="form-control" name="chol" value="5.2" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label">CREA (µmol/L)</label>
+            <input type="number" step="0.1" class="form-control" name="crea" value="81.0" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-primary btn-lg px-5">Analyze & Predict Stage</button>
+    </div>
+  </form>
+
+  <div id="resultSection" class="mt-4" style="max-width: 900px; margin-left:auto; margin-right:auto;"></div>
+</div>
+
+<div id="scanOverlay">
+  <div class="scan-box">
+    <div class="scan-ring"></div>
+    <div class="scan-title">Analyzing blood panel…</div>
+    <div id="scanSteps"></div>
+    <div class="scan-bar-track"><div class="scan-bar-fill" id="scanBarFill"></div></div>
+  </div>
+</div>
+
+<script>
+const STAGE_COLORS = {
+  "Blood Donor": "#5c8a68",
+  "Suspect Blood Donor": "#c08a2e",
+  "Hepatitis": "#c08a2e",
+  "Fibrosis": "#a34630",
+  "Cirrhosis": "#6e2330",
+};
+
+const SCAN_STEPS = [
+  "Validating input ranges",
+  "Checking protein markers (ALB, PROT)",
+  "Scanning liver enzymes (ALT, AST, ALP, GGT)",
+  "Evaluating metabolic markers (BIL, CHE, CHOL, CREA)",
+  "Normalizing feature vector",
+  "Running XGBoost classifier",
+  "Computing stage probabilities",
+];
+
+function fillHealthy() {
+  const v = {age:32, sex:"Male", alb:38.5, alp:52.5, alt:7.7, ast:22.1, bil:7.5, che:6.93, chol:3.23, crea:106, ggt:12.1, prot:69};
+  Object.entries(v).forEach(([k, val]) => document.querySelector(`[name="${k}"]`).value = val);
+}
+function fillHepatitis() {
+  const v = {age:48, sex:"Male", alb:35.2, alp:98.5, alt:65.3, ast:58.7, bil:15.8, che:5.2, chol:4.1, crea:88, ggt:95.4, prot:65};
+  Object.entries(v).forEach(([k, val]) => document.querySelector(`[name="${k}"]`).value = val);
+}
+function fillCirrhosis() {
+  const v = {age:62, sex:"Male", alb:28.3, alp:145.8, alt:92.5, ast:108.3, bil:28.4, che:3.1, chol:2.9, crea:102, ggt:215.6, prot:55.2};
+  Object.entries(v).forEach(([k, val]) => document.querySelector(`[name="${k}"]`).value = val);
+}
+
+function renderScanSteps() {
+  const box = document.getElementById("scanSteps");
+  box.innerHTML = SCAN_STEPS.map((s, i) =>
+    `<div class="scan-step" id="step-${i}"><span class="mark"></span><span>${s}</span></div>`
+  ).join("");
+}
+
+function runScanAnimation() {
+  return new Promise((resolve) => {
+    renderScanSteps();
+    const overlay = document.getElementById("scanOverlay");
+    const bar = document.getElementById("scanBarFill");
+    overlay.classList.add("active");
+    let i = 0;
+    const stepDelay = 260;
+    function tick() {
+      if (i > 0) document.getElementById(`step-${i-1}`).classList.replace("active", "done");
+      if (i < SCAN_STEPS.length) {
+        document.getElementById(`step-${i}`).classList.add("active");
+        bar.style.width = `${((i + 1) / SCAN_STEPS.length) * 100}%`;
+        i++;
+        setTimeout(tick, stepDelay);
+      } else {
+        setTimeout(() => { overlay.classList.remove("active"); resolve(); }, 220);
+      }
+    }
+    tick();
+  });
+}
+
+function markerLabel(m) {
+  const names = {ALB:"Albumin", ALP:"Alk. Phosphatase", ALT:"ALT", AST:"AST", BIL:"Bilirubin",
+    CHE:"Cholinesterase", CHOL:"Cholesterol", CREA:"Creatinine", GGT:"GGT", PROT:"Total Protein"};
+  return names[m] || m;
+}
+
+function renderResult(data) {
+  const section = document.getElementById("resultSection");
+  const color = STAGE_COLORS[data.label] || "#2f6f62";
+  const chips = data.flags.map(f =>
+    `<span class="marker-chip ${f.status}">${markerLabel(f.marker)}: ${f.value} ${f.status !== "normal" ? "("+f.status+")" : ""}</span>`
+  ).join(" ");
+  const rows = data.probs.map((p, idx) => `
+    <tr>
+      <td class="text-center"><strong>#${idx+1}</strong></td>
+      <td><strong>${p.stage}</strong></td>
+      <td><strong>${p.value}%</strong></td>
+      <td><div class="progress"><div class="progress-bar" style="width:0%" data-target="${p.value}"></div></div></td>
+    </tr>`).join("");
+
+  section.innerHTML = `
+    <div class="result-card" style="border-left-color: ${color};">
+      <h2 style="color: ${color};" class="fw-bold mb-2">${data.label}</h2>
+      <div class="confidence-badge mb-3">${data.confidence}% confidence</div>
+      <p class="mb-3">${data.desc}</p>
+      <div class="d-flex flex-wrap gap-2">${chips}</div>
+    </div>
+    <div class="content-card">
+      <h4 class="fw-bold mb-3">Probability distribution</h4>
+      <table class="table table-hover align-middle">
+        <thead><tr><th>Rank</th><th>Stage</th><th>Probability</th><th style="width:40%">Distribution</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="text-center">
+      <a href="#predictForm" class="btn btn-outline-primary" onclick="document.getElementById('resultSection').classList.remove('active'); return true;">Run another prediction</a>
+    </div>
+  `;
+  section.classList.add("active");
+  requestAnimationFrame(() => {
+    section.querySelectorAll(".progress-bar").forEach(bar => {
+      setTimeout(() => { bar.style.width = bar.dataset.target + "%"; }, 50);
+    });
+  });
+  section.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+document.getElementById("predictForm").addEventListener("submit", async function (e) {
+  e.preventDefault();
+  const fd = new FormData(this);
+  const payload = Object.fromEntries(fd.entries());
+
+  const [, response] = await Promise.all([
+    runScanAnimation(),
+    fetch("{{ url_for('api_predict') }}", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }),
+  ]);
+
+  const data = await response.json();
+  if (!response.ok) {
+    alert(data.error || "Prediction failed.");
+    return;
+  }
+  renderResult(data);
+});
+</script>
+{% endblock %}
